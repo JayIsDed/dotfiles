@@ -1,0 +1,57 @@
+/* wlogout Glass Theme */
+@import "colors.css";
+
+window {
+    background-color: alpha(@shadow, 0.5);
+}
+
+button {
+    background: radial-gradient(
+        circle at 50% 250%,
+        alpha(@surface, 0.85),
+        alpha(@surface_dim, 0.8)
+    );
+    border: 1px solid alpha(@outline, 0.3);
+    border-radius: 14px;
+    margin: 10px;
+    color: @on_surface;
+    font-size: 16px;
+    box-shadow: inset 1px 2px 2px rgba(255, 255, 255, 0.15);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 25%;
+}
+
+button:hover {
+    background: radial-gradient(
+        circle at 50% 250%,
+        alpha(@primary, 0.4),
+        alpha(@surface_dim, 0.7)
+    );
+    border-color: @primary;
+}
+
+button:focus {
+    outline: none;
+    border-color: @primary;
+}
+
+#lock {
+    background-image: image(url("/usr/share/wlogout/icons/lock.png"));
+}
+
+#logout {
+    background-image: image(url("/usr/share/wlogout/icons/logout.png"));
+}
+
+#suspend {
+    background-image: image(url("/usr/share/wlogout/icons/suspend.png"));
+}
+
+#reboot {
+    background-image: image(url("/usr/share/wlogout/icons/reboot.png"));
+}
+
+#shutdown {
+    background-image: image(url("/usr/share/wlogout/icons/shutdown.png"));
+}

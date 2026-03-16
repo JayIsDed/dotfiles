@@ -1,0 +1,128 @@
+/* Waybar Glass Theme */
+@import "colors.css";
+
+* {
+    font-family: "JetBrainsMono Nerd Font", "Font Awesome 6 Free", monospace;
+    font-size: 13px;
+    min-height: 0;
+    border: none;
+    border-radius: 0;
+}
+
+window#waybar {
+    background: transparent;
+}
+
+window#waybar > box {
+    background: radial-gradient(
+        circle at 50% 250%,
+        alpha(@surface, 0.9),
+        alpha(@surface_dim, 0.85)
+    ) padding-box,
+    linear-gradient(@primary, @on_primary) border-box;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    opacity: 0.85;
+    box-shadow: inset 1px 2px 2px rgba(255, 255, 255, 0.15);
+}
+
+/* Module defaults */
+#workspaces,
+#window,
+#clock,
+#cpu,
+#memory,
+#network,
+#pulseaudio,
+#tray,
+#custom-power {
+    padding: 0 10px;
+    color: @on_surface;
+}
+
+/* Workspaces */
+#workspaces button {
+    padding: 0 6px;
+    color: @on_surface_variant;
+    background: transparent;
+    border-radius: 8px;
+    margin: 3px 2px;
+    transition: all 0.2s ease;
+}
+
+#workspaces button.active {
+    color: @on_primary;
+    background: alpha(@primary, 0.6);
+    box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+#workspaces button:hover {
+    color: @on_surface;
+    background: alpha(@surface_container_high, 0.5);
+}
+
+/* Window title */
+#window {
+    color: @on_surface_variant;
+    font-style: italic;
+}
+
+/* Clock */
+#clock {
+    color: @on_surface;
+    font-weight: bold;
+}
+
+/* System modules */
+#cpu,
+#memory,
+#network,
+#pulseaudio {
+    color: @on_surface;
+    margin: 3px 2px;
+    padding: 0 8px;
+    border-radius: 8px;
+    background: alpha(@surface_container, 0.3);
+}
+
+#cpu { color: @primary; }
+#memory { color: @secondary; }
+#network { color: @tertiary; }
+
+#pulseaudio {
+    color: @primary;
+}
+
+#pulseaudio.muted {
+    color: @on_surface_variant;
+}
+
+/* System tray */
+#tray {
+    margin: 3px 4px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+/* Power button */
+#custom-power {
+    color: @error;
+    padding: 0 12px 0 8px;
+    font-size: 15px;
+}
+
+#custom-power:hover {
+    color: @on_error;
+    background: alpha(@error, 0.3);
+    border-radius: 8px;
+}
+
+/* Tooltip */
+tooltip {
+    background: alpha(@surface, 0.9);
+    border: 1px solid @outline;
+    border-radius: 10px;
+    color: @on_surface;
+}

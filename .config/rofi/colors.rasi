@@ -1,0 +1,16 @@
+/* Placeholder colors — Matugen will overwrite this file */
+* {
+    background:                  rgba(26, 27, 38, 0.7);
+    background-alt:              rgba(36, 40, 59, 0.8);
+    foreground:                  #c0caf5;
+    primary:                     #7aa2f7;
+    on-primary:                  #1a1b26;
+    secondary:                   #9ece6a;
+    surface:                     #1a1b26;
+    on-surface:                  #c0caf5;
+    surface-container:           #24283b;
+    surface-container-high:      #414868;
+    outline:                     #565f89;
+    error:                       #f7768e;
+    selected:                    rgba(122, 162, 247, 0.3);
+}

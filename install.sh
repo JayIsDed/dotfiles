@@ -1,0 +1,182 @@
+#!/bin/bash
+# ┌──────────────────────────────────────────┐
+# │      Arch + Hyprland Bootstrap           │
+# │     github.com/JayIsDed/dotfiles         │
+# └──────────────────────────────────────────┘
+#
+# Run on a fresh Arch install with a user account ready.
+# Installs packages, deploys configs, sets up NVIDIA.
+
+set -e
+
+DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
+CONFIG_DIR="$HOME/.config"
+
+echo ""
+echo "  ┌──────────────────────────────────────┐"
+echo "  │    Arch + Hyprland Install Script     │"
+echo "  │    AMD R9 7950X + RTX 3090            │"
+echo "  └──────────────────────────────────────┘"
+echo ""
+
+# ─── Preflight ──────────────────────────────────────────
+if [ ! -f /etc/arch-release ]; then
+    echo "ERROR: This script is for Arch Linux only."
+    exit 1
+fi
+
+echo "[1/6] Installing packages..."
+
+# ─── Core Packages ──────────────────────────────────────
+sudo pacman -S --needed --noconfirm \
+    hyprland \
+    xdg-desktop-portal-hyprland \
+    waybar \
+    kitty \
+    rofi-wayland \
+    swaync \
+    swww \
+    waypaper \
+    hyprlock \
+    hypridle \
+    wlogout \
+    fastfetch \
+    btop \
+    cliphist \
+    wl-clipboard \
+    grimblast-git \
+    imagemagick \
+    jq \
+    polkit-gnome \
+    thunar \
+    playerctl \
+    brightnessctl \
+    pipewire \
+    pipewire-alsa \
+    pipewire-pulse \
+    wireplumber \
+    pavucontrol \
+    blueman \
+    network-manager-applet \
+    papirus-icon-theme \
+    noto-fonts \
+    noto-fonts-emoji \
+    xdg-utils \
+    xdg-user-dirs
+
+echo "[2/6] Installing AUR packages (yay)..."
+
+# ─── Install yay if not present ─────────────────────────
+if ! command -v yay &>/dev/null; then
+    echo "  Installing yay..."
+    sudo pacman -S --needed --noconfirm base-devel git
+    git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
+    cd /tmp/yay-bin && makepkg -si --noconfirm
+    cd "$DOTFILES_DIR"
+    rm -rf /tmp/yay-bin
+fi
+
+# ─── AUR Packages ──────────────────────────────────────
+yay -S --needed --noconfirm \
+    matugen-bin \
+    ttf-jetbrains-mono-nerd \
+    swww
+
+echo "[3/6] Installing NVIDIA drivers..."
+
+# ─── NVIDIA ─────────────────────────────────────────────
+sudo pacman -S --needed --noconfirm \
+    nvidia-open-dkms \
+    nvidia-utils \
+    nvidia-settings \
+    egl-wayland \
+    lib32-nvidia-utils \
+    linux-headers
+
+echo "[4/6] Deploying dotfiles..."
+
+# ─── Deploy Configs ─────────────────────────────────────
+# Back up existing configs
+BACKUP_DIR="$HOME/.config-backup-$(date +%Y%m%d-%H%M%S)"
+CONFIGS=(
+    hypr waybar kitty rofi fastfetch swaync
+    hyprlock hypridle wlogout matugen waypaper btop
+)
+
+NEEDS_BACKUP=false
+for dir in "${CONFIGS[@]}"; do
+    if [ -d "$CONFIG_DIR/$dir" ]; then
+        NEEDS_BACKUP=true
+        break
+    fi
+done
+
+if [ "$NEEDS_BACKUP" = true ]; then
+    echo "  Backing up existing configs to $BACKUP_DIR"
+    mkdir -p "$BACKUP_DIR"
+    for dir in "${CONFIGS[@]}"; do
+        if [ -d "$CONFIG_DIR/$dir" ]; then
+            cp -r "$CONFIG_DIR/$dir" "$BACKUP_DIR/"
+        fi
+    done
+fi
+
+# Copy configs
+cp -r "$DOTFILES_DIR/.config/"* "$CONFIG_DIR/"
+
+# Create wallpapers directory
+mkdir -p "$CONFIG_DIR/wallpapers"
+
+# Ensure GTK dirs exist for Matugen output
+mkdir -p "$CONFIG_DIR/gtk-3.0" "$CONFIG_DIR/gtk-4.0"
+
+# Ensure btop themes dir exists
+mkdir -p "$CONFIG_DIR/btop/themes"
+
+# Ensure cache dir exists
+mkdir -p "$HOME/.cache/dotfiles"
+
+echo "[5/6] Setting permissions..."
+
+# ─── Permissions ────────────────────────────────────────
+chmod +x "$CONFIG_DIR/hypr/scripts/wallpaper.sh"
+chmod +x "$CONFIG_DIR/waybar/launch.sh"
+
+echo "[6/6] Final setup..."
+
+# ─── User directories ──────────────────────────────────
+xdg-user-dirs-update
+
+# ─── Enable services ───────────────────────────────────
+systemctl --user enable pipewire.service 2>/dev/null || true
+systemctl --user enable pipewire-pulse.service 2>/dev/null || true
+systemctl --user enable wireplumber.service 2>/dev/null || true
+
+echo ""
+echo "  ┌──────────────────────────────────────┐"
+echo "  │           Install Complete            │"
+echo "  ├──────────────────────────────────────┤"
+echo "  │                                      │"
+echo "  │  1. Add a wallpaper to:              │"
+echo "  │     ~/.config/wallpapers/            │"
+echo "  │                                      │"
+echo "  │  2. Reboot to load NVIDIA drivers    │"
+echo "  │                                      │"
+echo "  │  3. Start Hyprland from your login   │"
+echo "  │     manager or run: Hyprland         │"
+echo "  │                                      │"
+echo "  │  4. Press SUPER+W to pick wallpaper  │"
+echo "  │     (auto-generates theme colors)    │"
+echo "  │                                      │"
+echo "  │  Keybinds:                           │"
+echo "  │    SUPER+Enter    Terminal            │"
+echo "  │    SUPER+Space    App Launcher        │"
+echo "  │    SUPER+Q        Close Window        │"
+echo "  │    SUPER+W        Wallpaper Picker    │"
+echo "  │    SUPER+L        Lock Screen         │"
+echo "  │    SUPER+X        Power Menu          │"
+echo "  │    SUPER+N        Notifications       │"
+echo "  │    SUPER+1-0      Workspaces          │"
+echo "  │                                      │"
+echo "  └──────────────────────────────────────┘"
+echo ""

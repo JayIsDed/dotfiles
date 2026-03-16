@@ -1,0 +1,81 @@
+/* Rofi Configuration */
+@import "colors.rasi"
+@import "wallpaper.rasi"
+
+configuration {
+    modi: "drun,run,window";
+    show-icons: true;
+    icon-theme: "Papirus-Dark";
+    display-drun: " Apps";
+    display-run: " Run";
+    display-window: " Windows";
+    drun-display-format: "{name}";
+    font: "JetBrainsMono Nerd Font 12";
+}
+
+/* Glass theme */
+window {
+    transparency: "real";
+    location: center;
+    anchor: center;
+    width: 600px;
+    border: 2px;
+    border-color: @primary;
+    border-radius: 14px;
+    background-image: @current-image;
+}
+
+mainbox {
+    background-color: @background;
+    padding: 16px;
+    border-radius: 14px;
+}
+
+inputbar {
+    children: [ prompt, entry ];
+    background-color: @background-alt;
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin: 0 0 12px 0;
+}
+
+prompt {
+    background-color: transparent;
+    color: @primary;
+    margin: 0 8px 0 0;
+}
+
+entry {
+    background-color: transparent;
+    color: @foreground;
+    placeholder: "Search...";
+    placeholder-color: @outline;
+}
+
+listbox {
+    columns: 1;
+    lines: 8;
+}
+
+element {
+    padding: 8px 12px;
+    border-radius: 8px;
+    background-color: transparent;
+    color: @foreground;
+}
+
+element selected {
+    background-color: @selected;
+    color: @primary;
+}
+
+element-icon {
+    size: 24px;
+    margin: 0 8px 0 0;
+    background-color: transparent;
+}
+
+element-text {
+    background-color: transparent;
+    color: inherit;
+}

@@ -1,0 +1,9 @@
+# Cache files
+.cache/
+
+# Matugen will overwrite these but we track placeholders
+# Don't ignore them
+
+# OS files
+.DS_Store
+Thumbs.db

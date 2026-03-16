@@ -1,0 +1,2 @@
+/* Placeholder — wallpaper.sh will overwrite with blurred wallpaper path */
+* { current-image: url("", height); }

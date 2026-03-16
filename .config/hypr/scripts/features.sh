@@ -111,7 +111,7 @@ Game mode                        Strips all effects for max FPS
 FEATURES_LIST
 )
 
-echo "$FEATURES" | rofi -dmenu -i -p " Features" -markup-rows \
+echo "$FEATURES" | grep -v '^$' | rofi -dmenu -i -p " Features" -markup-rows \
     -theme-str 'window { width: 800px; }' \
     -theme-str 'listview { lines: 25; scrollbar: true; }' \
     -theme-str '* { font: "JetBrainsMono Nerd Font 11"; }'

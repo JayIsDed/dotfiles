@@ -54,3 +54,8 @@ output_path = '~/.config/wlogout/colors.css'
 [templates.hyprlock]
 input_path = '~/.config/matugen/templates/hyprlock-colors.conf'
 output_path = '~/.config/hyprlock/colors.conf'
+
+# Oh My Posh prompt colors
+[templates.ohmyposh]
+input_path = '~/.config/matugen/templates/ohmyposh-prompt.toml'
+output_path = '~/.config/ohmyposh/prompt.toml'

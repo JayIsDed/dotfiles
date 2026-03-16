@@ -9,15 +9,19 @@
 
     "modules-left": [
         "hyprland/workspaces",
+        "hyprland/submap",
         "hyprland/window"
     ],
     "modules-center": [
         "clock"
     ],
     "modules-right": [
+        "custom/updates",
+        "custom/docker",
         "tray",
         "pulseaudio",
         "network",
+        "custom/gpu",
         "cpu",
         "memory",
         "custom/power"
@@ -39,6 +43,12 @@
         },
         "on-click": "activate",
         "sort-by-number": true
+    },
+
+    "hyprland/submap": {
+        "format": " {}",
+        "max-length": 20,
+        "tooltip": false
     },
 
     "hyprland/window": {
@@ -95,6 +105,29 @@
     "tray": {
         "icon-size": 16,
         "spacing": 8
+    },
+
+    "custom/gpu": {
+        "exec": "~/.config/waybar/scripts/gpu-usage.sh",
+        "return-type": "json",
+        "interval": 5,
+        "tooltip": true
+    },
+
+    "custom/docker": {
+        "exec": "~/.config/waybar/scripts/docker-status.sh",
+        "return-type": "json",
+        "interval": 30,
+        "tooltip": true,
+        "on-click": "kitty ssh docker-services"
+    },
+
+    "custom/updates": {
+        "exec": "~/.config/waybar/scripts/updates.sh",
+        "return-type": "json",
+        "interval": 3600,
+        "tooltip": true,
+        "on-click": "kitty -e sudo pacman -Syu"
     },
 
     "custom/power": {

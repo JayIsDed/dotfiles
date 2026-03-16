@@ -106,6 +106,36 @@ window#waybar > box {
     -gtk-icon-effect: dim;
 }
 
+/* Submap indicator (resize mode, etc.) */
+#submap {
+    color: @error;
+    font-weight: bold;
+    padding: 0 10px;
+    background: alpha(@error, 0.2);
+    border-radius: 8px;
+    margin: 3px 4px;
+}
+
+/* Custom modules */
+#custom-gpu,
+#custom-docker,
+#custom-updates {
+    color: @on_surface;
+    margin: 3px 2px;
+    padding: 0 8px;
+    border-radius: 8px;
+    background: alpha(@surface_container, 0.3);
+}
+
+#custom-gpu { color: @secondary; }
+
+#custom-docker.healthy { color: @secondary; }
+#custom-docker.degraded { color: @error; }
+#custom-docker.disconnected { color: @on_surface_variant; }
+
+#custom-updates.pending { color: @tertiary; }
+#custom-updates.updated { color: @on_surface_variant; }
+
 /* Power button */
 #custom-power {
     color: @error;

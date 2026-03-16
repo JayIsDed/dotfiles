@@ -75,6 +75,11 @@ sudo pacman -S --needed --noconfirm \
     openssh \
     git \
     github-cli \
+    udiskie \
+    udisks2 \
+    socat \
+    wtype \
+    pacman-contrib \
     unzip \
     p7zip \
     man-db
@@ -95,7 +100,8 @@ fi
 yay -S --needed --noconfirm \
     grimblast-git \
     waypaper \
-    wlogout
+    wlogout \
+    satty-bin
 
 echo "[3/7] Installing NVIDIA drivers..."
 

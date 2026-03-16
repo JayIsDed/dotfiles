@@ -1,0 +1,111 @@
+{
+    "name": "right-island",
+    "layer": "top",
+    "position": "top",
+    "height": 36,
+    "margin-top": 6,
+    "margin-left": 0,
+    "margin-right": 10,
+    "margin-bottom": 0,
+
+    "modules-left": [
+        "custom/updates",
+        "custom/docker"
+    ],
+    "modules-center": [],
+    "modules-right": [
+        "tray",
+        "custom/bluetooth",
+        "pulseaudio",
+        "network",
+        "custom/gpu",
+        "cpu",
+        "memory",
+        "custom/notifications",
+        "custom/power"
+    ],
+
+    "cpu": {
+        "format": "󰍛 {usage}%",
+        "interval": 2,
+        "tooltip": true,
+        "on-click": "kitty -e btop"
+    },
+
+    "memory": {
+        "format": "󰘚 {percentage}%",
+        "interval": 2,
+        "tooltip-format": "{used:0.1f}G / {total:0.1f}G",
+        "on-click": "kitty -e btop"
+    },
+
+    "network": {
+        "format-wifi": "󰤨 {signalStrength}%",
+        "format-ethernet": "󰈀",
+        "format-disconnected": "󰤭",
+        "tooltip-format": "{ifname}: {ipaddr}/{cidr}\n{bandwidthUpBits} up / {bandwidthDownBits} down",
+        "on-click": "nm-connection-editor"
+    },
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰖁",
+        "format-icons": {
+            "default": ["󰕿", "󰖀", "󰕾"]
+        },
+        "on-click": "pavucontrol",
+        "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+",
+        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+    },
+
+    "tray": {
+        "icon-size": 16,
+        "spacing": 8
+    },
+
+    "custom/gpu": {
+        "exec": "~/.config/waybar/scripts/gpu-usage.sh",
+        "return-type": "json",
+        "interval": 5,
+        "tooltip": true
+    },
+
+    "custom/docker": {
+        "exec": "~/.config/waybar/scripts/docker-status.sh",
+        "return-type": "json",
+        "interval": 30,
+        "tooltip": true,
+        "on-click": "kitty ssh docker-services"
+    },
+
+    "custom/updates": {
+        "exec": "~/.config/waybar/scripts/updates.sh",
+        "return-type": "json",
+        "interval": 3600,
+        "tooltip": true,
+        "on-click": "kitty -e sudo pacman -Syu"
+    },
+
+    "custom/bluetooth": {
+        "exec": "~/.config/waybar/scripts/bluetooth.sh",
+        "return-type": "json",
+        "interval": 5,
+        "on-click": "blueman-manager",
+        "on-click-right": "bluetoothctl power toggle"
+    },
+
+    "custom/notifications": {
+        "exec": "~/.config/waybar/scripts/notifications.sh",
+        "return-type": "json",
+        "interval": 2,
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -C"
+    },
+
+    "custom/power": {
+        "format": "⏻",
+        "on-click": "wlogout",
+        "tooltip": false
+    }
+}

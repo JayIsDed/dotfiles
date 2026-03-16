@@ -1,0 +1,45 @@
+{
+    "name": "center-island",
+    "layer": "top",
+    "position": "top",
+    "height": 36,
+    "margin-top": 6,
+    "margin-left": 0,
+    "margin-right": 0,
+    "margin-bottom": 0,
+
+    "modules-left": [
+        "custom/media"
+    ],
+    "modules-center": [
+        "clock"
+    ],
+    "modules-right": [],
+
+    "clock": {
+        "format": "  {:%a %b %d    %H:%M}",
+        "tooltip-format": "<tt><small>{calendar}</small></tt>",
+        "calendar": {
+            "mode": "month",
+            "weeks-pos": "left",
+            "on-scroll": 1,
+            "format": {
+                "months":   "<span color='#ffead3'><b>{}</b></span>",
+                "days":     "<span color='#ecc6d9'>{}</span>",
+                "weeks":    "<span color='#99ffdd'><b>W{}</b></span>",
+                "weekdays": "<span color='#ffcc66'><b>{}</b></span>",
+                "today":    "<span color='#ff6699'><b><u>{}</u></b></span>"
+            }
+        }
+    },
+
+    "custom/media": {
+        "exec": "~/.config/waybar/scripts/media-player.sh",
+        "return-type": "json",
+        "interval": 3,
+        "on-click": "playerctl play-pause",
+        "on-click-right": "playerctl next",
+        "on-scroll-up": "playerctl position 5+",
+        "on-scroll-down": "playerctl position 5-"
+    }
+}

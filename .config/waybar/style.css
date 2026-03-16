@@ -1,4 +1,4 @@
-/* Waybar Glass Theme */
+/* Dynamic Islands — Glass Theme */
 @import "colors.css";
 
 * {
@@ -9,30 +9,23 @@
     border-radius: 0;
 }
 
+/* ── Islands: transparent outer shell ── */
 window#waybar {
     background: transparent;
 }
 
+/* ── Each island is a frosted glass pill ── */
 window#waybar > box {
     background: alpha(@surface, 0.55);
-    border: 1px solid alpha(@outline, 0.3);
+    border: 1px solid alpha(@outline, 0.25);
     border-radius: 14px;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    padding: 0 4px;
 }
 
-/* Module defaults */
-#workspaces,
-#window,
-#clock,
-#cpu,
-#memory,
-#network,
-#pulseaudio,
-#tray,
-#custom-power {
-    padding: 0 10px;
-    color: @on_surface;
-}
+/* ═══════════════════════════════════════════
+   LEFT ISLAND — Workspaces + Window Title
+   ═══════════════════════════════════════════ */
 
 /* Workspaces */
 #workspaces button {
@@ -59,48 +52,10 @@ window#waybar > box {
 #window {
     color: @on_surface_variant;
     font-style: italic;
+    padding: 0 10px;
 }
 
-/* Clock */
-#clock {
-    color: @on_surface;
-    font-weight: bold;
-}
-
-/* System modules */
-#cpu,
-#memory,
-#network,
-#pulseaudio {
-    color: @on_surface;
-    margin: 3px 2px;
-    padding: 0 8px;
-    border-radius: 8px;
-    background: alpha(@surface_container, 0.3);
-}
-
-#cpu { color: @primary; }
-#memory { color: @secondary; }
-#network { color: @tertiary; }
-
-#pulseaudio {
-    color: @primary;
-}
-
-#pulseaudio.muted {
-    color: @on_surface_variant;
-}
-
-/* System tray */
-#tray {
-    margin: 3px 4px;
-}
-
-#tray > .passive {
-    -gtk-icon-effect: dim;
-}
-
-/* Submap indicator (resize mode, etc.) */
+/* Submap indicator */
 #submap {
     color: @error;
     font-weight: bold;
@@ -110,30 +65,112 @@ window#waybar > box {
     margin: 3px 4px;
 }
 
-/* Custom modules */
+/* ═══════════════════════════════════════════
+   CENTER ISLAND — Clock + Media
+   ═══════════════════════════════════════════ */
+
+#clock {
+    color: @on_surface;
+    font-weight: bold;
+    padding: 0 12px;
+}
+
+/* Media player */
+#custom-media {
+    color: @on_surface_variant;
+    padding: 0 10px;
+    font-size: 12px;
+}
+
+#custom-media.playing {
+    color: @primary;
+}
+
+#custom-media.paused {
+    color: @on_surface_variant;
+}
+
+#custom-media.stopped {
+    padding: 0;
+    margin: 0;
+}
+
+/* ═══════════════════════════════════════════
+   RIGHT ISLAND — System Status
+   ═══════════════════════════════════════════ */
+
+/* Shared pill style for system modules */
+#cpu,
+#memory,
+#network,
+#pulseaudio,
 #custom-gpu,
 #custom-docker,
-#custom-updates {
+#custom-updates,
+#custom-bluetooth,
+#custom-notifications {
     color: @on_surface;
     margin: 3px 2px;
     padding: 0 8px;
     border-radius: 8px;
     background: alpha(@surface_container, 0.3);
+    transition: background 0.2s ease;
 }
 
+#cpu:hover,
+#memory:hover,
+#network:hover,
+#pulseaudio:hover,
+#custom-gpu:hover,
+#custom-docker:hover,
+#custom-updates:hover,
+#custom-bluetooth:hover,
+#custom-notifications:hover {
+    background: alpha(@surface_container_high, 0.5);
+}
+
+/* Per-module accent colors */
+#cpu { color: @primary; }
+#memory { color: @secondary; }
+#network { color: @tertiary; }
 #custom-gpu { color: @secondary; }
 
+#pulseaudio { color: @primary; }
+#pulseaudio.muted { color: @on_surface_variant; }
+
+/* Bluetooth states */
+#custom-bluetooth.connected { color: @primary; }
+#custom-bluetooth.on { color: @on_surface_variant; }
+#custom-bluetooth.off { color: @on_surface_variant; opacity: 0.5; }
+
+/* Docker health */
 #custom-docker.healthy { color: @secondary; }
 #custom-docker.degraded { color: @error; }
-#custom-docker.disconnected { color: @on_surface_variant; }
+#custom-docker.disconnected { color: @on_surface_variant; opacity: 0.5; }
 
+/* Updates */
 #custom-updates.pending { color: @tertiary; }
 #custom-updates.updated { color: @on_surface_variant; }
+
+/* Notification bell */
+#custom-notifications.unread { color: @primary; }
+#custom-notifications.clear { color: @on_surface_variant; }
+#custom-notifications.dnd { color: @error; }
+
+/* System tray */
+#tray {
+    margin: 3px 4px;
+    padding: 0 4px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
 
 /* Power button */
 #custom-power {
     color: @error;
-    padding: 0 12px 0 8px;
+    padding: 0 10px 0 6px;
     font-size: 15px;
 }
 
@@ -141,9 +178,13 @@ window#waybar > box {
     color: @on_error;
     background: alpha(@error, 0.3);
     border-radius: 8px;
+    margin: 3px 2px;
 }
 
-/* Tooltip */
+/* ═══════════════════════════════════════════
+   TOOLTIP
+   ═══════════════════════════════════════════ */
+
 tooltip {
     background: alpha(@surface, 0.9);
     border: 1px solid @outline;

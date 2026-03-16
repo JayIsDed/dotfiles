@@ -25,7 +25,7 @@ if [ ! -f /etc/arch-release ]; then
     exit 1
 fi
 
-echo "[1/6] Installing packages..."
+echo "[1/7] Installing packages..."
 
 # ─── Core Packages ──────────────────────────────────────
 sudo pacman -S --needed --noconfirm \
@@ -79,7 +79,7 @@ sudo pacman -S --needed --noconfirm \
     p7zip \
     man-db
 
-echo "[2/6] Installing AUR packages (yay)..."
+echo "[2/7] Installing AUR packages (yay)..."
 
 # ─── Install yay if not present ─────────────────────────
 if ! command -v yay &>/dev/null; then
@@ -97,7 +97,7 @@ yay -S --needed --noconfirm \
     grimblast-git \
     waypaper
 
-echo "[3/6] Installing NVIDIA drivers..."
+echo "[3/7] Installing NVIDIA drivers..."
 
 # ─── NVIDIA ─────────────────────────────────────────────
 sudo pacman -S --needed --noconfirm \
@@ -108,7 +108,18 @@ sudo pacman -S --needed --noconfirm \
     lib32-nvidia-utils \
     linux-headers
 
-echo "[4/6] Deploying dotfiles..."
+echo "[4/7] Installing SDDM display manager..."
+
+# ─── Display Manager ──────────────────────────────────
+sudo pacman -S --needed --noconfirm \
+    sddm \
+    qt5-graphicaleffects \
+    qt5-quickcontrols2
+
+# Enable SDDM service
+sudo systemctl enable sddm.service 2>/dev/null || true
+
+echo "[5/7] Deploying dotfiles..."
 
 # ─── Deploy Configs ─────────────────────────────────────
 # Back up existing configs
@@ -151,13 +162,13 @@ mkdir -p "$CONFIG_DIR/btop/themes"
 # Ensure cache dir exists
 mkdir -p "$HOME/.cache/dotfiles"
 
-echo "[5/6] Setting permissions..."
+echo "[6/7] Setting permissions..."
 
 # ─── Permissions ────────────────────────────────────────
 chmod +x "$CONFIG_DIR/hypr/scripts/wallpaper.sh"
 chmod +x "$CONFIG_DIR/waybar/launch.sh"
 
-echo "[6/6] Final setup..."
+echo "[7/7] Final setup..."
 
 # ─── User directories ──────────────────────────────────
 xdg-user-dirs-update
@@ -177,8 +188,7 @@ echo "  │     ~/.config/wallpapers/            │"
 echo "  │                                      │"
 echo "  │  2. Reboot to load NVIDIA drivers    │"
 echo "  │                                      │"
-echo "  │  3. Start Hyprland from your login   │"
-echo "  │     manager or run: Hyprland         │"
+echo "  │  3. Select Hyprland from SDDM login   │"
 echo "  │                                      │"
 echo "  │  4. Press SUPER+W to pick wallpaper  │"
 echo "  │     (auto-generates theme colors)    │"

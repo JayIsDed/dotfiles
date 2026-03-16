@@ -1,11 +1,5 @@
 #!/bin/bash
-# Launch waybar as 3 dynamic islands
-
+# Launch waybar (single instance, islands via CSS)
 pkill waybar 2>/dev/null
-sleep 0.3
-
-CONFIG_DIR="$HOME/.config/waybar"
-
-waybar -c "$CONFIG_DIR/config-left.jsonc"   -s "$CONFIG_DIR/style.css" &
-waybar -c "$CONFIG_DIR/config-center.jsonc" -s "$CONFIG_DIR/style.css" &
-waybar -c "$CONFIG_DIR/config-right.jsonc"  -s "$CONFIG_DIR/style.css" &
+sleep 0.2
+waybar &

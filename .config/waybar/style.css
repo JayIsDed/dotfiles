@@ -9,25 +9,31 @@
     border-radius: 0;
 }
 
-/* ── Islands: transparent outer shell ── */
+/* ── Outer shell: fully transparent ── */
 window#waybar {
     background: transparent;
 }
 
-/* ── Each island is a frosted glass pill ── */
 window#waybar > box {
+    background: transparent;
+}
+
+/* ── Each module group is its own island ── */
+.modules-left,
+.modules-center,
+.modules-right {
     background: alpha(@surface, 0.55);
     border: 1px solid alpha(@outline, 0.25);
     border-radius: 14px;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
     padding: 0 4px;
+    margin: 0 4px;
 }
 
 /* ═══════════════════════════════════════════
    LEFT ISLAND — Workspaces + Window Title
    ═══════════════════════════════════════════ */
 
-/* Workspaces */
 #workspaces button {
     padding: 0 6px;
     color: @on_surface_variant;
@@ -48,14 +54,12 @@ window#waybar > box {
     background: alpha(@surface_container_high, 0.5);
 }
 
-/* Window title */
 #window {
     color: @on_surface_variant;
     font-style: italic;
     padding: 0 10px;
 }
 
-/* Submap indicator */
 #submap {
     color: @error;
     font-weight: bold;
@@ -66,7 +70,7 @@ window#waybar > box {
 }
 
 /* ═══════════════════════════════════════════
-   CENTER ISLAND — Clock + Media
+   CENTER ISLAND — Clock + Media + Weather
    ═══════════════════════════════════════════ */
 
 #clock {
@@ -75,31 +79,21 @@ window#waybar > box {
     padding: 0 12px;
 }
 
-/* Media player */
 #custom-media {
     color: @on_surface_variant;
     padding: 0 10px;
     font-size: 12px;
 }
 
-#custom-media.playing {
-    color: @primary;
-}
-
-#custom-media.paused {
-    color: @on_surface_variant;
-}
-
-#custom-media.stopped {
-    padding: 0;
-    margin: 0;
-}
+#custom-media.playing { color: @primary; }
+#custom-media.paused { color: @on_surface_variant; }
+#custom-media.stopped { padding: 0; margin: 0; }
 
 /* ═══════════════════════════════════════════
    RIGHT ISLAND — System Status
    ═══════════════════════════════════════════ */
 
-/* Shared pill style for system modules */
+/* Shared pill style for all system modules */
 #cpu,
 #memory,
 #network,
@@ -154,35 +148,6 @@ window#waybar > box {
 #pulseaudio { color: @primary; }
 #pulseaudio.muted { color: @on_surface_variant; }
 
-/* Bluetooth states */
-#custom-bluetooth.connected { color: @primary; }
-#custom-bluetooth.on { color: @on_surface_variant; }
-#custom-bluetooth.off { color: @on_surface_variant; opacity: 0.5; }
-
-/* Docker health */
-#custom-docker.healthy { color: @secondary; }
-#custom-docker.degraded { color: @error; }
-#custom-docker.disconnected { color: @on_surface_variant; opacity: 0.5; }
-
-/* Updates */
-#custom-updates.pending { color: @tertiary; }
-#custom-updates.updated { color: @on_surface_variant; }
-
-/* Notification bell */
-#custom-notifications.unread { color: @primary; }
-#custom-notifications.clear { color: @on_surface_variant; }
-#custom-notifications.dnd { color: @error; }
-
-/* System tray */
-#tray {
-    margin: 3px 4px;
-    padding: 0 4px;
-}
-
-#tray > .passive {
-    -gtk-icon-effect: dim;
-}
-
 /* CPU temp */
 #custom-cputemp { color: @primary; }
 #custom-cputemp.warm { color: @tertiary; }
@@ -202,7 +167,6 @@ window#waybar > box {
 
 /* Clipboard */
 #custom-clipboard { color: @on_surface_variant; }
-#custom-clipboard.has-items { color: @on_surface_variant; }
 
 /* Night light */
 #custom-nightlight.on { color: @tertiary; }
@@ -211,9 +175,38 @@ window#waybar > box {
 /* Weather */
 #custom-weather { color: @primary; }
 
+/* Bluetooth states */
+#custom-bluetooth.connected { color: @primary; }
+#custom-bluetooth.on { color: @on_surface_variant; }
+#custom-bluetooth.off { color: @on_surface_variant; opacity: 0.5; }
+
+/* Docker health */
+#custom-docker.healthy { color: @secondary; }
+#custom-docker.degraded { color: @error; }
+#custom-docker.disconnected { color: @on_surface_variant; opacity: 0.5; }
+
+/* Updates */
+#custom-updates.pending { color: @tertiary; }
+#custom-updates.updated { color: @on_surface_variant; }
+
+/* Notification bell */
+#custom-notifications.unread { color: @primary; }
+#custom-notifications.clear { color: @on_surface_variant; }
+#custom-notifications.dnd { color: @error; }
+
 /* Idle inhibitor */
 #idle_inhibitor.activated { color: @primary; }
 #idle_inhibitor.deactivated { color: @on_surface_variant; opacity: 0.5; }
+
+/* System tray */
+#tray {
+    margin: 3px 4px;
+    padding: 0 4px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
 
 /* Power button */
 #custom-power {

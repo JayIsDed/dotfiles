@@ -3,9 +3,9 @@
     "position": "top",
     "height": 36,
     "spacing": 4,
-    "margin-top": 4,
-    "margin-left": 8,
-    "margin-right": 8,
+    "margin-top": 6,
+    "margin-left": 10,
+    "margin-right": 10,
 
     "modules-left": [
         "hyprland/workspaces",
@@ -13,17 +13,28 @@
         "hyprland/window"
     ],
     "modules-center": [
-        "clock"
+        "custom/media",
+        "clock",
+        "custom/weather"
     ],
     "modules-right": [
         "custom/updates",
         "custom/docker",
+        "custom/uptime",
         "tray",
+        "custom/clipboard",
+        "custom/nightlight",
+        "custom/mic",
+        "custom/bluetooth",
         "pulseaudio",
         "network",
         "custom/gpu",
         "cpu",
+        "custom/cputemp",
         "memory",
+        "custom/disk",
+        "idle_inhibitor",
+        "custom/notifications",
         "custom/power"
     ],
 
@@ -57,7 +68,7 @@
     },
 
     "clock": {
-        "format": "{:%a %b %d  %H:%M}",
+        "format": "  {:%a %b %d    %H:%M}",
         "tooltip-format": "<tt><small>{calendar}</small></tt>",
         "calendar": {
             "mode": "month",
@@ -89,15 +100,15 @@
 
     "network": {
         "format-wifi": "󰤨 {signalStrength}%",
-        "format-ethernet": "󰈀 {ipaddr}",
-        "format-disconnected": "󰤭 ",
+        "format-ethernet": "󰈀",
+        "format-disconnected": "󰤭",
         "tooltip-format": "{ifname}: {ipaddr}/{cidr}\n{bandwidthUpBits} up / {bandwidthDownBits} down",
         "on-click": "nm-connection-editor"
     },
 
     "pulseaudio": {
         "format": "{icon} {volume}%",
-        "format-muted": "󰖁 ",
+        "format-muted": "󰖁",
         "format-icons": {
             "default": ["󰕿", "󰖀", "󰕾"]
         },
@@ -107,9 +118,36 @@
         "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
     },
 
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "󰅶",
+            "deactivated": "󰾪"
+        },
+        "tooltip-format-activated": "Idle inhibitor ON — screen won't lock",
+        "tooltip-format-deactivated": "Idle inhibitor OFF"
+    },
+
     "tray": {
         "icon-size": 16,
         "spacing": 8
+    },
+
+    "custom/media": {
+        "exec": "~/.config/waybar/scripts/media-player.sh",
+        "return-type": "json",
+        "interval": 3,
+        "on-click": "playerctl play-pause",
+        "on-click-right": "playerctl next",
+        "on-scroll-up": "playerctl position 5+",
+        "on-scroll-down": "playerctl position 5-"
+    },
+
+    "custom/weather": {
+        "exec": "~/.config/waybar/scripts/weather.sh",
+        "return-type": "json",
+        "interval": 900,
+        "tooltip": true
     },
 
     "custom/gpu": {
@@ -117,6 +155,14 @@
         "return-type": "json",
         "interval": 5,
         "tooltip": true
+    },
+
+    "custom/cputemp": {
+        "exec": "~/.config/waybar/scripts/cpu-temp.sh",
+        "return-type": "json",
+        "interval": 3,
+        "tooltip": true,
+        "on-click": "kitty -e btop"
     },
 
     "custom/docker": {
@@ -133,6 +179,58 @@
         "interval": 3600,
         "tooltip": true,
         "on-click": "kitty -e sudo pacman -Syu"
+    },
+
+    "custom/uptime": {
+        "exec": "~/.config/waybar/scripts/uptime.sh",
+        "return-type": "json",
+        "interval": 60,
+        "tooltip": true
+    },
+
+    "custom/bluetooth": {
+        "exec": "~/.config/waybar/scripts/bluetooth.sh",
+        "return-type": "json",
+        "interval": 5,
+        "on-click": "blueman-manager",
+        "on-click-right": "bluetoothctl power toggle"
+    },
+
+    "custom/mic": {
+        "exec": "~/.config/waybar/scripts/mic.sh",
+        "return-type": "json",
+        "interval": 2,
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+    },
+
+    "custom/disk": {
+        "exec": "~/.config/waybar/scripts/disk.sh",
+        "return-type": "json",
+        "interval": 60,
+        "tooltip": true,
+        "on-click": "kitty -e btop"
+    },
+
+    "custom/clipboard": {
+        "exec": "~/.config/waybar/scripts/clipboard.sh",
+        "return-type": "json",
+        "interval": 5,
+        "on-click": "cliphist list | rofi -dmenu -p 'Clipboard' | cliphist decode | wl-copy"
+    },
+
+    "custom/nightlight": {
+        "exec": "~/.config/waybar/scripts/nightlight.sh",
+        "return-type": "json",
+        "interval": 2,
+        "on-click": "~/.config/waybar/scripts/nightlight-toggle.sh"
+    },
+
+    "custom/notifications": {
+        "exec": "~/.config/waybar/scripts/notifications.sh",
+        "return-type": "json",
+        "interval": 2,
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -C"
     },
 
     "custom/power": {

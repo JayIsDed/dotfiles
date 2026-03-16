@@ -3,7 +3,7 @@
 
 version = 3
 final_space = true
-{% raw %}console_title_template = '{{ .Shell }} in {{ .Folder }}'{% endraw %}
+console_title_template = '{{"{{" }} .Shell {{ "}}" }} in {{"{{" }} .Folder {{ "}}" }}'
 
 [[blocks]]
   type = 'prompt'
@@ -14,7 +14,7 @@ final_space = true
     type = 'path'
     style = 'plain'
     foreground = '{{colors.primary.default.hex}}'
-    {% raw %}template = '{{ .Path }}'{% endraw %}
+    template = '{{"{{" }} .Path {{ "}}" }}'
 
     [blocks.segments.properties]
       style = 'agnoster_short'
@@ -25,11 +25,11 @@ final_space = true
     style = 'plain'
     foreground = '{{colors.on_surface_variant.default.hex}}'
     foreground_templates = [
-      {% raw %}'{{ if gt .Ahead 0 }}{% endraw %}{{colors.secondary.default.hex}}{% raw %}{{ end }}'{% endraw %},
-      {% raw %}'{{ if gt .Behind 0 }}{% endraw %}{{colors.error.default.hex}}{% raw %}{{ end }}'{% endraw %},
-      {% raw %}'{{ if and (gt .Ahead 0) (gt .Behind 0) }}{% endraw %}{{colors.tertiary.default.hex}}{% raw %}{{ end }}'{% endraw %}
+      '{{"{{" }} if gt .Ahead 0 {{ "}}" }}{{colors.secondary.default.hex}}{{"{{" }} end {{ "}}" }}',
+      '{{"{{" }} if gt .Behind 0 {{ "}}" }}{{colors.error.default.hex}}{{"{{" }} end {{ "}}" }}',
+      '{{"{{" }} if and (gt .Ahead 0) (gt .Behind 0) {{ "}}" }}{{colors.tertiary.default.hex}}{{"{{" }} end {{ "}}" }}'
     ]
-    {% raw %}template = '  {{ .HEAD }}{{ if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }}'{% endraw %}
+    template = '  {{"{{" }} .HEAD {{ "}}" }}{{"{{" }} if .BranchStatus {{ "}}" }} {{"{{" }} .BranchStatus {{ "}}" }}{{"{{" }} end {{ "}}" }}{{"{{" }} if .Working.Changed {{ "}}" }}  {{"{{" }} .Working.String {{ "}}" }}{{"{{" }} end {{ "}}" }}{{"{{" }} if .Staging.Changed {{ "}}" }}  {{"{{" }} .Staging.String {{ "}}" }}{{"{{" }} end {{ "}}" }}'
 
     [blocks.segments.properties]
       branch_icon = ' '
@@ -40,7 +40,7 @@ final_space = true
     type = 'executiontime'
     style = 'plain'
     foreground = '{{colors.tertiary.default.hex}}'
-    {% raw %}template = '  {{ .FormattedMs }}'{% endraw %}
+    template = '  {{"{{" }} .FormattedMs {{ "}}" }}'
 
     [blocks.segments.properties]
       threshold = 2000
@@ -55,14 +55,14 @@ final_space = true
     type = 'text'
     style = 'plain'
     foreground_templates = [
-      {% raw %}'{{ if gt .Code 0 }}{% endraw %}{{colors.error.default.hex}}{% raw %}{{ end }}'{% endraw %},
-      {% raw %}'{{ if eq .Code 0 }}{% endraw %}{{colors.primary.default.hex}}{% raw %}{{ end }}'{% endraw %}
+      '{{"{{" }} if gt .Code 0 {{ "}}" }}{{colors.error.default.hex}}{{"{{" }} end {{ "}}" }}',
+      '{{"{{" }} if eq .Code 0 {{ "}}" }}{{colors.primary.default.hex}}{{"{{" }} end {{ "}}" }}'
     ]
-    {% raw %}template = '>'{% endraw %}
+    template = '>'
 
 [transient_prompt]
   foreground_templates = [
-    {% raw %}'{{ if gt .Code 0 }}{% endraw %}{{colors.error.default.hex}}{% raw %}{{ end }}'{% endraw %},
-    {% raw %}'{{ if eq .Code 0 }}{% endraw %}{{colors.primary.default.hex}}{% raw %}{{ end }}'{% endraw %}
+    '{{"{{" }} if gt .Code 0 {{ "}}" }}{{colors.error.default.hex}}{{"{{" }} end {{ "}}" }}',
+    '{{"{{" }} if eq .Code 0 {{ "}}" }}{{colors.primary.default.hex}}{{"{{" }} end {{ "}}" }}'
   ]
-  {% raw %}template = '> '{% endraw %}
+  template = '> '

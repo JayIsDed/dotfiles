@@ -97,6 +97,13 @@ Click GPU module                 NVIDIA GPU usage + temp
 Click Docker module              SSH to docker-services (LXC 112)
 Click Updates module             Run system update
 
+ GAMING
+SUPER + ALT + G                  Toggle game mode (strip effects)
+R_Shift + F12                    Toggle MangoHud overlay (in-game)
+R_Shift + F2                     Toggle MangoHud logging (in-game)
+Steam launch option              gamemoderun mangohud %command%
+Proton                           Enable in Steam > Game > Compatibility
+
  AUTOMATION
 USB drives auto-mount            udiskie (tray icon)
 Wallpaper change                 Auto-themes entire desktop via Matugen

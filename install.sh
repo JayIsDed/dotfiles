@@ -120,7 +120,32 @@ sudo pacman -S --needed --noconfirm \
     nvidia-settings \
     egl-wayland \
     lib32-nvidia-utils \
-    linux-headers
+    linux-headers \
+    vulkan-icd-loader \
+    lib32-vulkan-icd-loader
+
+echo "[3.5/7] Installing gaming packages..."
+
+# ─── Gaming ─────────────────────────────────────────────
+sudo pacman -S --needed --noconfirm \
+    steam \
+    gamemode \
+    lib32-gamemode \
+    mangohud \
+    lib32-mangohud \
+    wine \
+    wine-mono \
+    wine-gecko \
+    winetricks \
+    lib32-pipewire \
+    lib32-libpulse \
+    lib32-alsa-lib \
+    lib32-gnutls \
+    lib32-openal \
+    lib32-sdl2 \
+    lib32-mesa \
+    lib32-vulkan-icd-loader \
+    xdg-desktop-portal
 
 echo "[4/7] Installing SDDM display manager..."
 

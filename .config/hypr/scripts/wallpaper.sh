@@ -19,9 +19,17 @@ fi
 
 # Bail if wallpaper doesn't exist
 if [ ! -f "$WALLPAPER" ]; then
-    echo "Wallpaper not found: $WALLPAPER"
-    exit 1
+    echo "No wallpaper found at: $WALLPAPER"
+    echo "Add wallpapers to ~/.config/wallpapers/ and run this script again,"
+    echo "or use SUPER+W to pick one with waypaper."
+    exit 0
 fi
+
+# Wait for swww-daemon to be ready
+for i in $(seq 1 10); do
+    swww query &>/dev/null && break
+    sleep 0.5
+done
 
 # Cache current wallpaper path
 echo "$WALLPAPER" > "$CACHE_DIR/current_wallpaper"

@@ -36,19 +36,23 @@ sudo pacman -S --needed --noconfirm \
     rofi-wayland \
     swaync \
     swww \
-    waypaper \
     hyprlock \
     hypridle \
     wlogout \
+    matugen \
     fastfetch \
     btop \
     cliphist \
     wl-clipboard \
-    grimblast-git \
+    grim \
+    slurp \
     imagemagick \
     jq \
     polkit-gnome \
     thunar \
+    thunar-archive-plugin \
+    gvfs \
+    file-roller \
     playerctl \
     brightnessctl \
     pipewire \
@@ -57,13 +61,23 @@ sudo pacman -S --needed --noconfirm \
     wireplumber \
     pavucontrol \
     blueman \
+    networkmanager \
     network-manager-applet \
     papirus-icon-theme \
     noto-fonts \
     noto-fonts-emoji \
     nwg-displays \
+    qt5-wayland \
+    qt6-wayland \
+    xdg-desktop-portal-gtk \
     xdg-utils \
-    xdg-user-dirs
+    xdg-user-dirs \
+    openssh \
+    git \
+    github-cli \
+    unzip \
+    p7zip \
+    man-db
 
 echo "[2/6] Installing AUR packages (yay)..."
 
@@ -79,9 +93,9 @@ fi
 
 # ─── AUR Packages ──────────────────────────────────────
 yay -S --needed --noconfirm \
-    matugen-bin \
     ttf-jetbrains-mono-nerd \
-    swww
+    grimblast-git \
+    waypaper
 
 echo "[3/6] Installing NVIDIA drivers..."
 
@@ -174,7 +188,7 @@ echo "  │    SUPER+Enter    Terminal            │"
 echo "  │    SUPER+Space    App Launcher        │"
 echo "  │    SUPER+Q        Close Window        │"
 echo "  │    SUPER+W        Wallpaper Picker    │"
-echo "  │    SUPER+L        Lock Screen         │"
+echo "  │    SUPER+Esc      Lock Screen         │"
 echo "  │    SUPER+X        Power Menu          │"
 echo "  │    SUPER+N        Notifications       │"
 echo "  │    SUPER+1-0      Workspaces          │"

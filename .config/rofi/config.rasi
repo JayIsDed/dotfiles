@@ -52,9 +52,10 @@ entry {
     placeholder-color: @outline;
 }
 
-listbox {
+listview {
     columns: 1;
     lines: 8;
+    scrollbar: false;
 }
 
 element {

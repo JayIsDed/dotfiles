@@ -82,6 +82,10 @@ sudo pacman -S --needed --noconfirm \
     wf-recorder \
     fzf \
     qpwgraph \
+    qt5ct \
+    noto-fonts-cjk \
+    loupe \
+    evince \
     pacman-contrib \
     unzip \
     p7zip \
@@ -104,7 +108,8 @@ yay -S --needed --noconfirm \
     grimblast-git \
     waypaper \
     wlogout \
-    satty-bin
+    satty-bin \
+    bibata-cursor-theme
 
 echo "[3/7] Installing NVIDIA drivers..."
 
@@ -174,11 +179,25 @@ mkdir -p "$HOME/.cache/dotfiles"
 echo "[6/7] Setting permissions..."
 
 # ─── Permissions ────────────────────────────────────────
-chmod +x "$CONFIG_DIR/hypr/scripts/wallpaper.sh"
+chmod +x "$CONFIG_DIR/hypr/scripts/"*.sh
 chmod +x "$CONFIG_DIR/waybar/launch.sh"
+chmod +x "$CONFIG_DIR/waybar/scripts/"*.sh
 
 # Build font cache
 fc-cache -f
+
+# Set cursor theme
+mkdir -p "$HOME/.local/share/icons/default"
+cat > "$HOME/.local/share/icons/default/index.theme" << CURSOR
+[Icon Theme]
+Inherits=Bibata-Modern-Classic
+CURSOR
+
+# Set default applications
+bash "$CONFIG_DIR/hypr/scripts/set-defaults.sh"
+
+# Create Pictures/Videos dirs for screenshots/recordings
+mkdir -p "$HOME/Pictures" "$HOME/Videos"
 
 echo "[7/7] Final setup..."
 

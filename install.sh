@@ -79,6 +79,9 @@ sudo pacman -S --needed --noconfirm \
     udisks2 \
     socat \
     wtype \
+    wf-recorder \
+    fzf \
+    qpwgraph \
     pacman-contrib \
     unzip \
     p7zip \

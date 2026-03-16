@@ -13,78 +13,78 @@
     },
     "modules": [
         {
-            "key": "╭───────────╮",
+            "key": "╭────────────╮",
             "type": "custom"
         },
         {
-            "key": "│ {#31} user    {#keys}│",
+            "key": "│ {#31}\uf007 user     {#keys}│",
             "type": "title",
             "format": "{user-name}"
         },
         {
-            "key": "│ {#32}󰇅 hname   {#keys}│",
+            "key": "│ {#32}\uf015 hname    {#keys}│",
             "type": "title",
             "format": "{host-name}"
         },
         {
             "type": "command",
-            "key": "│ {#33}󱦟 os age  {#keys}│",
+            "key": "│ {#33}\uf073 os age   {#keys}│",
             "keyColor": "magenta",
             "text": "printf \"\\e[0m%s days\\e[0m\" \"$(( ($(date +%s) - $(stat -c %W /)) / 86400 ))\""
         },
         {
-            "key": "│ {#34}󰅐 uptime  {#keys}│",
+            "key": "│ {#34}\uf017 uptime   {#keys}│",
             "type": "uptime"
         },
         {
-            "key": "│ {#34}{icon} distro  {#keys}│",
+            "key": "│ {#34}{icon} distro   {#keys}│",
             "type": "os"
         },
         {
-            "key": "│ {#35} kernel  {#keys}│",
+            "key": "│ {#35}\uf312 kernel   {#keys}│",
             "type": "kernel"
         },
         {
-            "key": "│ {#36} wm      {#keys}│",
+            "key": "│ {#36}\uf2d0 wm       {#keys}│",
             "type": "wm"
         },
         {
-            "key": "│ {#31} term    {#keys}│",
+            "key": "│ {#31}\uf120 term     {#keys}│",
             "type": "terminal"
         },
         {
-            "key": "│ {#32} shell   {#keys}│",
+            "key": "│ {#32}\uf489 shell    {#keys}│",
             "type": "shell"
         },
         {
-            "key": "│ {#33}󰍛 cpu     {#keys}│",
+            "key": "│ {#33}\uf4bc cpu      {#keys}│",
             "type": "cpu",
             "showPeCoreCount": true
         },
         {
-            "key": "│ {#34}󰢮 gpu     {#keys}│",
+            "key": "│ {#34}\uf1b2 gpu      {#keys}│",
             "type": "gpu"
         },
         {
-            "key": "│ {#35}󰉉 disk    {#keys}│",
+            "key": "│ {#35}\uf0a0 disk     {#keys}│",
             "type": "disk",
             "folders": "/"
         },
         {
-            "key": "│ {#36} memory  {#keys}│",
+            "key": "│ {#36}\uf2db memory   {#keys}│",
             "type": "memory"
         },
         {
-            "key": "├───────────┤",
+            "key": "├────────────┤",
             "type": "custom"
         },
         {
-            "key": "│ {#39} colors  {#keys}│",
+            "key": "│ {#39}\uf53f colors   {#keys}│",
             "type": "colors",
             "symbol": "circle"
         },
         {
-            "key": "╰───────────╯",
+            "key": "╰────────────╯",
             "type": "custom"
         }
     ]

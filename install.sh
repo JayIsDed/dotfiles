@@ -61,6 +61,7 @@ sudo pacman -S --needed --noconfirm \
     papirus-icon-theme \
     noto-fonts \
     noto-fonts-emoji \
+    nwg-displays \
     xdg-utils \
     xdg-user-dirs
 

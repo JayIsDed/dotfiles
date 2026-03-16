@@ -26,7 +26,8 @@
         "volume",
         "dnd",
         "mpris",
-        "notifications"
+        "notifications",
+        "menubar#calendar"
     ],
     "widget-config": {
         "title": {
@@ -57,10 +58,26 @@
                     "command": "waypaper"
                 },
                 {
+                    "label": "󰛨",
+                    "command": "~/.config/waybar/scripts/nightlight-toggle.sh"
+                },
+                {
                     "label": "󰔎",
                     "command": "nwg-displays"
                 }
             ]
+        },
+        "menubar#calendar": {
+            "menu#calendar": {
+                "label": "  Calendar",
+                "position": "right",
+                "actions": [
+                    {
+                        "label": "󰃭",
+                        "command": "gnome-calendar 2>/dev/null || xdg-open https://calendar.google.com"
+                    }
+                ]
+            }
         },
         "volume": {
             "label": "󰕾"

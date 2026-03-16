@@ -108,7 +108,15 @@ window#waybar > box {
 #custom-docker,
 #custom-updates,
 #custom-bluetooth,
-#custom-notifications {
+#custom-notifications,
+#custom-cputemp,
+#custom-uptime,
+#custom-mic,
+#custom-disk,
+#custom-clipboard,
+#custom-nightlight,
+#custom-weather,
+#idle_inhibitor {
     color: @on_surface;
     margin: 3px 2px;
     padding: 0 8px;
@@ -125,7 +133,15 @@ window#waybar > box {
 #custom-docker:hover,
 #custom-updates:hover,
 #custom-bluetooth:hover,
-#custom-notifications:hover {
+#custom-notifications:hover,
+#custom-cputemp:hover,
+#custom-uptime:hover,
+#custom-mic:hover,
+#custom-disk:hover,
+#custom-clipboard:hover,
+#custom-nightlight:hover,
+#custom-weather:hover,
+#idle_inhibitor:hover {
     background: alpha(@surface_container_high, 0.5);
 }
 
@@ -166,6 +182,38 @@ window#waybar > box {
 #tray > .passive {
     -gtk-icon-effect: dim;
 }
+
+/* CPU temp */
+#custom-cputemp { color: @primary; }
+#custom-cputemp.warm { color: @tertiary; }
+#custom-cputemp.critical { color: @error; }
+
+/* Uptime */
+#custom-uptime { color: @on_surface_variant; }
+
+/* Mic */
+#custom-mic.live { color: @secondary; }
+#custom-mic.muted { color: @on_surface_variant; opacity: 0.5; }
+
+/* Disk */
+#custom-disk { color: @tertiary; }
+#custom-disk.warning { color: @tertiary; }
+#custom-disk.critical { color: @error; }
+
+/* Clipboard */
+#custom-clipboard { color: @on_surface_variant; }
+#custom-clipboard.has-items { color: @on_surface_variant; }
+
+/* Night light */
+#custom-nightlight.on { color: @tertiary; }
+#custom-nightlight.off { color: @on_surface_variant; opacity: 0.5; }
+
+/* Weather */
+#custom-weather { color: @primary; }
+
+/* Idle inhibitor */
+#idle_inhibitor.activated { color: @primary; }
+#idle_inhibitor.deactivated { color: @on_surface_variant; opacity: 0.5; }
 
 /* Power button */
 #custom-power {

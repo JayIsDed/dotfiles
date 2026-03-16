@@ -10,17 +10,24 @@
 
     "modules-left": [
         "custom/updates",
-        "custom/docker"
+        "custom/docker",
+        "custom/uptime"
     ],
     "modules-center": [],
     "modules-right": [
         "tray",
+        "custom/clipboard",
+        "custom/nightlight",
+        "custom/mic",
         "custom/bluetooth",
         "pulseaudio",
         "network",
         "custom/gpu",
         "cpu",
+        "custom/cputemp",
         "memory",
+        "custom/disk",
+        "idle_inhibitor",
         "custom/notifications",
         "custom/power"
     ],
@@ -59,6 +66,16 @@
         "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
     },
 
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "󰅶",
+            "deactivated": "󰾪"
+        },
+        "tooltip-format-activated": "Idle inhibitor ON — screen won't lock",
+        "tooltip-format-deactivated": "Idle inhibitor OFF"
+    },
+
     "tray": {
         "icon-size": 16,
         "spacing": 8
@@ -69,6 +86,14 @@
         "return-type": "json",
         "interval": 5,
         "tooltip": true
+    },
+
+    "custom/cputemp": {
+        "exec": "~/.config/waybar/scripts/cpu-temp.sh",
+        "return-type": "json",
+        "interval": 3,
+        "tooltip": true,
+        "on-click": "kitty -e btop"
     },
 
     "custom/docker": {
@@ -87,12 +112,48 @@
         "on-click": "kitty -e sudo pacman -Syu"
     },
 
+    "custom/uptime": {
+        "exec": "~/.config/waybar/scripts/uptime.sh",
+        "return-type": "json",
+        "interval": 60,
+        "tooltip": true
+    },
+
     "custom/bluetooth": {
         "exec": "~/.config/waybar/scripts/bluetooth.sh",
         "return-type": "json",
         "interval": 5,
         "on-click": "blueman-manager",
         "on-click-right": "bluetoothctl power toggle"
+    },
+
+    "custom/mic": {
+        "exec": "~/.config/waybar/scripts/mic.sh",
+        "return-type": "json",
+        "interval": 2,
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+    },
+
+    "custom/disk": {
+        "exec": "~/.config/waybar/scripts/disk.sh",
+        "return-type": "json",
+        "interval": 60,
+        "tooltip": true,
+        "on-click": "kitty -e btop"
+    },
+
+    "custom/clipboard": {
+        "exec": "~/.config/waybar/scripts/clipboard.sh",
+        "return-type": "json",
+        "interval": 5,
+        "on-click": "cliphist list | rofi -dmenu -p 'Clipboard' | cliphist decode | wl-copy"
+    },
+
+    "custom/nightlight": {
+        "exec": "~/.config/waybar/scripts/nightlight.sh",
+        "return-type": "json",
+        "interval": 2,
+        "on-click": "~/.config/waybar/scripts/nightlight-toggle.sh"
     },
 
     "custom/notifications": {

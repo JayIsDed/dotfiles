@@ -65,7 +65,19 @@ element {
     color: @foreground;
 }
 
-element selected {
+element normal.normal,
+element normal.urgent,
+element normal.active,
+element alternate.normal,
+element alternate.urgent,
+element alternate.active {
+    background-color: transparent;
+    color: @foreground;
+}
+
+element selected.normal,
+element selected.urgent,
+element selected.active {
     background-color: @selected;
     color: @primary;
 }

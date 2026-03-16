@@ -1,0 +1,68 @@
+# Oh My Posh prompt — clean, minimal, git-aware
+# Two-line prompt with transient collapse
+
+version = 3
+final_space = true
+console_title_template = '{{ .Shell }} in {{ .Folder }}'
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+  newline = true
+
+  [[blocks.segments]]
+    type = 'path'
+    style = 'plain'
+    foreground = 'cyan'
+    template = '{{ .Path }}'
+
+    [blocks.segments.properties]
+      style = 'agnoster_short'
+      max_depth = 3
+
+  [[blocks.segments]]
+    type = 'git'
+    style = 'plain'
+    foreground = 'white'
+    foreground_templates = [
+      '{{ if gt .Ahead 0 }}green{{ end }}',
+      '{{ if gt .Behind 0 }}red{{ end }}',
+      '{{ if and (gt .Ahead 0) (gt .Behind 0) }}yellow{{ end }}'
+    ]
+    template = '  {{ .HEAD }}{{ if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }}'
+
+    [blocks.segments.properties]
+      branch_icon = ' '
+      fetch_status = true
+      fetch_upstream_icon = true
+
+  [[blocks.segments]]
+    type = 'executiontime'
+    style = 'plain'
+    foreground = 'yellow'
+    template = '  {{ .FormattedMs }}'
+
+    [blocks.segments.properties]
+      threshold = 2000
+      style = 'roundrock'
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+  newline = true
+
+  [[blocks.segments]]
+    type = 'text'
+    style = 'plain'
+    foreground_templates = [
+      '{{ if gt .Code 0 }}red{{ end }}',
+      '{{ if eq .Code 0 }}magenta{{ end }}'
+    ]
+    template = '>'
+
+[transient_prompt]
+  foreground_templates = [
+    '{{ if gt .Code 0 }}red{{ end }}',
+    '{{ if eq .Code 0 }}magenta{{ end }}'
+  ]
+  template = '> '

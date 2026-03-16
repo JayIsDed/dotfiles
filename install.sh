@@ -33,13 +33,13 @@ sudo pacman -S --needed --noconfirm \
     xdg-desktop-portal-hyprland \
     waybar \
     kitty \
-    rofi-wayland \
+    rofi \
     swaync \
     swww \
     hyprlock \
     hypridle \
-    wlogout \
     matugen \
+    ttf-jetbrains-mono-nerd \
     fastfetch \
     btop \
     cliphist \
@@ -85,17 +85,17 @@ echo "[2/7] Installing AUR packages (yay)..."
 if ! command -v yay &>/dev/null; then
     echo "  Installing yay..."
     sudo pacman -S --needed --noconfirm base-devel git
+    rm -rf /tmp/yay-bin
     git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
-    cd /tmp/yay-bin && makepkg -si --noconfirm
-    cd "$DOTFILES_DIR"
+    (cd /tmp/yay-bin && makepkg -si --noconfirm)
     rm -rf /tmp/yay-bin
 fi
 
 # ─── AUR Packages ──────────────────────────────────────
 yay -S --needed --noconfirm \
-    ttf-jetbrains-mono-nerd \
     grimblast-git \
-    waypaper
+    waypaper \
+    wlogout
 
 echo "[3/7] Installing NVIDIA drivers..."
 
@@ -167,6 +167,9 @@ echo "[6/7] Setting permissions..."
 # ─── Permissions ────────────────────────────────────────
 chmod +x "$CONFIG_DIR/hypr/scripts/wallpaper.sh"
 chmod +x "$CONFIG_DIR/waybar/launch.sh"
+
+# Build font cache
+fc-cache -f
 
 echo "[7/7] Final setup..."
 

@@ -14,3 +14,5 @@
 @define-color on_surface_variant #a9b1d6;
 @define-color outline #565f89;
 @define-color outline_variant #414868;
+@define-color on_error #1a1b26;
+@define-color shadow #000000;

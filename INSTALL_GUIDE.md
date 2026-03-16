@@ -25,8 +25,14 @@ Hardware: AMD Ryzen 9 7950X, 96GB DDR5, NVIDIA RTX 3090
 - Mirror region: pick your country (or leave auto)
 
 ### Disk configuration
+
+**DUAL BOOT WARNING:** You have Windows on a separate NVMe. archinstall will show
+multiple drives (e.g., `nvme0n1`, `nvme1n1`). **Check the drive sizes to identify
+which is which.** Select the EMPTY drive for Arch. If you pick the wrong one,
+Windows is gone. When in doubt, check `lsblk` before running archinstall.
+
 - Select `Use a best-effort default partition layout`
-- Select your target drive (the NVMe/SSD you want Arch on)
+- Select your target drive — the **empty NVMe** (NOT your Windows drive)
 - Filesystem: **`ext4`** (simple, reliable) or **`btrfs`** (if you want snapshots)
 - Use default subvolume structure if btrfs
 - Say **Yes** to separate `/home` partition if asked — keeps your data safe on reinstalls
@@ -38,6 +44,9 @@ Hardware: AMD Ryzen 9 7950X, 96GB DDR5, NVIDIA RTX 3090
 ### Bootloader
 - **`systemd-boot`** (default, recommended)
 - Works great with NVIDIA, simpler than GRUB
+- Should auto-detect your Windows EFI partition and add it to the boot menu
+- If Windows doesn't show up after install: `sudo bootctl update`
+- Alternatively, just use your BIOS boot menu (F12/DEL on startup) to pick which NVMe to boot from — simplest approach for dual boot on separate drives
 
 ### Swap
 - **`True`** — let it create a swap partition
@@ -112,10 +121,29 @@ After reboot, SDDM login screen appears. Select **Hyprland** from the session dr
 ## First Boot Checklist
 
 1. **SUPER+D** — open nwg-displays, drag your 3 monitors into position, apply
-2. **SUPER+W** — open waypaper, pick a wallpaper (this generates your color theme)
+2. **SUPER+CTRL+W** — open waypaper, pick a wallpaper (this generates your color theme)
 3. **SUPER+Enter** — open kitty terminal, run `fastfetch` to verify
-4. **SUPER+Space** — test rofi app launcher
-5. Check audio: click the volume icon in waybar or `SUPER+Enter` then `pavucontrol`
+4. **SUPER+CTRL+Return** — test rofi app launcher
+5. **SUPER+F1** — open feature browser to see everything available
+6. Check audio: click the volume icon in waybar or run `pavucontrol`
+7. Open Steam, login, enable Proton for your games
+
+## Gaming Setup
+
+Steam and Proton are pre-installed. To play Windows games:
+
+1. Open Steam (`steam` from terminal or rofi)
+2. Go to Steam → Settings → Compatibility → check "Enable Steam Play for all titles"
+3. Select latest Proton version
+4. For per-game launch options (right-click game → Properties → Launch Options):
+   ```
+   gamemoderun mangohud %command%
+   ```
+   - `gamemoderun` — optimizes CPU/GPU while the game runs
+   - `mangohud` — shows FPS/GPU/CPU overlay (toggle with R_Shift+F12)
+5. **SUPER+ALT+G** toggles game mode (strips desktop effects for max FPS)
+
+Check game compatibility: https://www.protondb.com
 
 ## Troubleshooting
 

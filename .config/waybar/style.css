@@ -1,4 +1,4 @@
-/* Dynamic Islands — Glass Theme with Colored Monitoring Pills */
+/* Dynamic Islands — Glass Theme */
 @import "colors.css";
 
 * {
@@ -95,129 +95,104 @@ window#waybar > box {
 }
 
 /* ═══════════════════════════════════════════
-   RIGHT ISLAND — Colored Monitoring Pills
+   RIGHT ISLAND
    ═══════════════════════════════════════════ */
 
-/* Base pill style for all monitoring modules */
+/* Uniform module style */
 #cpu,
 #memory,
+#network,
+#pulseaudio,
 #custom-gpu,
 #custom-docker,
 #custom-updates,
+#custom-bluetooth,
 #custom-notifications,
 #custom-cputemp,
-#custom-disk {
+#custom-uptime,
+#custom-mic,
+#custom-disk,
+#custom-clipboard,
+#custom-nightlight,
+#idle_inhibitor {
     color: @on_surface;
-    padding: 0 8px;
+    padding: 0 6px;
     margin: 4px 1px;
-    border-radius: 8px;
-    background: alpha(@primary, 0.12);
-    transition: all 0.2s ease;
+    border-radius: 6px;
+    transition: background 0.2s ease;
 }
 
 #cpu:hover,
 #memory:hover,
+#network:hover,
+#pulseaudio:hover,
 #custom-gpu:hover,
 #custom-docker:hover,
 #custom-updates:hover,
+#custom-bluetooth:hover,
 #custom-notifications:hover,
 #custom-cputemp:hover,
-#custom-disk:hover {
-    background: alpha(@primary, 0.25);
+#custom-uptime:hover,
+#custom-mic:hover,
+#custom-disk:hover,
+#custom-clipboard:hover,
+#custom-nightlight:hover,
+#idle_inhibitor:hover {
+    background: alpha(@surface_container_high, 0.4);
 }
 
-/* ── Per-module accent colors ── */
+/* Accent colors */
+#cpu { color: @primary; }
+#memory { color: @secondary; }
+#network { color: @tertiary; }
+#custom-gpu { color: @secondary; }
+#pulseaudio { color: @primary; }
+#custom-weather { color: @primary; }
+#custom-disk { color: @tertiary; }
+#custom-uptime { color: @on_surface_variant; }
+#custom-clipboard { color: @on_surface_variant; }
 
-/* CPU */
-#cpu {
-    color: @primary;
-    background: alpha(@primary, 0.12);
-}
+#pulseaudio.muted { color: @on_surface_variant; opacity: 0.5; }
 
-/* CPU temp — state-driven */
-#custom-cputemp {
-    color: @primary;
-    background: alpha(@primary, 0.12);
-}
-#custom-cputemp.warm {
-    color: @tertiary;
-    background: alpha(@tertiary, 0.15);
-}
-#custom-cputemp.critical {
-    color: @error;
-    background: alpha(@error, 0.15);
-}
+/* CPU temp */
+#custom-cputemp { color: @primary; }
+#custom-cputemp.warm { color: @tertiary; }
+#custom-cputemp.critical { color: @error; }
 
-/* GPU */
-#custom-gpu {
-    color: @secondary;
-    background: alpha(@secondary, 0.12);
-}
+/* Mic */
+#custom-mic.live { color: @secondary; }
+#custom-mic.muted { color: @on_surface_variant; opacity: 0.5; }
 
-/* Memory */
-#memory {
-    color: @secondary;
-    background: alpha(@secondary, 0.12);
-}
+/* Disk */
+#custom-disk.warning { color: @tertiary; }
+#custom-disk.critical { color: @error; }
 
-/* Disk — state-driven */
-#custom-disk {
-    color: @tertiary;
-    background: alpha(@tertiary, 0.12);
-}
-#custom-disk.warning {
-    color: @tertiary;
-    background: alpha(@tertiary, 0.18);
-}
-#custom-disk.critical {
-    color: @error;
-    background: alpha(@error, 0.15);
-}
+/* Night light */
+#custom-nightlight.on { color: @tertiary; }
+#custom-nightlight.off { color: @on_surface_variant; opacity: 0.5; }
 
-/* Docker — state-driven */
-#custom-docker {
-    color: @secondary;
-    background: alpha(@secondary, 0.12);
-}
-#custom-docker.healthy {
-    color: @secondary;
-    background: alpha(@secondary, 0.12);
-}
-#custom-docker.degraded {
-    color: @error;
-    background: alpha(@error, 0.15);
-}
-#custom-docker.disconnected {
-    color: @on_surface_variant;
-    background: alpha(@surface_container_high, 0.2);
-    opacity: 0.6;
-}
+/* Bluetooth */
+#custom-bluetooth.connected { color: @primary; }
+#custom-bluetooth.on { color: @on_surface_variant; }
+#custom-bluetooth.off { color: @on_surface_variant; opacity: 0.5; }
 
-/* Updates — state-driven */
-#custom-updates {
-    color: @on_surface_variant;
-    background: alpha(@surface_container_high, 0.15);
-}
-#custom-updates.pending {
-    color: @tertiary;
-    background: alpha(@tertiary, 0.15);
-}
+/* Docker */
+#custom-docker.healthy { color: @secondary; }
+#custom-docker.degraded { color: @error; }
+#custom-docker.disconnected { color: @on_surface_variant; opacity: 0.5; }
 
-/* Notifications — state-driven */
-#custom-notifications {
-    color: @on_surface_variant;
-    background: alpha(@surface_container_high, 0.15);
-}
-#custom-notifications.unread {
-    color: @primary;
-    background: alpha(@primary, 0.15);
-}
-#custom-notifications.dnd {
-    color: @error;
-    background: alpha(@error, 0.12);
-}
+/* Updates */
+#custom-updates.pending { color: @tertiary; }
+#custom-updates.updated { color: @on_surface_variant; }
 
-/* ── Non-pill modules ── */
+/* Notifications */
+#custom-notifications.unread { color: @primary; }
+#custom-notifications.clear { color: @on_surface_variant; }
+#custom-notifications.dnd { color: @error; }
+
+/* Idle inhibitor */
+#idle_inhibitor.activated { color: @primary; }
+#idle_inhibitor.deactivated { color: @on_surface_variant; opacity: 0.5; }
 
 /* System tray */
 #tray {
@@ -233,13 +208,11 @@ window#waybar > box {
 #custom-panel {
     color: @primary;
     padding: 0 8px 0 6px;
-    margin: 4px 1px;
-    border-radius: 8px;
-    transition: all 0.2s ease;
 }
 
 #custom-panel:hover {
-    background: alpha(@primary, 0.25);
+    background: alpha(@primary, 0.3);
+    border-radius: 6px;
 }
 
 /* ═══════════════════════════════════════════

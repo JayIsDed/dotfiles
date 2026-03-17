@@ -12,7 +12,7 @@
     "timeout-low": 3,
     "timeout-critical": 0,
     "fit-to-screen": true,
-    "control-center-width": 400,
+    "control-center-width": 420,
     "notification-window-width": 400,
     "keyboard-shortcuts": true,
     "image-visibility": "when-available",
@@ -21,18 +21,94 @@
     "hide-on-action": true,
     "script-fail-notify": true,
     "widgets": [
-        "title",
+        "label#header",
+        "buttons-grid#quick",
+        "volume",
+        "mpris",
         "dnd",
-        "notifications"
+        "title",
+        "notifications",
+        "buttons-grid#power"
     ],
     "widget-config": {
+        "label#header": {
+            "text": "Control Center",
+            "clear-all-button": false
+        },
+        "buttons-grid#quick": {
+            "actions": [
+                {
+                    "label": "\uf1eb",
+                    "command": "nm-connection-editor"
+                },
+                {
+                    "label": "\uf294",
+                    "command": "blueman-manager"
+                },
+                {
+                    "label": "\uf028",
+                    "command": "pavucontrol"
+                },
+                {
+                    "label": "\uf186",
+                    "command": "~/.config/waybar/scripts/nightlight-toggle.sh"
+                },
+                {
+                    "label": "\uf03e",
+                    "command": "waypaper"
+                },
+                {
+                    "label": "\uf108",
+                    "command": "nwg-displays"
+                },
+                {
+                    "label": "\uf07b",
+                    "command": "thunar"
+                },
+                {
+                    "label": "\uf120",
+                    "command": "kitty"
+                }
+            ]
+        },
         "title": {
             "text": "Notifications",
             "clear-all-button": true,
             "button-text": "Clear"
         },
+        "volume": {
+            "label": "\uf028"
+        },
         "dnd": {
             "text": "Do Not Disturb"
+        },
+        "mpris": {
+            "image-size": 48,
+            "image-radius": 8
+        },
+        "buttons-grid#power": {
+            "actions": [
+                {
+                    "label": "\uf023",
+                    "command": "hyprlock"
+                },
+                {
+                    "label": "\uf236",
+                    "command": "systemctl suspend"
+                },
+                {
+                    "label": "\uf2f5",
+                    "command": "hyprctl dispatch exit"
+                },
+                {
+                    "label": "\uf01e",
+                    "command": "systemctl reboot"
+                },
+                {
+                    "label": "\uf011",
+                    "command": "systemctl poweroff"
+                }
+            ]
         }
     }
 }

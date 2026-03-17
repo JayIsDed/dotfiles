@@ -4,9 +4,6 @@
 configuration {
     show-icons: false;
     font: "JetBrainsMono Nerd Font 13";
-    hover-select: true;
-    me-select-entry: "";
-    me-accept-entry: "MousePrimary";
 }
 
 window {

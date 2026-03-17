@@ -32,9 +32,8 @@ indicator() {
 }
 
 # ── Build menu entries ──
-SEP="─────────────────────────"
+SEP="───────────────────────"
 
-# Toggle states
 WIFI_I=$(indicator wifi_on)
 BT_I=$(indicator bt_on)
 NL_I=$(indicator nightlight_on)
@@ -47,8 +46,7 @@ NL_S=$(nightlight_on && echo "ON" || echo "OFF")
 MIC_S=$(mic_muted && echo "MUTED" || echo "LIVE")
 DND_S=$(dnd_on && echo "ON" || echo "OFF")
 
-ENTRIES=$(cat <<EOF
-${WIFI_I}  WiFi            ${WIFI_S}
+ENTRIES="${WIFI_I}  WiFi            ${WIFI_S}
 ${BT_I}  Bluetooth       ${BT_S}
 ${NL_I}  Night Light     ${NL_S}
 ${MIC_I}  Mic Mute        ${MIC_S}
@@ -64,14 +62,11 @@ ${SEP}
    Suspend
    Logout
    Reboot
-   Shutdown
-EOF
-)
+   Shutdown"
 
 # ── Show rofi ──
-CHOICE=$(echo "$ENTRIES" | rofi -dmenu -markup-rows -i -p "" \
-    -theme "$HOME/.config/rofi/panel.rasi" \
-    -selected-row 0)
+CHOICE=$(echo "$ENTRIES" | rofi -dmenu -markup-rows -p "" \
+    -theme "$HOME/.config/rofi/panel.rasi")
 
 [ -z "$CHOICE" ] && exit 0
 

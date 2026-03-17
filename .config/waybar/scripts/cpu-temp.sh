@@ -4,7 +4,6 @@
 TEMP=$(sensors -j 2>/dev/null | jq -r '."k10temp-pci-00c3"."Tctl"."temp1_input" // empty' 2>/dev/null)
 
 if [ -z "$TEMP" ]; then
-    # Fallback: try any CPU temp
     TEMP=$(sensors 2>/dev/null | grep -i "tctl\|temp1" | head -1 | grep -oP '\+\K[0-9.]+')
 fi
 
@@ -23,4 +22,4 @@ else
     CLASS="normal"
 fi
 
-echo "{\"text\": \" ${TEMP_INT}°C\", \"tooltip\": \"CPU: ${TEMP}°C\", \"class\": \"${CLASS}\"}"
+echo "{\"text\": \"${TEMP_INT}°\", \"tooltip\": \"CPU: ${TEMP}°C\", \"class\": \"${CLASS}\"}"

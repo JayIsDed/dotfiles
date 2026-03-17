@@ -1,11 +1,10 @@
 #!/bin/bash
 # Waybar module: Docker container health from LXC 112
-# Shows running/total count, tooltip with container names
 
 RESULT=$(ssh -o ConnectTimeout=3 docker-services "docker ps --format '{{.Names}}\t{{.Status}}'" 2>/dev/null)
 
 if [ $? -ne 0 ]; then
-    echo '{"text": "󰡨 ?", "tooltip": "Cannot reach docker-services", "class": "disconnected"}'
+    echo '{"text": " ?", "tooltip": "Cannot reach docker-services", "class": "disconnected"}'
     exit 0
 fi
 
@@ -19,4 +18,4 @@ else
     CLASS="degraded"
 fi
 
-echo "{\"text\": \"󰡨 ${RUNNING}/${TOTAL}\", \"tooltip\": \"${TOOLTIP}\", \"class\": \"${CLASS}\"}"
+echo "{\"text\": \" ${RUNNING}/${TOTAL}\", \"tooltip\": \"${TOOLTIP}\", \"class\": \"${CLASS}\"}"

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Waybar module: Arch package updates available
+# Waybar module: Arch package updates
 
 UPDATES=$(checkupdates 2>/dev/null | wc -l)
 

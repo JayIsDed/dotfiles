@@ -2,8 +2,8 @@
 @import "colors.css";
 
 * {
-    font-family: "JetBrainsMono Nerd Font", "Font Awesome 6 Free", monospace;
-    font-size: 13px;
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 14px;
     min-height: 0;
     border: none;
     border-radius: 0;
@@ -26,20 +26,20 @@ window#waybar > box {
     border: 1px solid alpha(@outline, 0.25);
     border-radius: 14px;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    padding: 0 4px;
+    padding: 0 6px;
     margin: 0 4px;
 }
 
 /* ═══════════════════════════════════════════
-   LEFT ISLAND — Workspaces + Window Title
+   LEFT ISLAND
    ═══════════════════════════════════════════ */
 
 #workspaces button {
-    padding: 0 6px;
+    padding: 0 7px;
     color: @on_surface_variant;
     background: transparent;
     border-radius: 8px;
-    margin: 3px 2px;
+    margin: 4px 1px;
     transition: all 0.2s ease;
 }
 
@@ -66,34 +66,39 @@ window#waybar > box {
     padding: 0 10px;
     background: alpha(@error, 0.2);
     border-radius: 8px;
-    margin: 3px 4px;
+    margin: 4px 2px;
 }
 
 /* ═══════════════════════════════════════════
-   CENTER ISLAND — Clock + Media + Weather
+   CENTER ISLAND
    ═══════════════════════════════════════════ */
 
 #clock {
     color: @on_surface;
     font-weight: bold;
-    padding: 0 12px;
+    padding: 0 10px;
 }
 
 #custom-media {
     color: @on_surface_variant;
     padding: 0 10px;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 #custom-media.playing { color: @primary; }
 #custom-media.paused { color: @on_surface_variant; }
-#custom-media.stopped { padding: 0; margin: 0; }
+#custom-media.stopped { padding: 0; margin: 0; min-width: 0; }
+
+#custom-weather {
+    color: @primary;
+    padding: 0 10px;
+}
 
 /* ═══════════════════════════════════════════
-   RIGHT ISLAND — System Status
+   RIGHT ISLAND
    ═══════════════════════════════════════════ */
 
-/* Shared pill style for all system modules */
+/* Uniform module style */
 #cpu,
 #memory,
 #network,
@@ -109,13 +114,11 @@ window#waybar > box {
 #custom-disk,
 #custom-clipboard,
 #custom-nightlight,
-#custom-weather,
 #idle_inhibitor {
     color: @on_surface;
-    margin: 3px 2px;
-    padding: 0 8px;
-    border-radius: 8px;
-    background: alpha(@surface_container, 0.3);
+    padding: 0 6px;
+    margin: 4px 1px;
+    border-radius: 6px;
     transition: background 0.2s ease;
 }
 
@@ -134,53 +137,46 @@ window#waybar > box {
 #custom-disk:hover,
 #custom-clipboard:hover,
 #custom-nightlight:hover,
-#custom-weather:hover,
 #idle_inhibitor:hover {
-    background: alpha(@surface_container_high, 0.5);
+    background: alpha(@surface_container_high, 0.4);
 }
 
-/* Per-module accent colors */
+/* Accent colors */
 #cpu { color: @primary; }
 #memory { color: @secondary; }
 #network { color: @tertiary; }
 #custom-gpu { color: @secondary; }
-
 #pulseaudio { color: @primary; }
-#pulseaudio.muted { color: @on_surface_variant; }
+#custom-weather { color: @primary; }
+#custom-disk { color: @tertiary; }
+#custom-uptime { color: @on_surface_variant; }
+#custom-clipboard { color: @on_surface_variant; }
+
+#pulseaudio.muted { color: @on_surface_variant; opacity: 0.5; }
 
 /* CPU temp */
 #custom-cputemp { color: @primary; }
 #custom-cputemp.warm { color: @tertiary; }
 #custom-cputemp.critical { color: @error; }
 
-/* Uptime */
-#custom-uptime { color: @on_surface_variant; }
-
 /* Mic */
 #custom-mic.live { color: @secondary; }
 #custom-mic.muted { color: @on_surface_variant; opacity: 0.5; }
 
 /* Disk */
-#custom-disk { color: @tertiary; }
 #custom-disk.warning { color: @tertiary; }
 #custom-disk.critical { color: @error; }
-
-/* Clipboard */
-#custom-clipboard { color: @on_surface_variant; }
 
 /* Night light */
 #custom-nightlight.on { color: @tertiary; }
 #custom-nightlight.off { color: @on_surface_variant; opacity: 0.5; }
 
-/* Weather */
-#custom-weather { color: @primary; }
-
-/* Bluetooth states */
+/* Bluetooth */
 #custom-bluetooth.connected { color: @primary; }
 #custom-bluetooth.on { color: @on_surface_variant; }
 #custom-bluetooth.off { color: @on_surface_variant; opacity: 0.5; }
 
-/* Docker health */
+/* Docker */
 #custom-docker.healthy { color: @secondary; }
 #custom-docker.degraded { color: @error; }
 #custom-docker.disconnected { color: @on_surface_variant; opacity: 0.5; }
@@ -189,7 +185,7 @@ window#waybar > box {
 #custom-updates.pending { color: @tertiary; }
 #custom-updates.updated { color: @on_surface_variant; }
 
-/* Notification bell */
+/* Notifications */
 #custom-notifications.unread { color: @primary; }
 #custom-notifications.clear { color: @on_surface_variant; }
 #custom-notifications.dnd { color: @error; }
@@ -200,26 +196,23 @@ window#waybar > box {
 
 /* System tray */
 #tray {
-    margin: 3px 4px;
     padding: 0 4px;
+    margin: 4px 2px;
 }
 
 #tray > .passive {
     -gtk-icon-effect: dim;
 }
 
-/* Power button */
+/* Power */
 #custom-power {
     color: @error;
-    padding: 0 10px 0 6px;
-    font-size: 15px;
+    padding: 0 8px 0 6px;
 }
 
 #custom-power:hover {
-    color: @on_error;
     background: alpha(@error, 0.3);
-    border-radius: 8px;
-    margin: 3px 2px;
+    border-radius: 6px;
 }
 
 /* ═══════════════════════════════════════════

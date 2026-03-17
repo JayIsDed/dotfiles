@@ -204,14 +204,14 @@ window#waybar > box {
     -gtk-icon-effect: dim;
 }
 
-/* Power */
-#custom-power {
-    color: @error;
+/* Panel toggle */
+#custom-panel {
+    color: @primary;
     padding: 0 8px 0 6px;
 }
 
-#custom-power:hover {
-    background: alpha(@error, 0.3);
+#custom-panel:hover {
+    background: alpha(@primary, 0.3);
     border-radius: 6px;
 }
 

@@ -12,7 +12,7 @@
     "timeout-low": 3,
     "timeout-critical": 0,
     "fit-to-screen": true,
-    "control-center-width": 400,
+    "control-center-width": 420,
     "notification-window-width": 400,
     "keyboard-shortcuts": true,
     "image-visibility": "when-available",
@@ -21,33 +21,45 @@
     "hide-on-action": true,
     "script-fail-notify": true,
     "widgets": [
-        "title",
-        "buttons-grid",
+        "label#header",
+        "buttons-grid#quick",
         "volume",
-        "dnd",
         "mpris",
+        "dnd",
+        "title",
         "notifications",
-        "menubar#calendar"
+        "buttons-grid#power"
     ],
     "widget-config": {
-        "title": {
-            "text": "Notifications",
-            "clear-all-button": true,
-            "button-text": "Clear"
+        "label#header": {
+            "text": "Control Center",
+            "clear-all-button": false
         },
-        "buttons-grid": {
+        "buttons-grid#quick": {
             "actions": [
                 {
-                    "label": "󰤨",
+                    "label": "",
                     "command": "nm-connection-editor"
                 },
                 {
-                    "label": "󰂯",
+                    "label": "",
                     "command": "blueman-manager"
                 },
                 {
-                    "label": "󰏘",
+                    "label": "",
                     "command": "pavucontrol"
+                },
+                {
+                    "label": "",
+                    "command": "~/.config/waybar/scripts/nightlight-toggle.sh"
+                },
+                {
+                    "label": "",
+                    "command": "waypaper"
+                },
+                {
+                    "label": "",
+                    "command": "nwg-displays"
                 },
                 {
                     "label": "",
@@ -55,32 +67,17 @@
                 },
                 {
                     "label": "",
-                    "command": "waypaper"
-                },
-                {
-                    "label": "󰛨",
-                    "command": "~/.config/waybar/scripts/nightlight-toggle.sh"
-                },
-                {
-                    "label": "󰔎",
-                    "command": "nwg-displays"
+                    "command": "kitty"
                 }
             ]
         },
-        "menubar#calendar": {
-            "menu#calendar": {
-                "label": "  Calendar",
-                "position": "right",
-                "actions": [
-                    {
-                        "label": "󰃭",
-                        "command": "gnome-calendar 2>/dev/null || xdg-open https://calendar.google.com"
-                    }
-                ]
-            }
+        "title": {
+            "text": "Notifications",
+            "clear-all-button": true,
+            "button-text": "Clear"
         },
         "volume": {
-            "label": "󰕾"
+            "label": ""
         },
         "dnd": {
             "text": "Do Not Disturb"
@@ -88,6 +85,30 @@
         "mpris": {
             "image-size": 48,
             "image-radius": 8
+        },
+        "buttons-grid#power": {
+            "actions": [
+                {
+                    "label": "",
+                    "command": "hyprlock"
+                },
+                {
+                    "label": "",
+                    "command": "systemctl suspend"
+                },
+                {
+                    "label": "",
+                    "command": "hyprctl dispatch exit"
+                },
+                {
+                    "label": "",
+                    "command": "systemctl reboot"
+                },
+                {
+                    "label": "",
+                    "command": "systemctl poweroff"
+                }
+            ]
         }
     }
 }

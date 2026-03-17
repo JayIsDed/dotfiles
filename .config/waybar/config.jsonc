@@ -35,7 +35,7 @@
         "custom/disk",
         "idle_inhibitor",
         "custom/notifications",
-        "custom/power"
+        "custom/panel"
     ],
 
     "hyprland/workspaces": {
@@ -233,9 +233,9 @@
         "on-click-right": "swaync-client -C"
     },
 
-    "custom/power": {
+    "custom/panel": {
         "format": "",
-        "on-click": "wlogout",
-        "tooltip": false
+        "on-click": "swaync-client -t -sw",
+        "tooltip-format": "Control Center"
     }
 }

@@ -75,10 +75,10 @@ label, button, button label {
 
 /* ── Header ── */
 .widget-label {
-    color: @on_surface;
-    font-weight: bold;
-    font-size: 20px;
-    margin: 2px 8px 12px 8px;
+    color: @on_surface !important;
+    font-weight: bold !important;
+    font-size: 20px !important;
+    margin: 2px 8px 12px 8px !important;
 }
 
 /* ── Quick toggle grid ── */
@@ -91,14 +91,14 @@ label, button, button label {
 }
 
 .widget-buttons-grid#quick > flowbox > flowboxchild > button {
-    background: alpha(@surface_container, 0.45);
-    color: @on_surface;
-    border: 1px solid alpha(@outline, 0.12);
-    border-radius: 14px;
-    padding: 0;
-    min-height: 64px;
-    min-width: 82px;
-    font-size: 22px;
+    background: alpha(@surface_container, 0.45) !important;
+    color: @on_surface !important;
+    border: 1px solid alpha(@outline, 0.12) !important;
+    border-radius: 14px !important;
+    padding: 0 !important;
+    min-height: 64px !important;
+    min-width: 82px !important;
+    font-size: 22px !important;
     transition: all 0.2s ease;
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.06),
@@ -106,7 +106,8 @@ label, button, button label {
 }
 
 .widget-buttons-grid#quick > flowbox > flowboxchild > button label {
-    font-size: 22px;
+    font-size: 22px !important;
+    font-family: "JetBrainsMono Nerd Font" !important;
 }
 
 .widget-buttons-grid#quick > flowbox > flowboxchild > button:hover {
@@ -266,14 +267,14 @@ label, button, button label {
 }
 
 .widget-buttons-grid#power > flowbox > flowboxchild > button {
-    background: alpha(@surface_container, 0.35);
-    border: 1px solid alpha(@outline, 0.1);
-    border-radius: 12px;
-    min-height: 48px;
-    min-width: 64px;
-    padding: 0;
-    font-size: 20px;
-    color: @on_surface_variant;
+    background: alpha(@surface_container, 0.35) !important;
+    border: 1px solid alpha(@outline, 0.1) !important;
+    border-radius: 12px !important;
+    min-height: 48px !important;
+    min-width: 64px !important;
+    padding: 0 !important;
+    font-size: 20px !important;
+    color: @on_surface_variant !important;
     transition: all 0.2s ease;
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.04),
@@ -281,7 +282,8 @@ label, button, button label {
 }
 
 .widget-buttons-grid#power > flowbox > flowboxchild > button label {
-    font-size: 20px;
+    font-size: 20px !important;
+    font-family: "JetBrainsMono Nerd Font" !important;
 }
 
 .widget-buttons-grid#power > flowbox > flowboxchild > button:hover {

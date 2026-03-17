@@ -7,7 +7,7 @@
     -gtk-secondary-caret-color: transparent;
 }
 
-/* Force nerd font on all labels and buttons */
+/* Force nerd font everywhere */
 label, button, button label {
     font-family: "JetBrainsMono Nerd Font";
 }
@@ -62,7 +62,7 @@ label, button, button label {
     background: alpha(@surface_dim, 0.92);
     border: 1px solid alpha(@outline, 0.2);
     border-radius: 16px;
-    padding: 16px;
+    padding: 18px;
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.06),
         0 8px 32px rgba(0, 0, 0, 0.4);
@@ -77,21 +77,17 @@ label, button, button label {
 .widget-label {
     color: @on_surface;
     font-weight: bold;
-    font-size: 18px;
-    margin: 4px 8px 10px 8px;
+    font-size: 20px;
+    margin: 2px 8px 12px 8px;
 }
 
 /* ── Quick toggle grid ── */
 .widget-buttons-grid#quick {
-    margin: 0 4px 8px 4px;
-}
-
-.widget-buttons-grid#quick > flowbox {
-    /* 4 columns */
+    margin: 0 2px 10px 2px;
 }
 
 .widget-buttons-grid#quick > flowbox > flowboxchild {
-    padding: 3px;
+    padding: 4px;
 }
 
 .widget-buttons-grid#quick > flowbox > flowboxchild > button {
@@ -99,16 +95,18 @@ label, button, button label {
     color: @on_surface;
     border: 1px solid alpha(@outline, 0.12);
     border-radius: 14px;
-    padding: 14px 8px;
-    min-height: 44px;
-    min-width: 72px;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.3px;
+    padding: 0;
+    min-height: 64px;
+    min-width: 82px;
+    font-size: 22px;
     transition: all 0.2s ease;
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.06),
         0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.widget-buttons-grid#quick > flowbox > flowboxchild > button label {
+    font-size: 22px;
 }
 
 .widget-buttons-grid#quick > flowbox > flowboxchild > button:hover {
@@ -117,7 +115,7 @@ label, button, button label {
     border-color: alpha(@primary, 0.3);
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.1),
-        0 2px 8px rgba(0, 0, 0, 0.2);
+        0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
 .widget-buttons-grid#quick > flowbox > flowboxchild > button:active {
@@ -128,7 +126,7 @@ label, button, button label {
 /* ── Volume slider ── */
 .widget-volume {
     margin: 6px 6px;
-    padding: 10px 14px;
+    padding: 12px 14px;
     background: alpha(@surface_container, 0.35);
     border-radius: 14px;
     border: 1px solid alpha(@outline, 0.1);
@@ -139,9 +137,9 @@ label, button, button label {
     background: transparent;
     color: @on_surface_variant;
     border: none;
-    min-height: 28px;
-    min-width: 28px;
-    font-size: 16px;
+    min-height: 32px;
+    min-width: 32px;
+    font-size: 18px;
 }
 
 .widget-volume scale trough {
@@ -159,16 +157,16 @@ label, button, button label {
 .widget-volume scale slider {
     background: @on_surface;
     border-radius: 50%;
-    min-height: 18px;
-    min-width: 18px;
-    margin: -4px 0;
+    min-height: 20px;
+    min-width: 20px;
+    margin: -5px 0;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 /* ── MPRIS media widget ── */
 .widget-mpris {
     margin: 6px 6px;
-    padding: 10px 14px;
+    padding: 12px 14px;
     background: alpha(@surface_container, 0.35);
     border-radius: 14px;
     border: 1px solid alpha(@outline, 0.1);
@@ -187,8 +185,8 @@ label, button, button label {
     border: none;
     border-radius: 8px;
     padding: 6px;
-    min-height: 28px;
-    min-width: 28px;
+    min-height: 32px;
+    min-width: 32px;
 }
 
 .widget-mpris > box > box > button:hover {
@@ -204,10 +202,11 @@ label, button, button label {
 .widget-dnd {
     color: @on_surface;
     margin: 6px 6px;
-    padding: 10px 14px;
+    padding: 12px 14px;
     background: alpha(@surface_container, 0.35);
     border-radius: 14px;
     border: 1px solid alpha(@outline, 0.1);
+    font-size: 14px;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
@@ -215,8 +214,8 @@ label, button, button label {
     background: alpha(@surface_container_high, 0.5);
     border-radius: 14px;
     border: 1px solid alpha(@outline, 0.1);
-    min-height: 26px;
-    min-width: 48px;
+    min-height: 28px;
+    min-width: 50px;
 }
 
 .widget-dnd > switch:checked {
@@ -227,8 +226,8 @@ label, button, button label {
 .widget-dnd > switch slider {
     background: @on_surface;
     border-radius: 50%;
-    min-height: 20px;
-    min-width: 20px;
+    min-height: 22px;
+    min-width: 22px;
     margin: 2px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
@@ -238,7 +237,7 @@ label, button, button label {
     color: @on_surface_variant;
     font-size: 14px;
     font-weight: bold;
-    margin: 8px 8px 4px 8px;
+    margin: 10px 8px 4px 8px;
 }
 
 .widget-title > button {
@@ -257,29 +256,32 @@ label, button, button label {
 
 /* ── Power buttons ── */
 .widget-buttons-grid#power {
-    margin: 8px 4px 4px 4px;
-    padding-top: 10px;
-    border-top: 1px solid alpha(@outline, 0.12);
+    margin: 10px 2px 4px 2px;
+    padding-top: 12px;
+    border-top: 1px solid alpha(@outline, 0.15);
 }
 
 .widget-buttons-grid#power > flowbox > flowboxchild {
-    padding: 3px;
+    padding: 4px;
 }
 
 .widget-buttons-grid#power > flowbox > flowboxchild > button {
     background: alpha(@surface_container, 0.35);
     border: 1px solid alpha(@outline, 0.1);
     border-radius: 12px;
-    min-height: 38px;
-    min-width: 60px;
-    padding: 8px;
-    font-size: 12px;
-    font-weight: 500;
+    min-height: 48px;
+    min-width: 64px;
+    padding: 0;
+    font-size: 20px;
     color: @on_surface_variant;
     transition: all 0.2s ease;
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.04),
         0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.widget-buttons-grid#power > flowbox > flowboxchild > button label {
+    font-size: 20px;
 }
 
 .widget-buttons-grid#power > flowbox > flowboxchild > button:hover {

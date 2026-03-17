@@ -1,0 +1,69 @@
+/* Rofi Control Panel — dropdown from waybar */
+@import "colors.rasi"
+
+configuration {
+    show-icons: false;
+    font: "JetBrainsMono Nerd Font 13";
+    hover-select: true;
+    me-select-entry: "";
+    me-accept-entry: "MousePrimary";
+}
+
+window {
+    transparency: "real";
+    location: northeast;
+    anchor: northeast;
+    x-offset: -10;
+    y-offset: 50;
+    width: 320px;
+    border: 1px;
+    border-color: @primary;
+    border-radius: 14px;
+    background-color: @background;
+}
+
+mainbox {
+    background-color: transparent;
+    padding: 8px;
+}
+
+inputbar {
+    enabled: false;
+}
+
+listview {
+    columns: 1;
+    lines: 17;
+    scrollbar: false;
+    background-color: transparent;
+    spacing: 2px;
+    fixed-height: false;
+}
+
+element {
+    padding: 10px 14px;
+    border-radius: 10px;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+element normal.normal {
+    background-color: transparent;
+    text-color: @foreground;
+}
+
+element alternate.normal {
+    background-color: transparent;
+    text-color: @foreground;
+}
+
+element selected.normal {
+    background-color: @selected;
+    text-color: @primary;
+}
+
+element-text {
+    background-color: transparent;
+    text-color: inherit;
+    markup: true;
+}

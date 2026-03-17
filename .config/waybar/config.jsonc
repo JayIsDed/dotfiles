@@ -20,20 +20,12 @@
     "modules-right": [
         "custom/updates",
         "custom/docker",
-        "custom/uptime",
         "tray",
-        "custom/clipboard",
-        "custom/nightlight",
-        "custom/mic",
-        "custom/bluetooth",
-        "pulseaudio",
-        "network",
-        "custom/gpu",
         "cpu",
         "custom/cputemp",
+        "custom/gpu",
         "memory",
         "custom/disk",
-        "idle_inhibitor",
         "custom/notifications",
         "custom/panel"
     ],
@@ -98,36 +90,6 @@
         "on-click": "kitty -e btop"
     },
 
-    "network": {
-        "format-wifi": "  {signalStrength}%",
-        "format-ethernet": "",
-        "format-disconnected": "",
-        "tooltip-format": "{ifname}: {ipaddr}/{cidr}\n{bandwidthUpBits} up / {bandwidthDownBits} down",
-        "on-click": "nm-connection-editor"
-    },
-
-    "pulseaudio": {
-        "format": "{icon} {volume}%",
-        "format-muted": "",
-        "format-icons": {
-            "default": ["", "", ""]
-        },
-        "on-click": "pavucontrol",
-        "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
-        "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+",
-        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-    },
-
-    "idle_inhibitor": {
-        "format": "{icon}",
-        "format-icons": {
-            "activated": "",
-            "deactivated": ""
-        },
-        "tooltip-format-activated": "Idle inhibitor ON",
-        "tooltip-format-deactivated": "Idle inhibitor OFF"
-    },
-
     "tray": {
         "icon-size": 18,
         "spacing": 8
@@ -181,48 +143,12 @@
         "on-click": "kitty -e sudo pacman -Syu"
     },
 
-    "custom/uptime": {
-        "exec": "~/.config/waybar/scripts/uptime.sh",
-        "return-type": "json",
-        "interval": 60,
-        "tooltip": true
-    },
-
-    "custom/bluetooth": {
-        "exec": "~/.config/waybar/scripts/bluetooth.sh",
-        "return-type": "json",
-        "interval": 5,
-        "on-click": "blueman-manager",
-        "on-click-right": "bluetoothctl power toggle"
-    },
-
-    "custom/mic": {
-        "exec": "~/.config/waybar/scripts/mic.sh",
-        "return-type": "json",
-        "interval": 2,
-        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
-    },
-
     "custom/disk": {
         "exec": "~/.config/waybar/scripts/disk.sh",
         "return-type": "json",
         "interval": 60,
         "tooltip": true,
         "on-click": "kitty -e btop"
-    },
-
-    "custom/clipboard": {
-        "exec": "~/.config/waybar/scripts/clipboard.sh",
-        "return-type": "json",
-        "interval": 5,
-        "on-click": "cliphist list | rofi -dmenu -p 'Clipboard' | cliphist decode | wl-copy"
-    },
-
-    "custom/nightlight": {
-        "exec": "~/.config/waybar/scripts/nightlight.sh",
-        "return-type": "json",
-        "interval": 2,
-        "on-click": "~/.config/waybar/scripts/nightlight-toggle.sh"
     },
 
     "custom/notifications": {
@@ -235,7 +161,7 @@
 
     "custom/panel": {
         "format": "󰍜",
-        "on-click": "swaync-client -t -sw",
-        "tooltip": false
+        "on-click": "~/.config/waybar/scripts/control-panel.sh",
+        "tooltip-format": "Control Panel"
     }
 }

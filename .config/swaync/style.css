@@ -81,9 +81,7 @@ label, button, button label {
     color: @on_surface;
     border: 1px solid alpha(@outline, 0.12);
     border-radius: 14px;
-    padding: 0;
-    min-height: 64px;
-    min-width: 82px;
+    padding: 20px 28px;
     font-size: 22px;
     transition: all 0.2s ease;
     box-shadow:
@@ -248,9 +246,7 @@ label, button, button label {
     background: alpha(@surface_container, 0.35);
     border: 1px solid alpha(@outline, 0.1);
     border-radius: 12px;
-    min-height: 48px;
-    min-width: 64px;
-    padding: 0;
+    padding: 14px 20px;
     font-size: 20px;
     color: @on_surface_variant;
     transition: all 0.2s ease;

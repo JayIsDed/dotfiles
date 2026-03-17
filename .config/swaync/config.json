@@ -38,35 +38,35 @@
         "buttons-grid#quick": {
             "actions": [
                 {
-                    "label": "WiFi",
+                    "label": "\uf1eb",
                     "command": "nm-connection-editor"
                 },
                 {
-                    "label": "BT",
+                    "label": "\uf294",
                     "command": "blueman-manager"
                 },
                 {
-                    "label": "Audio",
+                    "label": "\uf028",
                     "command": "pavucontrol"
                 },
                 {
-                    "label": "Night",
+                    "label": "\uf186",
                     "command": "~/.config/waybar/scripts/nightlight-toggle.sh"
                 },
                 {
-                    "label": "Wall",
+                    "label": "\uf03e",
                     "command": "waypaper"
                 },
                 {
-                    "label": "Disp",
+                    "label": "\uf108",
                     "command": "nwg-displays"
                 },
                 {
-                    "label": "Files",
+                    "label": "\uf07b",
                     "command": "thunar"
                 },
                 {
-                    "label": "Term",
+                    "label": "\uf120",
                     "command": "kitty"
                 }
             ]
@@ -77,7 +77,7 @@
             "button-text": "Clear"
         },
         "volume": {
-            "label": "Vol"
+            "label": "\uf028"
         },
         "dnd": {
             "text": "Do Not Disturb"
@@ -89,23 +89,23 @@
         "buttons-grid#power": {
             "actions": [
                 {
-                    "label": "Lock",
+                    "label": "\uf023",
                     "command": "hyprlock"
                 },
                 {
-                    "label": "Sleep",
+                    "label": "\uf236",
                     "command": "systemctl suspend"
                 },
                 {
-                    "label": "Logout",
+                    "label": "\uf2f5",
                     "command": "hyprctl dispatch exit"
                 },
                 {
-                    "label": "Reboot",
+                    "label": "\uf01e",
                     "command": "systemctl reboot"
                 },
                 {
-                    "label": "Off",
+                    "label": "\uf011",
                     "command": "systemctl poweroff"
                 }
             ]

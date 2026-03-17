@@ -4,6 +4,12 @@
 * {
     font-family: "JetBrainsMono Nerd Font";
     font-size: 14px;
+    -gtk-secondary-caret-color: transparent;
+}
+
+/* Force nerd font on all labels and buttons */
+label, button, button label {
+    font-family: "JetBrainsMono Nerd Font";
 }
 
 /* ── Notification popups ── */

@@ -234,8 +234,8 @@
     },
 
     "custom/panel": {
-        "format": "",
+        "format": "󰍜",
         "on-click": "swaync-client -t -sw",
-        "tooltip-format": "Control Center"
+        "tooltip": false
     }
 }

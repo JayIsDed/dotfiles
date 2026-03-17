@@ -5,7 +5,9 @@
 # ── Read colors from rofi colors.rasi ──
 COLORS_FILE="$HOME/.config/rofi/colors.rasi"
 get_color() {
-    grep -oP "$1:\s*\K[^;]+" "$COLORS_FILE" 2>/dev/null | tr -d ' '
+    # Match exact property name (word boundary) to avoid partial matches
+    # e.g. "primary" must not match "on-primary"
+    grep -P "^\s*${1}:" "$COLORS_FILE" 2>/dev/null | grep -oP '#[0-9a-fA-F]+' | head -1
 }
 
 COL_ON=$(get_color "primary")

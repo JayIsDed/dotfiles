@@ -1,5 +1,5 @@
 #!/bin/bash
-# Waybar module: Docker container health from LXC 112
+# Waybar module: Docker container health from docker-vm
 
 RESULT=$(ssh -o ConnectTimeout=3 docker-services "docker ps --format '{{.Names}}\t{{.Status}}'" 2>/dev/null)
 

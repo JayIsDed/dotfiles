@@ -7,7 +7,9 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("swaync")
   hl.exec_cmd("hypridle")
   hl.exec_cmd("wl-paste --watch cliphist store")
-  hl.exec_cmd("waybar")  -- → replace with quickshell when the bar lands
+  -- waybar via ML4W launch.sh (assembles themed config from themes/) —
+  -- bare `waybar` renders stock. Dies entirely when quickshell lands.
+  hl.exec_cmd(os.getenv("HOME") .. "/.config/waybar/launch.sh")
   hl.exec_cmd("awww-daemon")           -- wallpaper daemon (waypaper backend)
   hl.exec_cmd("waypaper --restore")
   hl.exec_cmd("hyprctl setcursor Bibata-Modern-Ice 24")

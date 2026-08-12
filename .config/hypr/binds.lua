@@ -93,4 +93,6 @@ bind(mod .. " + CTRL + K", hl.dsp.exec_cmd(scripts .. "/cheatsheet.sh"), { desc 
 bind(mod .. " + SHIFT + W", hl.dsp.exec_cmd("waypaper --random"), { desc = "Random wallpaper" })
 bind(mod .. " + CTRL + W", hl.dsp.exec_cmd("waypaper"), { desc = "Wallpaper picker" })
 -- SUPER+ALT+G gamemode lives in gamemode.lua
--- waybar reload/toggle binds retired with waybar → Quickshell owns the bar
+-- waybar binds live until Quickshell replaces the bar layer
+bind(mod .. " + SHIFT + B", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/waybar/launch.sh"), { desc = "Reload waybar" })
+bind(mod .. " + CTRL + B", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/waybar/toggle.sh"), { desc = "Toggle waybar" })

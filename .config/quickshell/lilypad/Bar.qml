@@ -54,6 +54,10 @@ PanelWindow {
             visible: tasks.any
             TaskSwitcher { id: tasks; Layout.alignment: Qt.AlignVCenter }
         }
+        Tile {
+            visible: dockerTile.alive
+            DockerTile { id: dockerTile; Layout.alignment: Qt.AlignVCenter }
+        }
     }
 
     // ── center: media · clock · weather tile
@@ -80,11 +84,6 @@ PanelWindow {
         anchors.rightMargin: Theme.barSideMargin
         anchors.verticalCenter: parent.verticalCenter
         spacing: Theme.pad
-
-        Tile {
-            visible: dockerTile.alive
-            DockerTile { id: dockerTile; Layout.alignment: Qt.AlignVCenter }
-        }
 
         Tile {
             autoHide: true

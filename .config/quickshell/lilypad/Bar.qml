@@ -109,10 +109,11 @@ PanelWindow {
         id: leftBundle
         anchors.verticalCenter: parent.verticalCenter
         x: {
-            const spanStart = wsTile.x + wsTile.width + Theme.pad
-            // clamp: an overgrown bundle hugs the workspaces side rather
-            // than sliding under the clock (responsive collapse = later)
-            return Math.max(spanStart, spanStart + (clockTile.x - spanStart - width) / 2)
+            // center over the TRUE span — pad lives only in the clamp floor,
+            // or it skews the gaps by one pad-width (Jay caught the 8px)
+            const spanStart = wsTile.x + wsTile.width
+            const centered = spanStart + (clockTile.x - spanStart - width) / 2
+            return Math.max(spanStart + Theme.pad, centered)
         }
         spacing: Theme.pad
 
@@ -132,8 +133,9 @@ PanelWindow {
         id: rightBundle
         anchors.verticalCenter: parent.verticalCenter
         x: {
-            const spanStart = clockTile.x + clockTile.width + Theme.pad
-            return Math.max(spanStart, spanStart + (powerTile.x - spanStart - width) / 2)
+            const spanStart = clockTile.x + clockTile.width
+            const centered = spanStart + (powerTile.x - spanStart - width) / 2
+            return Math.max(spanStart + Theme.pad, centered)
         }
         spacing: Theme.pad
 

@@ -59,6 +59,7 @@ PluginComponent {
     // padding, hover all come free) — size via implicitWidth like their
     // built-in widgets, never draw your own pill rect (double chrome +
     // zero-width allocation = the overlap Jay caught)
+    // lilypad grammar: labels | stacked MeterBars | numbers, dvm count east
     horizontalBarPill: Component {
         Item {
             implicitWidth: dvmRow.implicitWidth
@@ -75,12 +76,31 @@ PluginComponent {
                     color: root.alive ? Theme.widgetIconColor : Theme.surfaceVariantText
                     anchors.verticalCenter: parent.verticalCenter
                 }
+                Column {
+                    spacing: 1
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: root.alive
+                    StyledText { text: "cpu"; color: Theme.surfaceVariantText; font.pixelSize: 8 }
+                    StyledText { text: "ram"; color: Theme.surfaceVariantText; font.pixelSize: 8 }
+                }
+                Column {
+                    spacing: 4
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: root.alive
+                    MeterBar { value: root.cpu; okColor: Theme.primary; implicitWidth: 44 }
+                    MeterBar { value: root.mem; okColor: Theme.primary; implicitWidth: 44 }
+                }
+                Column {
+                    spacing: 1
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: root.alive
+                    StyledText { text: Math.round(root.cpu) + "%"; color: Theme.widgetTextColor; font.pixelSize: 8; horizontalAlignment: Text.AlignRight; width: 22 }
+                    StyledText { text: Math.round(root.mem) + "%"; color: Theme.widgetTextColor; font.pixelSize: 8; horizontalAlignment: Text.AlignRight; width: 22 }
+                }
                 StyledText {
-                    text: root.alive
-                        ? Math.round(root.cpu) + "% " + Math.round(root.mem) + "% " + root.containers
-                        : "off"
-                    color: Theme.widgetTextColor
-                    font.pixelSize: Theme.barTextSize(root.barThickness, root.barConfig?.fontScale, root.barConfig?.maximizeWidgetText)
+                    text: root.alive ? root.containers : "off"
+                    color: root.alive ? Theme.widgetTextColor : Theme.surfaceVariantText
+                    font.pixelSize: Theme.fontSizeSmall
                     anchors.verticalCenter: parent.verticalCenter
                 }
             }

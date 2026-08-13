@@ -44,6 +44,7 @@ PluginComponent {
         onTriggered: root.probe()
     }
 
+    // lilypad grammar: 5h/7d labels | bars (7d carries the 50% fable tick) | numbers
     horizontalBarPill: Component {
         Item {
             implicitWidth: cuRow.implicitWidth
@@ -60,12 +61,38 @@ PluginComponent {
                     color: root.cu5 >= 80 ? Theme.tempDanger : root.cu5 >= 60 ? Theme.tempWarning : Theme.widgetIconColor
                     anchors.verticalCenter: parent.verticalCenter
                 }
+                Column {
+                    spacing: 1
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: root.alive
+                    StyledText { text: "5h"; color: Theme.surfaceVariantText; font.pixelSize: 8 }
+                    StyledText { text: "7d"; color: Theme.surfaceVariantText; font.pixelSize: 8 }
+                }
+                Column {
+                    spacing: 4
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: root.alive
+                    MeterBar {
+                        value: root.cu5; implicitWidth: 44
+                        fillColor: root.cu5 >= 85 ? "#ef4444" : root.cu5 >= 70 ? "#fbbf24" : Theme.primary
+                    }
+                    MeterBar {
+                        value: root.cu7; marker: 50; implicitWidth: 44
+                        fillColor: root.cu7 >= 85 ? "#ef4444" : root.cu7 >= 70 ? "#fbbf24" : Theme.secondary
+                    }
+                }
+                Column {
+                    spacing: 1
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: root.alive
+                    StyledText { text: Math.round(root.cu5) + "%"; color: Theme.widgetTextColor; font.pixelSize: 8; horizontalAlignment: Text.AlignRight; width: 22 }
+                    StyledText { text: Math.round(root.cu7) + "%"; color: Theme.widgetTextColor; font.pixelSize: 8; horizontalAlignment: Text.AlignRight; width: 22 }
+                }
                 StyledText {
-                    text: root.alive
-                        ? Math.round(root.cu5) + "% " + Math.round(root.cu7) + "%"
-                        : "…"
-                    color: Theme.widgetTextColor
-                    font.pixelSize: Theme.barTextSize(root.barThickness, root.barConfig?.fontScale, root.barConfig?.maximizeWidgetText)
+                    visible: !root.alive
+                    text: "…"
+                    color: Theme.surfaceVariantText
+                    font.pixelSize: Theme.fontSizeSmall
                     anchors.verticalCenter: parent.verticalCenter
                 }
             }

@@ -1,0 +1,11 @@
+{
+    "id": "sysMetrics",
+    "name": "Sys Metrics",
+    "description": "lilypad metrics cluster — cpu/ram/dsk stacked meters + tmp/fan dual spark",
+    "version": "0.1.0",
+    "author": "Jay",
+    "type": "widget",
+    "capabilities": ["dankbar-widget"],
+    "component": "./SysWidget.qml",
+    "icon": "monitoring"
+}

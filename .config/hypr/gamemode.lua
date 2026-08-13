@@ -17,7 +17,10 @@ local function notify(msg)
     "notify-send -a 'Game Mode' -i input-gaming '%s'", msg))
 end
 
-hl.bind("SUPER + ALT + G", function()
+-- GLOBAL on purpose: reachable from outside via
+--   hyprctl dispatch "gamemode_toggle()"
+-- (0.55+ dispatch args are Lua shorthand) — the lilypad panel uses this.
+function gamemode_toggle()
   if gamemode_active() then
     look.apply()
     hl.exec_cmd(shelf .. " up")
@@ -38,4 +41,6 @@ hl.bind("SUPER + ALT + G", function()
     hl.exec_cmd(shelf .. " down")
     notify("On — eye candy off, AI shelf spinning down")
   end
-end, { desc = "Game mode: toggle eye candy + AI shelf" })
+end
+
+hl.bind("SUPER + ALT + G", gamemode_toggle, { desc = "Game mode: toggle eye candy + AI shelf" })

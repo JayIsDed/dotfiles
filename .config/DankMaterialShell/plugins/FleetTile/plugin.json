@@ -1,0 +1,12 @@
+{
+    "id": "fleetTile",
+    "name": "Fleet Tile",
+    "description": "Server fleet — one bar pill (flippable resident host), popout with a tile per host",
+    "version": "0.1.0",
+    "author": "Jay",
+    "type": "widget",
+    "capabilities": ["dankbar-widget"],
+    "component": "./FleetWidget.qml",
+    "icon": "dns",
+    "requires": ["ssh"]
+}

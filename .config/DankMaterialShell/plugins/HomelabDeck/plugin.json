@@ -1,0 +1,12 @@
+{
+    "id": "homelabDeck",
+    "name": "Homelab Deck",
+    "description": "Ambient homelab card on the desktop — dvm vitals, homelab RTT, posture tint",
+    "version": "0.1.0",
+    "author": "Jay",
+    "type": "desktop",
+    "capabilities": ["desktop-widget"],
+    "component": "./DeckWidget.qml",
+    "icon": "dns",
+    "requires": ["ssh"]
+}

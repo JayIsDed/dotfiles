@@ -41,7 +41,7 @@ PanelWindow {
     // ── left: workspaces tile · window-title tile (hides when empty)
     RowLayout {
         anchors.left: parent.left
-        anchors.leftMargin: Theme.islandMargin
+        anchors.leftMargin: Theme.barSideMargin
         anchors.verticalCenter: parent.verticalCenter
         spacing: Theme.pad
 
@@ -74,7 +74,7 @@ PanelWindow {
     // ── right: chips tile · metric tiles (cluster draws its own) · power tile
     RowLayout {
         anchors.right: parent.right
-        anchors.rightMargin: Theme.islandMargin
+        anchors.rightMargin: Theme.barSideMargin
         anchors.verticalCenter: parent.verticalCenter
         spacing: Theme.pad
 

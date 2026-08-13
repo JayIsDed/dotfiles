@@ -134,7 +134,8 @@ Singleton {
     // near-black tile ground, faint palette tint (Jay: pills darker than surface tones)
     readonly property color tileBase: mix("#000000", m3background, 0.55)
     readonly property int barHeight: 52        // island height — roomy, uses the inside space
-    readonly property int islandMargin: 4      // uniform thin ring: top = sides = bottom
+    readonly property int islandMargin: 4      // vertical ring: tile to screen-top / to windows
+    readonly property int barSideMargin: 8     // = hypr gaps_out, so end tiles align with window borders
     readonly property int islandRadius: 12
     readonly property int radius: 10
     readonly property int chipRadius: 8

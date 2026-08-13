@@ -15,13 +15,16 @@ MouseArea {
     property var leftCmd: []
     property var rightCmd: []
     property color tone: Theme.text2
+    property int maxWidth: 0          // >0 caps width, text elides (media titles)
 
     property string text_: ""
     property string tooltip: ""
     property string klass: ""
 
     visible: text_ !== ""
-    implicitWidth: visible ? label.implicitWidth : 0
+    implicitWidth: visible
+        ? (maxWidth > 0 ? Math.min(label.implicitWidth, maxWidth) : label.implicitWidth)
+        : 0
     implicitHeight: label.implicitHeight
     acceptedButtons: Qt.LeftButton | Qt.RightButton
     hoverEnabled: true
@@ -62,6 +65,8 @@ MouseArea {
 
     Text {
         id: label
+        width: root.maxWidth > 0 ? Math.min(implicitWidth, root.maxWidth) : implicitWidth
+        elide: Text.ElideRight
         text: root.text_
         color: root.klass === "critical" || root.klass === "urgent" ? Theme.red
              : root.klass === "warning" || root.klass === "disconnected" ? Theme.amber

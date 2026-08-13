@@ -1,7 +1,8 @@
-// Bar.qml — floating tile row (design pass 3: the single island dissolved
-// into per-group tiles; same one window + blur layer, so the split costs
-// nothing — hypr blurs painted pixels only, gaps stay wallpaper).
-// Alignment: anchored sections (left / center / right), layouts only inside.
+// Bar.qml — floating tile row, pass 4 geometry: three fixed anchors
+// (workspaces west, clock dead-center, power east) and two self-centering
+// bundles that float at the midpoint of their spans. Bundles recenter as
+// their content grows (task switcher, dvm tile), so the bar never reads
+// lopsided. Same one window + blur layer throughout.
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Wayland
@@ -27,7 +28,7 @@ PanelWindow {
     component Tile: Rectangle {
         property bool autoHide: false
         default property alias content: inner.data
-        implicitWidth: inner.implicitWidth + 24
+        implicitWidth: inner.implicitWidth + 28
         implicitHeight: Theme.barHeight
         radius: Theme.islandRadius
         color: Theme.alpha(Theme.tileBase, Theme.islandAlpha)
@@ -41,32 +42,24 @@ PanelWindow {
         }
     }
 
-    // ── left: workspaces tile · window-title tile (hides when empty)
-    RowLayout {
+    // ── fixed west: workspaces
+    Tile {
+        id: wsTile
         anchors.left: parent.left
         anchors.leftMargin: Theme.barSideMargin
         anchors.verticalCenter: parent.verticalCenter
-        spacing: Theme.pad
-
-        Tile { Workspaces { Layout.alignment: Qt.AlignVCenter } }
-        Tile { SysCard { Layout.alignment: Qt.AlignVCenter } }
-        Tile {
-            visible: tasks.any
-            TaskSwitcher { id: tasks; Layout.alignment: Qt.AlignVCenter }
-        }
-        Tile {
-            visible: dockerTile.alive
-            DockerTile { id: dockerTile; Layout.alignment: Qt.AlignVCenter }
-        }
+        Workspaces { Layout.alignment: Qt.AlignVCenter }
     }
 
-    // ── center: media · clock · weather tile
+    // ── fixed center: media · clock · weather
     Tile {
+        id: clockTile
         anchors.centerIn: parent
         ScriptModule {
             Layout.alignment: Qt.AlignVCenter
             script: "media-player.sh"; interval: 3000
             tone: Theme.text3
+            maxWidth: 320
             leftCmd: ["playerctl", "play-pause"]
             rightCmd: ["playerctl", "next"]
         }
@@ -78,11 +71,70 @@ PanelWindow {
         }
     }
 
-    // ── right: chips tile · metric tiles (cluster draws its own) · power tile
-    RowLayout {
+    // ── fixed east: audio · network · brightness · power · battery · panel
+    Tile {
+        id: powerTile
         anchors.right: parent.right
         anchors.rightMargin: Theme.barSideMargin
         anchors.verticalCenter: parent.verticalCenter
+        Volume  { Layout.alignment: Qt.AlignVCenter }
+        Network { Layout.alignment: Qt.AlignVCenter }
+        BrightnessChip { Layout.alignment: Qt.AlignVCenter }
+        PowerDraw { Layout.alignment: Qt.AlignVCenter }
+        Battery { Layout.alignment: Qt.AlignVCenter }
+        Rectangle {
+            Layout.alignment: Qt.AlignVCenter
+            implicitWidth: 30
+            implicitHeight: 26
+            radius: Theme.chipRadius
+            color: panelLoader.active ? Theme.elevated : "transparent"
+            border.color: panelLoader.active ? Theme.borderStrong : Theme.border
+            border.width: 1
+            Text {
+                anchors.centerIn: parent
+                text: "󱍢"
+                color: Theme.accent
+                font.family: Theme.font
+                font.pixelSize: 15
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: panelLoader.active = !panelLoader.active
+            }
+        }
+    }
+
+    // ── left bundle: sys card · tasks · dvm, centered in the ws↔clock span
+    RowLayout {
+        id: leftBundle
+        anchors.verticalCenter: parent.verticalCenter
+        x: {
+            const spanStart = wsTile.x + wsTile.width + Theme.pad
+            // clamp: an overgrown bundle hugs the workspaces side rather
+            // than sliding under the clock (responsive collapse = later)
+            return Math.max(spanStart, spanStart + (clockTile.x - spanStart - width) / 2)
+        }
+        spacing: Theme.pad
+
+        Tile { SysCard { Layout.alignment: Qt.AlignVCenter } }
+        Tile {
+            visible: tasks.any
+            TaskSwitcher { id: tasks; Layout.alignment: Qt.AlignVCenter }
+        }
+        Tile {
+            visible: dockerTile.alive
+            DockerTile { id: dockerTile; Layout.alignment: Qt.AlignVCenter }
+        }
+    }
+
+    // ── right bundle: chips · metric tiles, centered in the clock↔power span
+    RowLayout {
+        id: rightBundle
+        anchors.verticalCenter: parent.verticalCenter
+        x: {
+            const spanStart = clockTile.x + clockTile.width + Theme.pad
+            return Math.max(spanStart, spanStart + (powerTile.x - spanStart - width) / 2)
+        }
         spacing: Theme.pad
 
         Tile {
@@ -120,34 +172,6 @@ PanelWindow {
         }
 
         MetricsCluster { Layout.alignment: Qt.AlignVCenter }
-
-        Tile {
-            Volume  { Layout.alignment: Qt.AlignVCenter }
-            Network { Layout.alignment: Qt.AlignVCenter }
-            BrightnessChip { Layout.alignment: Qt.AlignVCenter }
-            PowerDraw { Layout.alignment: Qt.AlignVCenter }
-            Battery { Layout.alignment: Qt.AlignVCenter }
-            Rectangle {
-                Layout.alignment: Qt.AlignVCenter
-                implicitWidth: 30
-                implicitHeight: 26
-                radius: Theme.chipRadius
-                color: panelLoader.active ? Theme.elevated : "transparent"
-                border.color: panelLoader.active ? Theme.borderStrong : Theme.border
-                border.width: 1
-                Text {
-                    anchors.centerIn: parent
-                    text: "󱍢"
-                    color: Theme.accent
-                    font.family: Theme.font
-                    font.pixelSize: 15
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: panelLoader.active = !panelLoader.active
-                }
-            }
-        }
     }
 
     LazyLoader {

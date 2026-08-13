@@ -17,7 +17,8 @@ RowLayout {
     // metric tile — full bar-height sibling of Bar's Tile, near-black glass
     component Seg: Rectangle {
         default property alias content: inner.data
-        implicitWidth: inner.implicitWidth + 24
+        // wide side padding: radius-20 corners were kissing the numbers
+        implicitWidth: inner.implicitWidth + 34
         implicitHeight: Theme.barHeight
         radius: Theme.islandRadius
         color: Theme.alpha(Theme.tileBase, Theme.islandAlpha)

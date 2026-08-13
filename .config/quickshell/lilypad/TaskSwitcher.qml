@@ -33,7 +33,7 @@ RowLayout {
                 anchors.centerIn: parent
                 text: {
                     const t = modelData.title ?? ""
-                    return t.length > 26 ? t.slice(0, 25) + "…" : t
+                    return t.length > 18 ? t.slice(0, 17) + "…" : t
                 }
                 color: modelData.activated ? Theme.text : Theme.text2
                 font.family: Theme.font

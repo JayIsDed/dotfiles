@@ -185,3 +185,16 @@ the contract between seats: read it fully before touching QML.
   spawned test windows by saved PID, verify via `ps | grep "[s]queeze"`.
 - x1c ssh alias still .101; laptop answers on .247 — reservation didn't
   hold. Fix alias or DHCP before the next remote seat trips on it.
+
+## DIRECTION CHECK (2026-08-13 morning) — read before starting Phase 3
+
+Jay green-lit evaluating **DankMaterialShell** (dms) as the shell base:
+same stack (quickshell 0.3.0+, matugen, hyprland Lua), MIT, real plugin
+API (~/.config plugins survive updates — the anti-ML4W property). Ships
+popouts/control-center/wifi/bt/calendar = our Phase 3+4. Reference clone:
+`~/git/reference/DankMaterialShell` (v1.5). **Phase 3 popovers are ON HOLD
+pending a dms trial seat**: install beside lilypad on the laptop (separate
+config dir, qs -p switching), port the dvm tile as a plugin to probe API
+depth, theme toward pond, judge on screen. If it carries → adopt, lilypad
+lives on as the plugin set. If not → keep lilypad shell, strip-mine their
+Services/ + DankPopout instead. Start at quickshell/PLUGINS/README.md.

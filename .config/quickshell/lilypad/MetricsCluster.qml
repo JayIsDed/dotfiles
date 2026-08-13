@@ -200,16 +200,13 @@ RowLayout {
         }
     }
 
-    // thermal — dual spark like the net pill: counts | sparks | icons
+    // thermal — dual spark, icons | sparks | counts
     Seg {
         Layout.alignment: Qt.AlignVCenter
         ColumnLayout {
             spacing: 0
-            Pct {
-                text: root.temp + "°"
-                color: root.temp >= 85 ? Theme.crit : root.temp >= 70 ? Theme.warn : Theme.text2
-            }
-            Pct { text: root.fan; visible: root.fan > 0 }
+            Text { text: "󰔏"; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
+            Text { text: "󰈐"; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
         }
         ColumnLayout {
             spacing: 2
@@ -232,8 +229,11 @@ RowLayout {
         }
         ColumnLayout {
             spacing: 0
-            Text { text: "󰔏"; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
-            Text { text: "󰈐"; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
+            Pct {
+                text: root.temp + "°"
+                color: root.temp >= 85 ? Theme.crit : root.temp >= 70 ? Theme.warn : Theme.text2
+            }
+            Pct { text: root.fan; visible: root.fan > 0 }
         }
     }
 
@@ -264,13 +264,13 @@ RowLayout {
         }
     }
 
-    // net — same arrangement: counts | sparks | icons
+    // net — same arrangement: icons | sparks | counts
     Seg {
         Layout.alignment: Qt.AlignVCenter
         ColumnLayout {
             spacing: 0
-            Pct { text: root.rxRate }
-            Pct { text: root.txRate }
+            Text { text: "󰇚"; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
+            Text { text: "󰕒"; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
         }
         ColumnLayout {
             spacing: 2
@@ -279,8 +279,8 @@ RowLayout {
         }
         ColumnLayout {
             spacing: 0
-            Text { text: "󰇚"; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
-            Text { text: "󰕒"; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
+            Pct { text: root.rxRate }
+            Pct { text: root.txRate }
         }
     }
 

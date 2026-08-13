@@ -7,13 +7,17 @@ Rectangle {
     id: root
     property string heading: ""
     property color headingColor: Qt.rgba(1, 1, 1, 0.45)
+    // nesting: inner tiles take a darker wash + softer border so section
+    // families read as inset groups inside a host card
+    property color bg: Qt.rgba(1, 1, 1, 0.05)
+    property color borderTint: Qt.rgba(1, 1, 1, 0.08)
     default property alias content: col.data
 
     width: parent ? parent.width : 280
     implicitHeight: col.implicitHeight + (heading !== "" ? 34 : 24)
     radius: 10
-    color: Qt.rgba(1, 1, 1, 0.05)
-    border.color: Qt.rgba(1, 1, 1, 0.08)
+    color: bg
+    border.color: borderTint
     border.width: 1
 
     Text {

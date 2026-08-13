@@ -435,39 +435,45 @@ PluginComponent {
                         tail: root.archAlive ? "up " + root.archUp + " · plug " + (root.plugState || "?") : "asleep · plug " + (root.plugState || "?")
                     }
 
-                    VRow { label: "cpu"; val: root.archCpu; hist: root.archHist; valueText: Math.round(root.archCpu) + "%"; tone: Theme.primary; visible: root.archAlive }
-                    VRow { label: "ram"; val: root.archMem; valueText: root.archMemUsedG.toFixed(1) + "/" + root.archMemTotalG.toFixed(0) + "G"; tone: Theme.secondary; visible: root.archAlive }
+                    Tile {
+                        visible: root.archAlive
+                        heading: "CPU"
+                        headingColor: Theme.surfaceVariantText
+                        bg: Qt.rgba(0, 0, 0, 0.18)
+                        borderTint: Qt.rgba(1, 1, 1, 0.05)
+                    VRow { label: "cpu"; val: root.archCpu; hist: root.archHist; valueText: Math.round(root.archCpu) + "%"; tone: Theme.primary }
+                    VRow { label: "ram"; val: root.archMem; valueText: root.archMemUsedG.toFixed(1) + "/" + root.archMemTotalG.toFixed(0) + "G"; tone: Theme.secondary }
 
-                    // cores — 32 threads, 3-col grid, spark + util + clock
+                    // cores — 32 threads, 4-col grid, spark + util + clock
                     Grid {
                         visible: root.archAlive && root.aCoreUtil.length > 0
-                        columns: 3
-                        columnSpacing: 10
+                        columns: 4
+                        columnSpacing: 8
                         rowSpacing: 3
                         width: parent.width
                         Repeater {
                             model: root.aCoreUtil.length
                             delegate: Row {
                                 required property int index
-                                spacing: 4
-                                StyledText { text: "c" + index; color: Theme.surfaceVariantText; font.pixelSize: 8; width: 18; anchors.verticalCenter: parent.verticalCenter }
+                                spacing: 2
+                                StyledText { text: "c" + index; color: Theme.surfaceVariantText; font.pixelSize: 8; width: 16; anchors.verticalCenter: parent.verticalCenter }
                                 Spark {
                                     values: root.aCoreHist[index] || []
                                     lineColor: Theme.primary
                                     area: false
                                     minValue: 0; maxValue: 100
-                                    implicitWidth: 26; implicitHeight: 10; stroke: 1
+                                    implicitWidth: 20; implicitHeight: 10; stroke: 1
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
                                 StyledText {
                                     text: Math.round(root.aCoreUtil[index] || 0) + "%"
-                                    color: Theme.surfaceText; font.pixelSize: 8; width: 24
+                                    color: Theme.surfaceText; font.pixelSize: 8; width: 22
                                     horizontalAlignment: Text.AlignRight
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
                                 StyledText {
-                                    text: (root.aCoreFreq[index] || 0).toFixed(1)
-                                    color: Theme.surfaceVariantText; font.pixelSize: 8; width: 20
+                                    text: (root.aCoreFreq[index] || 0).toFixed(2)
+                                    color: Theme.surfaceVariantText; font.pixelSize: 8; width: 26
                                     horizontalAlignment: Text.AlignRight
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
@@ -475,28 +481,35 @@ PluginComponent {
                         }
                     }
 
+                    }
+
                     // 3090
-                    VRow { label: "gpu"; val: root.gpuU; hist: root.gpuUHist; valueText: root.gpuU + "%"; tone: root.cGpu; visible: root.archAlive && root.gpuU >= 0 }
+                    Tile {
+                        visible: root.archAlive
+                        heading: "GPU · 3090 iCX3"
+                        headingColor: Theme.surfaceVariantText
+                        bg: Qt.rgba(0, 0, 0, 0.18)
+                        borderTint: Qt.rgba(1, 1, 1, 0.05)
+                    VRow { label: "gpu"; val: root.gpuU; hist: root.gpuUHist; valueText: root.gpuU + "%"; tone: root.cGpu; visible: root.gpuU >= 0 }
                     VRow {
                         label: "vram"; val: root.vramTotal > 0 ? root.vramUsed / root.vramTotal * 100 : -1
                         valueText: root.vramTotal > 0 ? (root.vramUsed / 1024).toFixed(1) + "/" + (root.vramTotal / 1024).toFixed(0) + "G" : "—"
-                        tone: root.cVram; visible: root.archAlive && root.vramTotal > 0
+                        tone: root.cVram; visible: root.vramTotal > 0
                     }
                     VRow {
                         label: "die"; hist: root.gpuTHist; valueText: root.gpuT + "° / " + (root.icxGpu2 >= 0 ? root.icxGpu2.toFixed(0) + "°" : "—")
-                        tone: root.cDie; visible: root.archAlive && root.gpuT >= 0
+                        tone: root.cDie; visible: root.gpuT >= 0
                         sMin: root.gpuTHist.length ? Math.min(...root.gpuTHist) - 2 : 20
                         sMax: root.gpuTHist.length ? Math.max(...root.gpuTHist) + 2 : 90
                     }
                     VRow {
                         label: "vrT"; hist: root.icxVramHist
                         valueText: (root.icxVram >= 0 ? root.icxVram.toFixed(0) : "—") + "°"
-                        tone: root.cVram; visible: root.archAlive && root.icxVram >= 0
+                        tone: root.cVram; visible: root.icxVram >= 0
                         sMin: root.icxVramHist.length ? Math.min(...root.icxVramHist) - 2 : 20
                         sMax: root.icxVramHist.length ? Math.max(...root.icxVramHist) + 2 : 90
                     }
                     Row {
-                        visible: root.archAlive
                         spacing: Theme.spacingM
                         width: parent.width
                         StyledText { text: "mem̄ " + (root.icxMemAvg >= 0 ? root.icxMemAvg.toFixed(1) + "°" : "—"); color: root.cMem; font.pixelSize: Theme.fontSizeSmall }
@@ -507,7 +520,14 @@ PluginComponent {
                         }
                     }
 
+                    }
+
                     // power
+                    Tile {
+                        heading: "POWER"
+                        headingColor: Theme.surfaceVariantText
+                        bg: Qt.rgba(0, 0, 0, 0.18)
+                        borderTint: Qt.rgba(1, 1, 1, 0.05)
                     VRow {
                         label: "wall"; hist: root.wallHist
                         valueText: (root.wallW >= 0 ? root.wallW.toFixed(0) : "—") + "W"
@@ -518,7 +538,7 @@ PluginComponent {
                     VRow {
                         label: "gW"; hist: root.gpuPowHist
                         valueText: (root.gpuPow >= 0 ? root.gpuPow.toFixed(0) : "—") + "W"
-                        tone: root.cGpuPow; visible: root.archAlive && root.gpuPow >= 0
+                        tone: root.cGpuPow; visible: root.gpuPow >= 0
                         sMin: 0
                         sMax: root.gpuPowHist.length ? Math.max(...root.gpuPowHist) + 30 : 450
                     }
@@ -526,6 +546,7 @@ PluginComponent {
                         text: "today " + (root.kwhToday >= 0 ? root.kwhToday.toFixed(2) + " kWh" : "—")
                               + (root.archAlive && root.wallW >= 0 && root.gpuPow >= 0 ? " · non-gpu " + (root.wallW - root.gpuPow).toFixed(0) + "W" : "")
                         color: root.cWall; font.pixelSize: Theme.fontSizeSmall
+                    }
                     }
 
                     Rectangle {
@@ -565,8 +586,8 @@ PluginComponent {
             }
         }
     }
-    popoutWidth: 380
-    popoutHeight: 900
+    popoutWidth: 480
+    popoutHeight: 940
 
     // headless popout toggle: qs -c dms ipc call popout-fleet toggle
     IpcHandler {

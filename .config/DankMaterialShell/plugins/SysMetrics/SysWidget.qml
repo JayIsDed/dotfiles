@@ -3,6 +3,7 @@
 // Probe is lilypad's sysProbe verbatim, local sh every 2s. MeterBar/Spark
 // are the self-contained kit copies in this dir.
 import QtQuick
+import Quickshell.Io
 import qs.Common
 import qs.Widgets
 import qs.Modules.Plugins
@@ -213,4 +214,10 @@ PluginComponent {
     }
     popoutWidth: 320
     popoutHeight: 380
+
+    // headless popout toggle: qs -c dms ipc call popout-sys toggle
+    IpcHandler {
+        target: "popout-sys"
+        function toggle(): string { root.triggerPopout(); return "ok" }
+    }
 }

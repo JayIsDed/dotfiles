@@ -2,6 +2,7 @@
 // (+green charging / −blue discharging, fixed hues) over a 0-65W rate bar
 // (X1C9 brick scale). BAT0 sysfs probe, 5s.
 import QtQuick
+import Quickshell.Io
 import qs.Common
 import qs.Widgets
 import qs.Modules.Plugins
@@ -116,4 +117,10 @@ PluginComponent {
     }
     popoutWidth: 300
     popoutHeight: 220
+
+    // headless popout toggle: qs -c dms ipc call popout-bat toggle
+    IpcHandler {
+        target: "popout-bat"
+        function toggle(): string { root.triggerPopout(); return "ok" }
+    }
 }

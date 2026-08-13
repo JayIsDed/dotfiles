@@ -25,11 +25,14 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("wl-paste --watch cliphist store")
   if require("hosts").is_laptop then
     -- no swaync here: dms IS the notification daemon (DBus name fight)
-    -- dms (DankMaterialShell) — ADOPTED 2026-08-13. Runs from the git
-    -- clone (their supported dev mode); PATH prefix so its spawns find
-    -- dms/dgop/matugen-shim in ~/.local/bin. dms owns the wallpaper
-    -- layer, so no waypaper restore here.
-    hl.exec_cmd("sh -c 'PATH=$HOME/.local/bin:$PATH exec qs -p $HOME/git/reference/DankMaterialShell/quickshell'")
+    -- dms (DankMaterialShell) — ADOPTED 2026-08-13. `dms run` = qs -c dms
+    -- (~/.config/quickshell is a REAL dir since 08-13: dms + lilypad
+    -- entries) and hosts the CLI server the CC network panel needs.
+    -- PATH prefix so spawns find dms/dgop/matugen-shim in ~/.local/bin.
+    -- dms owns the wallpaper layer, so no waypaper restore here.
+    -- Launching from the SEAT session also keeps polkit quiet (wifi
+    -- scans from SSH-launched shells prompt for auth — 08-13 lesson).
+    hl.exec_cmd("sh -c 'PATH=$HOME/.local/bin:$PATH exec dms run'")
   else
     -- archbox stays on waybar + swaync until its dms port seat.
     -- waybar via ML4W launch.sh (assembles themed config from themes/) —

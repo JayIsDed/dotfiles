@@ -2,6 +2,7 @@
 // Same probe: one ssh to docker-services every 10s, cpu from successive
 // /proc/stat samples, self-dims when the VM is unreachable.
 import QtQuick
+import Quickshell.Io
 import qs.Common
 import qs.Widgets
 import qs.Modules.Plugins
@@ -147,4 +148,10 @@ PluginComponent {
     }
     popoutWidth: 320
     popoutHeight: 300
+
+    // headless popout toggle: qs -c dms ipc call popout-dvm toggle
+    IpcHandler {
+        target: "popout-dvm"
+        function toggle(): string { root.triggerPopout(); return "ok" }
+    }
 }

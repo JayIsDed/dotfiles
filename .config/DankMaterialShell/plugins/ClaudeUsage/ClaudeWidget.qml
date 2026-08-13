@@ -4,6 +4,7 @@
 // Pattern per DvmTile: pill Component is CONTENT inside BasePill; size by
 // implicitWidth, no own chrome.
 import QtQuick
+import Quickshell.Io
 import qs.Common
 import qs.Widgets
 import qs.Modules.Plugins
@@ -139,4 +140,10 @@ PluginComponent {
     }
     popoutWidth: 320
     popoutHeight: 200
+
+    // headless popout toggle: qs -c dms ipc call popout-claude toggle
+    IpcHandler {
+        target: "popout-claude"
+        function toggle(): string { root.triggerPopout(); return "ok" }
+    }
 }

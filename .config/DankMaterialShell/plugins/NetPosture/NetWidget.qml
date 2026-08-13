@@ -3,6 +3,7 @@
 // house at home vs tunnel-lock away, homelab RTT beside. Fixed status hues
 // on purpose — posture must read the same on every wallpaper.
 import QtQuick
+import Quickshell.Io
 import qs.Common
 import qs.Widgets
 import qs.Modules.Plugins
@@ -147,4 +148,10 @@ PluginComponent {
     }
     popoutWidth: 320
     popoutHeight: 280
+
+    // headless popout toggle: qs -c dms ipc call popout-net toggle
+    IpcHandler {
+        target: "popout-net"
+        function toggle(): string { root.triggerPopout(); return "ok" }
+    }
 }

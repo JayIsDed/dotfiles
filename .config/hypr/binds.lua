@@ -17,6 +17,7 @@ bind(mod .. " + RETURN", hl.dsp.exec_cmd(terminal), { desc = "Terminal" })
 bind(mod .. " + B",      hl.dsp.exec_cmd(browser), { desc = "Browser" })
 bind(mod .. " + E",      hl.dsp.exec_cmd(files), { desc = "File manager" })
 bind(mod .. " + C",      hl.dsp.exec_cmd("code"), { desc = "VS Code" })
+bind(mod .. " + D",      hl.dsp.exec_cmd("discord"), { desc = "Discord" })
 bind(mod .. " + CTRL + RETURN", hl.dsp.exec_cmd("rofi -show drun"), { desc = "App launcher" })
 bind(mod .. " + V", hl.dsp.exec_cmd("sh -c 'cliphist list | rofi -dmenu -p clip | cliphist decode | wl-copy'"), { desc = "Clipboard history" })
 

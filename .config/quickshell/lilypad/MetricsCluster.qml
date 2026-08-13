@@ -1,10 +1,11 @@
 // MetricsCluster.qml — the always-on metrics run of the island (design brief
-// v2: stacked meters, glanceable, never stale). Segment order (Jay, 22:30):
-// cpu/ram (icon + hue differentiated) | temp sparkline | claude 5h/7d
-// (primary/tertiary hues, 50% fable tick) | net rx/tx sparks + rates |
-// tailscale badge | sys card. Brightness moved out to BrightnessChip (lives
-// by the battery). Metric hues pin per-metric and hand over to warn/crit
-// at thresholds. Three probes: 2s system, 10s tailscale, 180s claude relay.
+// v2: stacked meters, glanceable, never stale). Segment order (Jay, 22:30,
+// trimmed 08-13): cpu/ram/dsk | temp+fan sparks | claude 5h/7d (primary/
+// tertiary hues, 50% fable tick) | net rx/tx plain rates. The tailscale
+// badge moved into Network.qml (system-controls tile) and the sys card into
+// ControlPanel — bar real estate goes to what actually gets watched. Metric
+// hues pin per-metric and hand over to warn/crit at thresholds. Two probes:
+// 2s system, 180s claude relay.
 import Quickshell
 import Quickshell.Io
 import QtQuick
@@ -52,7 +53,6 @@ RowLayout {
     property int disk: -1
     property int fan: 0
     property var fanHist: []
-    property string lat: ""
     property int temp: 0
     property var tempHist: []
     property var lastIdle: 0
@@ -60,15 +60,11 @@ RowLayout {
     property string host: ""
     property string kernel: ""
     property string up: ""
-    property var rxHist: []
-    property var txHist: []
     property string rxRate: ""
     property string txRate: ""
     property var lastRx: -1
     property var lastTx: -1
     property double lastNetMs: 0
-    property string tsLabel: ""
-    property color tsColor: Theme.text2
     property real cu5: -1
     property real cu7: -1
 
@@ -118,8 +114,6 @@ RowLayout {
                             const txB = Math.max(0, (tx - root.lastTx) / dt)
                             root.rxRate = root.fmtRate(rxB)
                             root.txRate = root.fmtRate(txB)
-                            root.rxHist = root.rxHist.concat(rxB).slice(-30)
-                            root.txHist = root.txHist.concat(txB).slice(-30)
                         }
                         root.lastRx = rx; root.lastTx = tx; root.lastNetMs = now
                     } else if (p[0] === "D" && p.length >= 2) {
@@ -139,34 +133,7 @@ RowLayout {
     Timer { interval: 2000; running: true; repeat: true; triggeredOnStart: true
             onTriggered: sysProbe.running = true }
 
-    // ---- probe 2: tailscale mode, every 10s
-    Process {
-        id: tsProbe
-        command: ["sh", "-c",
-            "tailscale status --json 2>/dev/null | grep -m1 BackendState; " +
-            "ip route show default 2>/dev/null | head -1; " +
-            "test -e /sys/class/net/proton && echo PROTON; " +
-            "ping -c1 -W1 192.168.8.111 2>/dev/null | grep -o 'time=[0-9.]*'"]
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const t = text
-                const running = t.indexOf("\"Running\"") >= 0
-                const home = t.indexOf("via 192.168.8.") >= 0
-                const vpn = t.indexOf("PROTON") >= 0
-                if (!running)      { root.tsLabel = "󰖂 OFF";  root.tsColor = Theme.warn }
-                else if (home)     { root.tsLabel = "󰖂 HOME"; root.tsColor = Theme.ok }
-                else if (vpn)      { root.tsLabel = "󰖂 AWAY"; root.tsColor = Theme.info }
-                else               { root.tsLabel = "󰖂 AWAY?"; root.tsColor = Theme.warn }
-                // homelab RTT rides along (ping to 111 direct or via tunnel)
-                const m = t.match(/time=([0-9.]+)/)
-                root.lat = m ? Math.round(Number(m[1])) + "ms" : ""
-            }
-        }
-    }
-    Timer { interval: 10000; running: true; repeat: true; triggeredOnStart: true
-            onTriggered: tsProbe.running = true }
-
-    // ---- probe 3: claude usage via 111 relay, every 3min
+    // ---- probe 2: claude usage via 111 relay, every 3min
     Process {
         id: cuProbe
         command: ["ssh", "-o", "ConnectTimeout=5", "-o", "BatchMode=yes",
@@ -273,34 +240,19 @@ RowLayout {
         }
     }
 
-    // net — same arrangement: icons | sparks | counts
+    // net — plain rates (Jay 08-13: flow sparks weren't earning their width;
+    // the detail view belongs to the phase-3 system popover)
     Seg {
         Layout.alignment: Qt.AlignVCenter
         ColumnLayout {
-            spacing: 2
+            spacing: 0
             RowLabel { text: "rx" }
             RowLabel { text: "tx" }
-        }
-        ColumnLayout {
-            spacing: 2
-            Spark { values: root.rxHist; implicitHeight: 9; minValue: 0 }
-            Spark { values: root.txHist; implicitHeight: 9; minValue: 0; lineColor: Theme.purple }
         }
         ColumnLayout {
             spacing: 0
             Pct { text: root.rxRate }
             Pct { text: root.txRate }
-        }
-    }
-
-    // tailscale badge
-    Seg {
-        Layout.alignment: Qt.AlignVCenter
-        visible: root.tsLabel !== ""
-        Text {
-            text: root.tsLabel + (root.lat !== "" ? " · " + root.lat : "")
-            color: root.tsColor
-            font.family: Theme.font; font.pixelSize: Theme.fontSizeS
         }
     }
 

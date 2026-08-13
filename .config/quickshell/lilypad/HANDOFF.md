@@ -198,3 +198,9 @@ config dir, qs -p switching), port the dvm tile as a plugin to probe API
 depth, theme toward pond, judge on screen. If it carries → adopt, lilypad
 lives on as the plugin set. If not → keep lilypad shell, strip-mine their
 Services/ + DankPopout instead. Start at quickshell/PLUGINS/README.md.
+- **Trial-seat prep DONE (08-13 07:05, pre-work window)**: laptop verified
+  quickshell 0.3.0-2 + matugen 4.1.0; Material Symbols Rounded installed to
+  ~/.local/share/fonts (user-level, no sudo); dms cloned at laptop
+  ~/git/reference/DankMaterialShell. Missing: dgop binary (their stats tool,
+  some widgets want it — ~/.local/bin drop from their releases, non-blocking).
+  First boot should be just: qs -p ~/git/reference/DankMaterialShell/quickshell

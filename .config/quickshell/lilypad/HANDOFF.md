@@ -204,3 +204,15 @@ Services/ + DankPopout instead. Start at quickshell/PLUGINS/README.md.
   ~/git/reference/DankMaterialShell. Missing: dgop binary (their stats tool,
   some widgets want it — ~/.local/bin drop from their releases, non-blocking).
   First boot should be just: qs -p ~/git/reference/DankMaterialShell/quickshell
+- **Trial progress (08-13 morning, remote from work)**: dms LIVE on laptop
+  (lilypad OFF — relaunch: `qs -p ~/dotfiles/.config/quickshell/lilypad`).
+  DvmTile plugin LOADED + live data (canon: dotfiles
+  .config/DankMaterialShell/plugins/DvmTile). Enable path: plugin_settings
+  .json {id:{enabled:true}} + id into dankBarRightWidgets in settings.json;
+  IPC: `qs -p <dir> ipc call plugin-scan scan|list|status <id>` (needs
+  WAYLAND_DISPLAY in env). dms CLI v1.5.3 + dgop v0.2.3 in ~/.local/bin.
+  Theme set "dynamic" — accent went blue (fallback), dms-colors.json NOT
+  generating: their matugen worker wedges ("Worker already running" after
+  a failed spawn pre-CLI-install; persisted across one restart). DEBUG NEXT.
+  Then the pond decision (Jay's): wallpaper-dynamic (foliage → ice blue per
+  dial table) vs hex-source pond green (dms supports --kind hex).

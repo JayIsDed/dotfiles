@@ -439,7 +439,8 @@ PluginComponent {
                         spacing: 2
                         anchors.verticalCenter: parent.verticalCenter
                         MeterBar { visible: val >= 0; value: val; okColor: tone; warnLevel: 101; implicitWidth: parent.parent.width - 128; implicitHeight: 4 }
-                        Spark { visible: hist.length > 1; values: hist; lineColor: tone; area: false; minValue: sMin; maxValue: sMax; implicitWidth: parent.parent.width - 128; implicitHeight: 13; stroke: 1.2 }
+                        // standalone spark (no bar above) = framed trend chip
+                        Spark { visible: hist.length > 1; framed: val < 0; values: hist; lineColor: tone; area: false; minValue: sMin; maxValue: sMax; implicitWidth: parent.parent.width - 128; implicitHeight: 13; stroke: 1.2 }
                     }
                     StyledText { text: valueText; color: tone; font.pixelSize: Theme.fontSizeSmall; width: 82; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                 }
@@ -482,6 +483,7 @@ PluginComponent {
                                 spacing: 2
                                 StyledText { text: "c" + index; color: Theme.surfaceVariantText; font.pixelSize: 8; width: 16; anchors.verticalCenter: parent.verticalCenter }
                                 Spark {
+                                    framed: true
                                     values: root.aCoreHist[index] || []
                                     lineColor: Theme.primary
                                     area: false

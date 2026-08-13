@@ -14,7 +14,25 @@ PluginComponent {
     property string status: ""
     property real watts: 0
     property real health: -1
+    property int cycles: -1
+    property real energyNow: -1   // µWh
+    property real energyFull: -1
     property var wattsHist: []
+
+    // hours to empty (discharging) or full (charging), from the live draw
+    readonly property real hoursLeft: {
+        if (watts <= 0.5) return -1
+        if (charging && energyFull > 0 && energyNow >= 0)
+            return (energyFull - energyNow) / 1000000 / watts
+        if (!charging && energyNow > 0)
+            return energyNow / 1000000 / watts
+        return -1
+    }
+    function fmtH(h) {
+        if (h < 0) return ""
+        const hh = Math.floor(h), mm = Math.round((h - hh) * 60)
+        return (hh > 0 ? hh + "h" : "") + mm + "m"
+    }
     readonly property bool alive: pct >= 0
     readonly property bool charging: status === "Charging"
     readonly property color polColor: charging ? "#4ade80" : "#60a5fa"
@@ -24,7 +42,7 @@ PluginComponent {
         Proc.runCommand("batteryPower.probe",
             ["sh", "-c",
              "cd /sys/class/power_supply/BAT0 2>/dev/null && " +
-             "for f in capacity status power_now energy_full energy_full_design charge_full charge_full_design; do " +
+             "for f in capacity status power_now energy_now energy_full energy_full_design charge_full charge_full_design cycle_count; do " +
              "v=$(cat $f 2>/dev/null); [ -n \"$v\" ] && echo $f=$v; done; true"],
             (stdout, exitCode) => {
                 if (exitCode !== 0) { root.pct = -1; return }
@@ -40,6 +58,9 @@ PluginComponent {
                 const full = Number(kv.energy_full || kv.charge_full || 0)
                 const design = Number(kv.energy_full_design || kv.charge_full_design || 0)
                 root.health = design > 0 ? full / design * 100 : -1
+                root.energyNow = Number(kv.energy_now || -1)
+                root.energyFull = full > 0 ? full : -1
+                root.cycles = Number(kv.cycle_count || -1)
                 // signed history: charge above zero, draw below
                 root.wattsHist = root.wattsHist.concat(
                     root.charging ? root.watts : -root.watts).slice(-60)
@@ -112,6 +133,13 @@ PluginComponent {
                         width: parent.width
                         StyledText { text: root.pct + "%"; color: Theme.surfaceText; font.pixelSize: 22; font.weight: Font.Bold; anchors.verticalCenter: parent.verticalCenter }
                         StyledText { text: root.status.toLowerCase(); color: root.polColor; font.pixelSize: Theme.fontSizeSmall; anchors.verticalCenter: parent.verticalCenter }
+                        StyledText {
+                            visible: root.hoursLeft > 0
+                            text: "~" + root.fmtH(root.hoursLeft) + (root.charging ? " to full" : " left")
+                            color: Theme.surfaceVariantText
+                            font.pixelSize: Theme.fontSizeSmall
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
                     }
                     MeterBar { value: root.pct; okColor: root.polColor; warnLevel: 101; implicitWidth: parent.width; implicitHeight: 5 }
                 }
@@ -121,11 +149,12 @@ PluginComponent {
                     Row {
                         spacing: Theme.spacingS
                         width: parent.width
-                        StyledText { text: root.charging ? "+W" : "−W"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 30; anchors.verticalCenter: parent.verticalCenter }
-                        MeterBar { value: root.watts / 65 * 100; fillColor: root.polColor; implicitWidth: parent.width - 86; implicitHeight: 5; anchors.verticalCenter: parent.verticalCenter }
-                        StyledText { text: root.watts.toFixed(1); color: root.polColor; font.pixelSize: Theme.fontSizeSmall; width: 40; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
+                        StyledText { text: "now"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 30; anchors.verticalCenter: parent.verticalCenter }
+                        MeterBar { value: root.watts / 65 * 100; fillColor: root.polColor; implicitWidth: parent.width - 100; implicitHeight: 5; anchors.verticalCenter: parent.verticalCenter }
+                        StyledText { text: (root.charging ? "+" : "−") + root.watts.toFixed(1) + "W"; color: root.polColor; font.pixelSize: Theme.fontSizeSmall; width: 54; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                     }
                     Spark {
+                        framed: true
                         values: root.wattsHist
                         lineColor: root.polColor
                         area: false
@@ -141,6 +170,7 @@ PluginComponent {
                     Row {
                         spacing: Theme.spacingM
                         StyledText { text: root.health >= 0 ? root.health.toFixed(1) + "% of design" : "—"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeMedium }
+                        StyledText { text: root.cycles >= 0 ? root.cycles + " cycles" : ""; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; anchors.verticalCenter: parent.verticalCenter }
                         StyledText { text: "TLP holds 75–80"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; anchors.verticalCenter: parent.verticalCenter }
                     }
                 }

@@ -36,6 +36,11 @@ PluginComponent {
     property string host: ""
     property string kernel: ""
     property string up: ""
+    property real swapTotalG: 0
+    property real swapUsedG: 0
+    property string load1: ""
+    property string load5: ""
+    property string load15: ""
 
     // ── resident pin: which metric's value rides the bar pill
     property string pinned: ""
@@ -64,6 +69,7 @@ PluginComponent {
         case "disk": return diskUsed + "G"
         case "tmp":  return temp + "°"
         case "fan":  return fan + ""
+        case "swap": return swapUsedG.toFixed(1) + "G"
         case "freq": return freqAvg.toFixed(1) + "GHz"
         default:     return ""
         }
@@ -81,7 +87,8 @@ PluginComponent {
              "echo C $(head -1 /proc/stat); " +
              "echo P $(awk '/^cpu[0-9]/{print $1\":\"$5+$6\":\"$2+$3+$4+$5+$6+$7+$8+$9}' /proc/stat | tr '\\n' ' '); " +
              "echo Q $(cat /sys/devices/system/cpu/cpu[0-9]*/cpufreq/scaling_cur_freq 2>/dev/null | tr '\\n' ' '); " +
-             "echo M $(awk '/MemTotal|MemAvailable/{printf \"%s \", $2}' /proc/meminfo); " +
+             "echo M $(awk '/^MemTotal|^MemAvailable|^SwapTotal|^SwapFree/{printf \"%s \", $2}' /proc/meminfo); " +
+             "echo L $(cut -d' ' -f1-3 /proc/loadavg); " +
              "echo T $(cat /sys/class/hwmon/hwmon*/temp1_input 2>/dev/null | sort -rn | head -1); " +
              "echo D $(df --output=pcent / 2>/dev/null | tail -1 | tr -d ' %'); " +
              "echo E $(df -BG --output=used,size / 2>/dev/null | tail -1 | tr -d 'G'); " +
@@ -131,6 +138,13 @@ PluginComponent {
                             root.memTotalG = totalK / 1048576
                             root.memUsedG = (totalK - availK) / 1048576
                         }
+                        // meminfo file order: MemTotal MemAvailable SwapTotal SwapFree
+                        if (p.length >= 5) {
+                            root.swapTotalG = Number(p[3]) / 1048576
+                            root.swapUsedG = (Number(p[3]) - Number(p[4])) / 1048576
+                        }
+                    } else if (p[0] === "L" && p.length >= 4) {
+                        root.load1 = p[1]; root.load5 = p[2]; root.load15 = p[3]
                     } else if (p[0] === "T" && p.length >= 2) {
                         root.temp = Math.round(Number(p[1]) / 1000)
                         root.tempHist = root.tempHist.concat(root.temp).slice(-30)
@@ -205,16 +219,23 @@ PluginComponent {
                     Column {
                         spacing: 2
                         anchors.verticalCenter: parent.verticalCenter
+                        // framed + damped ranges: trend chips, not seismographs
                         Spark {
+                            framed: true
+                            implicitHeight: 10
+                            area: false
                             values: root.tempHist
-                            minValue: root.tempHist.length ? Math.min(...root.tempHist) - 2 : 30
-                            maxValue: root.tempHist.length ? Math.max(...root.tempHist) + 2 : 95
+                            minValue: root.tempHist.length ? Math.min(...root.tempHist) - 6 : 30
+                            maxValue: root.tempHist.length ? Math.max(...root.tempHist) + 6 : 95
                             lineColor: root.temp >= 85 ? "#ef4444" : root.temp >= 70 ? "#fbbf24" : Theme.primary
                         }
                         Spark {
+                            framed: true
+                            implicitHeight: 10
+                            area: false
                             values: root.fanHist
                             minValue: 0
-                            maxValue: root.fanHist.length ? Math.max(...root.fanHist) + 500 : 5000
+                            maxValue: root.fanHist.length ? Math.max(...root.fanHist) + 600 : 5000
                             lineColor: Theme.secondary
                         }
                     }
@@ -288,12 +309,22 @@ PluginComponent {
                     MetricRow { pinKey: "cpu"; label: "cpu"; val: root.cpu; hist: root.cpuHist; valueText: Math.round(root.cpu) + "%" }
                     MetricRow { pinKey: "ram"; label: "ram"; val: root.mem; hist: root.memHist; tone: Theme.secondary; valueText: root.memUsedG.toFixed(1) + " / " + root.memTotalG.toFixed(1) + "G" }
                     MetricRow { pinKey: "disk"; label: "dsk"; val: root.disk; valueText: root.diskUsed + " / " + root.diskSize + "G" }
+                    MetricRow {
+                        pinKey: "swap"; label: "swp"
+                        val: root.swapTotalG > 0 ? root.swapUsedG / root.swapTotalG * 100 : -1
+                        tone: Theme.tertiary
+                        valueText: root.swapTotalG > 0 ? root.swapUsedG.toFixed(1) + " / " + root.swapTotalG.toFixed(1) + "G" : "none"
+                        visible: root.swapTotalG > 0
+                    }
                     Row {
                         spacing: Theme.spacingS
                         width: parent.width
                         PinDot { key: "freq" }
                         StyledText { text: "freq"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 28; anchors.verticalCenter: parent.verticalCenter }
                         StyledText { text: root.freqAvg.toFixed(2) + " GHz avg"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; anchors.verticalCenter: parent.verticalCenter }
+                        Item { width: 8; height: 1 }
+                        StyledText { text: "load"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; anchors.verticalCenter: parent.verticalCenter }
+                        StyledText { text: root.load1 + " · " + root.load5 + " · " + root.load15; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; anchors.verticalCenter: parent.verticalCenter; visible: root.load1 !== "" }
                     }
                 }
 
@@ -312,6 +343,7 @@ PluginComponent {
                                 spacing: 5
                                 StyledText { text: "c" + index; color: Theme.surfaceVariantText; font.pixelSize: 9; width: 16; anchors.verticalCenter: parent.verticalCenter }
                                 Spark {
+                                    framed: true
                                     values: root.coreHist[index] || []
                                     lineColor: Theme.primary
                                     area: false
@@ -345,6 +377,7 @@ PluginComponent {
                         PinDot { key: "tmp" }
                         StyledText { text: "tmp"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 28; anchors.verticalCenter: parent.verticalCenter }
                         Spark {
+                            framed: true
                             values: root.tempHist
                             lineColor: root.temp >= 85 ? "#ef4444" : root.temp >= 70 ? "#fbbf24" : Theme.primary
                             area: false
@@ -361,6 +394,7 @@ PluginComponent {
                         PinDot { key: "fan" }
                         StyledText { text: "fan"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 28; anchors.verticalCenter: parent.verticalCenter }
                         Spark {
+                            framed: true
                             values: root.fanHist
                             lineColor: Theme.secondary
                             area: false

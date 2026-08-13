@@ -1,5 +1,8 @@
 // Spark.qml — lilypad's sparkline, dms edition. Self-contained (see
 // MeterBar.qml): lineColor fed by the consumer, fill derived from it.
+// framed = "trend chip": the line sits in MeterBar's rounded track, so a
+// standalone spark reads as the same family as the bars beside it. Sparks
+// stacked UNDER a MeterBar (history shadows) stay naked.
 import QtQuick
 
 Item {
@@ -10,6 +13,8 @@ Item {
     property var maxValue: undefined
     property bool area: true
     property real stroke: 1.5
+    property bool framed: false
+    property color trackColor: Qt.rgba(1, 1, 1, 0.12)
 
     implicitWidth: 56
     implicitHeight: 9
@@ -17,9 +22,23 @@ Item {
     onValuesChanged: canvas.requestPaint()
     onLineColorChanged: canvas.requestPaint()
 
+    Rectangle {
+        visible: root.framed
+        anchors.fill: parent
+        radius: height / 2
+        color: root.trackColor
+    }
+
+    // proportional inset so small chips keep drawable width
+    readonly property real padX: framed ? Math.max(3, Math.min(5, width * 0.1)) : 0
+
     Canvas {
         id: canvas
         anchors.fill: parent
+        anchors.leftMargin: root.padX
+        anchors.rightMargin: root.padX
+        anchors.topMargin: root.framed ? 2 : 0
+        anchors.bottomMargin: root.framed ? 2 : 0
         onPaint: {
             const ctx = getContext("2d")
             ctx.clearRect(0, 0, width, height)

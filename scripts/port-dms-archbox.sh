@@ -23,7 +23,7 @@ DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 say()  { printf '  %-52s %s\n' "$1" "$2"; }
 need() { FAIL=1; say "$1" "MISSING — $2"; }
 
-echo "== dms port: staging on $(hostname) =="
+echo "== dms port: staging on $(cat /proc/sys/kernel/hostname) =="
 
 # 1 — packages (install needs sudo; report, don't attempt)
 for pkg in quickshell matugen; do

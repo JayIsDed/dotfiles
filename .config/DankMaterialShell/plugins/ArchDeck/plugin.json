@@ -1,0 +1,12 @@
+{
+    "id": "archDeck",
+    "name": "Arch-Box Deck",
+    "description": "taichi on the desktop — cpu/ram/gpu metrics awake, WAKE button asleep (wol via 111)",
+    "version": "0.1.0",
+    "author": "Jay",
+    "type": "desktop",
+    "capabilities": ["desktop-widget"],
+    "component": "./ArchWidget.qml",
+    "icon": "desktop_windows",
+    "requires": ["ssh"]
+}

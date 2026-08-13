@@ -457,7 +457,11 @@ PluginComponent {
                 Tile {
                     HostHeader {
                         key: "arch"; label: "archbox"; alive: root.archAlive
-                        tail: root.archAlive ? "up " + root.archUp + " · plug " + (root.plugState || "?") : "asleep · plug " + (root.plugState || "?")
+                        // >60W with ssh dead is a wedged box, not a sleeping
+                        // one (08-13: unrestarted openssh upgrade) — say so
+                        tail: root.archAlive ? "up " + root.archUp + " · plug " + (root.plugState || "?")
+                            : root.wallW > 60 ? "UP but ssh dead (" + root.wallW.toFixed(0) + "W) · cycle it"
+                            : "asleep · plug " + (root.plugState || "?")
                     }
 
                     Tile {

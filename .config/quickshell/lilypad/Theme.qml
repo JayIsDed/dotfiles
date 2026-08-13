@@ -31,5 +31,5 @@ Singleton {
     readonly property int barHeight: 36
     readonly property int radius: 10
     readonly property string font: "JetBrainsMono Nerd Font"
-    readonly property int fontSize: 13
+    readonly property int fontSize: 15   // 13 read as dust at 1.25-scale 4K
 }

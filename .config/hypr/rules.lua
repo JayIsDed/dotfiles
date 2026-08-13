@@ -45,6 +45,14 @@ hl.window_rule({
   no_focus = true,
 })
 
+-- lilypad glass: compositor-side blur behind the translucent bar
+hl.layer_rule({
+  name = "lilypad-glass",
+  match = { namespace = "^lilypad$" },
+  blur = true,
+  ignore_alpha = 0.29,
+})
+
 -- swaync overlays keep the glass treatment
 for _, ns in ipairs({ "swaync-control-center", "swaync-notification-window" }) do
   hl.layer_rule({

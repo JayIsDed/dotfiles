@@ -129,6 +129,7 @@ Singleton {
     readonly property color borderStrong: alpha(m3onSurface, 0.17)
 
     // ---- geometry + type ----
+    readonly property real islandAlpha: 0.78   // island glass density (was 0.62 — too see-through)
     readonly property int barHeight: 44
     readonly property int radius: 10
     readonly property int chipRadius: 8

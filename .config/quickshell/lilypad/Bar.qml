@@ -33,7 +33,7 @@ PanelWindow {
         anchors.rightMargin: bar.mSide
         height: bar.islandH
         radius: 14
-        color: Qt.rgba(Theme.bg.r, Theme.bg.g, Theme.bg.b, 0.62)
+        color: Qt.rgba(Theme.bg.r, Theme.bg.g, Theme.bg.b, Theme.islandAlpha)
         border.color: Theme.border
         border.width: 1
 
@@ -114,7 +114,7 @@ PanelWindow {
             }
             Volume  { Layout.alignment: Qt.AlignVCenter }
             Network { Layout.alignment: Qt.AlignVCenter }
-            SysStats { Layout.alignment: Qt.AlignVCenter }
+            MetricsCluster { Layout.alignment: Qt.AlignVCenter }
             Battery { Layout.alignment: Qt.AlignVCenter }
             ScriptModule {
                 id: notif

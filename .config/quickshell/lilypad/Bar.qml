@@ -15,14 +15,17 @@ PanelWindow {
 
     anchors { left: true; right: true; top: true }
     implicitHeight: Theme.barHeight + Theme.islandMargin * 2
-    exclusiveZone: Theme.barHeight + Theme.islandMargin * 2
+    // hypr gaps_out (8) is measured from the exclusive-zone edge; claiming
+    // only barHeight makes window-top land at tile-bottom + islandMargin,
+    // matching the tile-to-screen-top gap
+    exclusiveZone: Theme.barHeight
     color: "transparent"
     WlrLayershell.namespace: "lilypad"
 
     // one floating tile — near-black glass, blur behind
     component Tile: Rectangle {
         default property alias content: inner.data
-        implicitWidth: inner.implicitWidth + 28
+        implicitWidth: inner.implicitWidth + 24
         implicitHeight: Theme.barHeight
         radius: Theme.islandRadius
         color: Theme.alpha(Theme.tileBase, Theme.islandAlpha)

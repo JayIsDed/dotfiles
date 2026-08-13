@@ -38,12 +38,16 @@ RowLayout {
         Layout.preferredWidth: 34
     }
     // fixed centered box so stacked icons align regardless of glyph width
+    // (nerd glyphs mix single- and double-cell advances)
     component MiniIcon: Text {
         color: Theme.text3
         font.family: Theme.font
-        font.pixelSize: Theme.fontSizeS
+        font.pixelSize: 11
         horizontalAlignment: Text.AlignHCenter
-        Layout.preferredWidth: 16
+        verticalAlignment: Text.AlignVCenter
+        Layout.preferredWidth: 18
+        Layout.maximumWidth: 18
+        Layout.preferredHeight: 9
     }
 
     property real cpu: 0
@@ -212,7 +216,7 @@ RowLayout {
     Seg {
         Layout.alignment: Qt.AlignVCenter
         ColumnLayout {
-            spacing: 0
+            spacing: 2
             MiniIcon { text: "󰔏" }
             MiniIcon { text: "󰈐" }
         }
@@ -276,7 +280,7 @@ RowLayout {
     Seg {
         Layout.alignment: Qt.AlignVCenter
         ColumnLayout {
-            spacing: 0
+            spacing: 2
             MiniIcon { text: "󰇚" }
             MiniIcon { text: "󰕒" }
         }

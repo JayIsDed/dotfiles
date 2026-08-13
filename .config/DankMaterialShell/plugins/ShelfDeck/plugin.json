@@ -1,0 +1,12 @@
+{
+    "id": "shelfDeck",
+    "name": "Shelf Deck",
+    "description": "Calibration shelf on the desktop — tank/air temps, heater state, via the 111 relay",
+    "version": "0.1.0",
+    "author": "Jay",
+    "type": "desktop",
+    "capabilities": ["desktop-widget"],
+    "component": "./ShelfWidget.qml",
+    "icon": "water",
+    "requires": ["ssh"]
+}

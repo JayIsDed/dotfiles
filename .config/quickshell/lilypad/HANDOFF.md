@@ -256,6 +256,13 @@ Trial passed on all axes; Jay: "everything looks good... lets adopt it."
 - **Reload truth**: `plugin-scan scan` reloads QML *sometimes* (dir-mtime
   dependent?); `dms restart` is the reliable path, ~9s to bar-back. IPC
   toggle + grim loop unchanged and remains the verification standard.
+  After a restart, sparks hide until 2+ probe ticks (hist.length > 1) —
+  wait ~35s before judging a spark change from a screenshot.
+- **KIT PROPAGATION TRAP (bit us 08-13)**: MeterBar/Spark/Tile are COPIES
+  in every plugin dir (dms loads per-dir, no shared import). Editing one
+  copy does nothing for the others — after ANY kit edit run the propagate
+  loop (`for d in ...; do cp SysMetrics/Spark.qml $d/; done`), verify with
+  `md5sum */Spark.qml | awk '{print $1}' | sort -u | wc -l` == 1, THEN sync.
 - **Archbox incident (the whole afternoon's flavor)**: box showed "asleep"
   but pulled 148W — sshd wedged (accepts TCP, no banner, RST = classic
   unrestarted openssh upgrade; per-connection re-exec dies). Ping fine,

@@ -12,6 +12,7 @@ PluginComponent {
     property int pct: -1
     property string status: ""
     property real watts: 0
+    property var wattsHist: []
     readonly property bool alive: pct >= 0
     readonly property bool charging: status === "Charging"
     readonly property color polColor: charging ? "#4ade80" : "#60a5fa"
@@ -26,6 +27,9 @@ PluginComponent {
                 root.pct = Number(p[0])
                 root.status = p[1]
                 root.watts = Number(p[2]) / 1000000
+                // signed history: charge above zero, draw below
+                root.wattsHist = root.wattsHist.concat(
+                    root.charging ? root.watts : -root.watts).slice(-60)
             }, 0, 4000)
     }
 
@@ -99,7 +103,14 @@ PluginComponent {
                     implicitWidth: 200
                     implicitHeight: 5
                 }
-                StyledText { text: "rate bar scale: 0–65 W (brick)"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall }
+                Spark {
+                    values: root.wattsHist
+                    lineColor: root.polColor
+                    implicitWidth: 260
+                    implicitHeight: 30
+                    stroke: 2
+                }
+                StyledText { text: "±W history · 5s ticks · rate bar 0–65 W (brick)"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall }
             }
         }
     }

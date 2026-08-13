@@ -242,3 +242,30 @@ Trial passed on all axes; Jay: "everything looks good... lets adopt it."
   bits if their Tailscale CC panel lacks the homelab ping · archbox dms
   port (nvidia/triple-head validation) · retire waybar + ~/.mydotfiles
   after that · upstream issue: dms CLI --prefer passthrough for matugen.
+
+## dms loot list (found in the repo, 08-13 — DURABLE COPY, Jay asked)
+
+Bar widget ids (add via barConfigs[0].*Widgets): diskUsage · cpuTemp ·
+gpuTemp · privacyIndicator · idleInhibitor · vpn · notepadButton ·
+colorPicker · systemUpdate · powerMenuButton · capsLockIndicator ·
+layout · spacer · separator. ENABLED 08-13: systemUpdate,
+privacyIndicator, idleInhibitor, notepadButton, colorPicker,
+powerMenuButton.
+Modules/features still unexplored:
+- Desktop widgets (DesktopPluginComponent) — draggable widgets ON the
+  wallpaper layer. Shelf temps / pond print status / homelab tiles on
+  the desktop. THE sleeper feature.
+- ProcessList — process-list popout off cpu widgets (btop-lite).
+- Launcher plugins — trigger-prefixed searches ("=" calc built in);
+  custom triggers are a plugin type (!ssh host jumper, spool search).
+- DankDash — dashboard overlay tabs · Notepad slide-out.
+- Display profiles (1.5) — saved monitor layouts, auto-switch (dock QoL,
+  archbox triple-head).
+- Window Rules Manager (1.5) — GUI window rules, cross-compositor.
+- dms keybinds show hyprland — cheatsheet overlay off the real binds
+  (could retire cheatsheet.sh on SUPER+CTRL+K).
+- Night mode (CC) / Lock / greeter — DEDUPE pairs: vs hyprsunset /
+  hyprlock / hypridle (same class as the swaync fight, fixed 08-13).
+- Plugin registry: plugins.danklinux.com (230+, ranked).
+Bar height: barConfigs[0].innerPadding drives it (widgetThickness =
+26 + innerPadding*0.6; 4→10 on 08-13 for the taller bar).

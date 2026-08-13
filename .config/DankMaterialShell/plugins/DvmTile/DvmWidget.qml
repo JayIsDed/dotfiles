@@ -12,6 +12,8 @@ PluginComponent {
     property real cpu: 0
     property real mem: 0
     property string containers: ""
+    property var cpuHist: []
+    property var memHist: []
     property var lastIdle: 0
     property var lastTotal: 0
     readonly property bool alive: containers !== ""
@@ -33,13 +35,17 @@ PluginComponent {
                         const f = p.slice(2).map(Number)
                         const idle = f[3] + (f[4] || 0)
                         const total = f.reduce((a, b) => a + b, 0)
-                        if (root.lastTotal > 0 && total > root.lastTotal)
+                        if (root.lastTotal > 0 && total > root.lastTotal) {
                             root.cpu = 100 * (1 - (idle - root.lastIdle) / (total - root.lastTotal))
+                            root.cpuHist = root.cpuHist.concat(root.cpu).slice(-30)
+                        }
                         root.lastIdle = idle
                         root.lastTotal = total
                     } else if (p[0] === "M" && p.length >= 3) {
-                        if (Number(p[1]) > 0)
+                        if (Number(p[1]) > 0) {
                             root.mem = 100 * (1 - Number(p[2]) / Number(p[1]))
+                            root.memHist = root.memHist.concat(root.mem).slice(-30)
+                        }
                     } else if (p[0] === "D" && p.length >= 2) {
                         root.containers = p[1]
                     }
@@ -115,26 +121,30 @@ PluginComponent {
 
             Column {
                 width: parent.width
-                spacing: Theme.spacingM
+                spacing: Theme.spacingS
 
-                StyledText {
-                    text: "cpu  " + Math.round(root.cpu) + "%"
-                    color: Theme.surfaceText
-                    font.pixelSize: Theme.fontSizeLarge
+                Row {
+                    spacing: Theme.spacingS
+                    StyledText { text: "cpu"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 34; anchors.verticalCenter: parent.verticalCenter }
+                    MeterBar { value: root.cpu; okColor: Theme.primary; implicitWidth: 150; implicitHeight: 5; anchors.verticalCenter: parent.verticalCenter }
+                    StyledText { text: Math.round(root.cpu) + "%"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 34; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                 }
-                StyledText {
-                    text: "ram  " + Math.round(root.mem) + "%"
-                    color: Theme.surfaceText
-                    font.pixelSize: Theme.fontSizeLarge
+                Spark { values: root.cpuHist; lineColor: Theme.primary; minValue: 0; maxValue: 100; implicitWidth: 260; implicitHeight: 26; stroke: 2 }
+                Row {
+                    spacing: Theme.spacingS
+                    StyledText { text: "ram"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 34; anchors.verticalCenter: parent.verticalCenter }
+                    MeterBar { value: root.mem; okColor: Theme.primary; implicitWidth: 150; implicitHeight: 5; anchors.verticalCenter: parent.verticalCenter }
+                    StyledText { text: Math.round(root.mem) + "%"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 34; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                 }
+                Spark { values: root.memHist; lineColor: Theme.secondary; minValue: 0; maxValue: 100; implicitWidth: 260; implicitHeight: 26; stroke: 2 }
                 StyledText {
-                    text: "containers  " + root.containers
+                    text: "containers  " + root.containers + "  ·  10s ssh probe"
                     color: Theme.surfaceText
-                    font.pixelSize: Theme.fontSizeLarge
+                    font.pixelSize: Theme.fontSizeMedium
                 }
             }
         }
     }
     popoutWidth: 320
-    popoutHeight: 220
+    popoutHeight: 300
 }

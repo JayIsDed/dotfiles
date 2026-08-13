@@ -107,20 +107,30 @@ PluginComponent {
 
             Column {
                 width: parent.width
-                spacing: Theme.spacingM
+                spacing: Theme.spacingS
 
-                StyledText {
-                    text: "5h window   " + (root.alive ? Math.round(root.cu5) + "%" : "—")
-                    color: Theme.surfaceText
-                    font.pixelSize: Theme.fontSizeLarge
+                Row {
+                    spacing: Theme.spacingS
+                    StyledText { text: "5h"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 24; anchors.verticalCenter: parent.verticalCenter }
+                    MeterBar {
+                        value: root.cu5; implicitWidth: 180; implicitHeight: 6
+                        fillColor: root.cu5 >= 85 ? "#ef4444" : root.cu5 >= 70 ? "#fbbf24" : Theme.primary
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    StyledText { text: root.alive ? Math.round(root.cu5) + "%" : "—"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 34; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
+                }
+                Row {
+                    spacing: Theme.spacingS
+                    StyledText { text: "7d"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 24; anchors.verticalCenter: parent.verticalCenter }
+                    MeterBar {
+                        value: root.cu7; marker: 50; implicitWidth: 180; implicitHeight: 6
+                        fillColor: root.cu7 >= 85 ? "#ef4444" : root.cu7 >= 70 ? "#fbbf24" : Theme.secondary
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    StyledText { text: root.cu7 >= 0 ? Math.round(root.cu7) + "%" : "—"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 34; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                 }
                 StyledText {
-                    text: "7d window   " + (root.cu7 >= 0 ? Math.round(root.cu7) + "%" : "—")
-                    color: root.cu7 >= 50 ? Theme.tempDanger : Theme.surfaceText
-                    font.pixelSize: Theme.fontSizeLarge
-                }
-                StyledText {
-                    text: root.cu7 >= 50 ? "past the fable ceiling" : "under the fable ceiling"
+                    text: (root.cu7 >= 50 ? "past" : "under") + " the fable ceiling (tick = 50%) · 3min relay"
                     color: Theme.surfaceVariantText
                     font.pixelSize: Theme.fontSizeSmall
                 }

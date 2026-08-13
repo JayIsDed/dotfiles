@@ -130,7 +130,9 @@ Singleton {
     readonly property color borderStrong: alpha(m3onSurface, 0.17)
 
     // ---- geometry + type ----
-    readonly property real islandAlpha: 0.86   // island glass density (0.62 -> 0.78 -> 0.86, Jay-tuned; hypr blurs behind it)
+    readonly property real islandAlpha: 0.86   // tile glass density (0.62 -> 0.78 -> 0.86, Jay-tuned; hypr blurs behind it)
+    // near-black tile ground, faint palette tint (Jay: pills darker than surface tones)
+    readonly property color tileBase: mix("#000000", m3background, 0.55)
     readonly property int barHeight: 52        // island height — roomy, uses the inside space
     readonly property int islandMargin: 4      // uniform thin ring: top = sides = bottom
     readonly property int islandRadius: 12

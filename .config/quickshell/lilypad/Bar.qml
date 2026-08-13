@@ -1,6 +1,6 @@
-// Bar.qml — floating glass island (2025 custom-waybar geometry: 40 high,
-// 6 top / 10 side margins). The window is full-width and transparent; the
-// island is drawn inset, so no unverified margin API is involved.
+// Bar.qml — floating tile row (design pass 3: the single island dissolved
+// into per-group tiles; same one window + blur layer, so the split costs
+// nothing — hypr blurs painted pixels only, gaps stay wallpaper).
 // Alignment: anchored sections (left / center / right), layouts only inside.
 import Quickshell
 import Quickshell.Hyprland
@@ -13,42 +13,40 @@ PanelWindow {
     required property var modelData
     screen: modelData
 
-    readonly property int islandH: Theme.barHeight
-    readonly property int mTop: Theme.islandMargin
-    readonly property int mSide: Theme.islandMargin
-
     anchors { left: true; right: true; top: true }
-    implicitHeight: islandH + Theme.islandMargin * 2
-    exclusiveZone: islandH + Theme.islandMargin * 2
+    implicitHeight: Theme.barHeight + Theme.islandMargin * 2
+    exclusiveZone: Theme.barHeight + Theme.islandMargin * 2
     color: "transparent"
     WlrLayershell.namespace: "lilypad"
 
-    Rectangle {
-        id: island
-        anchors.top: parent.top
-        anchors.topMargin: bar.mTop
-        anchors.left: parent.left
-        anchors.leftMargin: bar.mSide
-        anchors.right: parent.right
-        anchors.rightMargin: bar.mSide
-        height: bar.islandH
+    // one floating tile — near-black glass, blur behind
+    component Tile: Rectangle {
+        default property alias content: inner.data
+        implicitWidth: inner.implicitWidth + 28
+        implicitHeight: Theme.barHeight
         radius: Theme.islandRadius
-        color: Qt.rgba(Theme.bg.r, Theme.bg.g, Theme.bg.b, Theme.islandAlpha)
+        color: Theme.alpha(Theme.tileBase, Theme.islandAlpha)
         border.color: Theme.border
         border.width: 1
-
-        // ── left: workspaces · window title
         RowLayout {
-            anchors.left: parent.left
-            anchors.leftMargin: 14
-            anchors.verticalCenter: parent.verticalCenter
+            id: inner
+            anchors.centerIn: parent
             spacing: 12
+        }
+    }
 
-            Workspaces { Layout.alignment: Qt.AlignVCenter }
+    // ── left: workspaces tile · window-title tile (hides when empty)
+    RowLayout {
+        anchors.left: parent.left
+        anchors.leftMargin: Theme.islandMargin
+        anchors.verticalCenter: parent.verticalCenter
+        spacing: Theme.pad
 
+        Tile { Workspaces { Layout.alignment: Qt.AlignVCenter } }
+        Tile {
+            visible: (Hyprland.activeToplevel?.title ?? "") !== ""
             Text {
-                Layout.alignment: Qt.AlignVCenter
-                Layout.maximumWidth: bar.width * 0.25
+                Layout.maximumWidth: bar.width * 0.22
                 text: Hyprland.activeToplevel?.title ?? ""
                 color: Theme.text2
                 font.family: Theme.font
@@ -56,34 +54,34 @@ PanelWindow {
                 elide: Text.ElideRight
             }
         }
+    }
 
-        // ── center: media · clock · weather (the 2025 arrangement)
-        RowLayout {
-            anchors.centerIn: parent
-            spacing: 16
-
-            ScriptModule {
-                Layout.alignment: Qt.AlignVCenter
-                script: "media-player.sh"; interval: 3000
-                tone: Theme.text3
-                leftCmd: ["playerctl", "play-pause"]
-                rightCmd: ["playerctl", "next"]
-            }
-            Clock { Layout.alignment: Qt.AlignVCenter }
-            ScriptModule {
-                Layout.alignment: Qt.AlignVCenter
-                script: "weather.sh"; interval: 900000
-                tone: Theme.text3
-            }
+    // ── center: media · clock · weather tile
+    Tile {
+        anchors.centerIn: parent
+        ScriptModule {
+            Layout.alignment: Qt.AlignVCenter
+            script: "media-player.sh"; interval: 3000
+            tone: Theme.text3
+            leftCmd: ["playerctl", "play-pause"]
+            rightCmd: ["playerctl", "next"]
         }
+        Clock { Layout.alignment: Qt.AlignVCenter }
+        ScriptModule {
+            Layout.alignment: Qt.AlignVCenter
+            script: "weather.sh"; interval: 900000
+            tone: Theme.text3
+        }
+    }
 
-        // ── right: the module fleet
-        RowLayout {
-            anchors.right: parent.right
-            anchors.rightMargin: 14
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: 13
+    // ── right: chips tile · metric tiles (cluster draws its own) · power tile
+    RowLayout {
+        anchors.right: parent.right
+        anchors.rightMargin: Theme.islandMargin
+        anchors.verticalCenter: parent.verticalCenter
+        spacing: Theme.pad
 
+        Tile {
             ScriptModule {
                 Layout.alignment: Qt.AlignVCenter
                 script: "updates.sh"; interval: 3600000
@@ -114,9 +112,6 @@ PanelWindow {
             }
             Volume  { Layout.alignment: Qt.AlignVCenter }
             Network { Layout.alignment: Qt.AlignVCenter }
-            MetricsCluster { Layout.alignment: Qt.AlignVCenter }
-            BrightnessChip { Layout.alignment: Qt.AlignVCenter }
-            Battery { Layout.alignment: Qt.AlignVCenter }
             ScriptModule {
                 id: notif
                 Layout.alignment: Qt.AlignVCenter
@@ -124,12 +119,18 @@ PanelWindow {
                 leftCmd: ["swaync-client", "-t", "-sw"]
                 rightCmd: ["swaync-client", "-C"]
             }
+        }
 
+        MetricsCluster { Layout.alignment: Qt.AlignVCenter }
+
+        Tile {
+            BrightnessChip { Layout.alignment: Qt.AlignVCenter }
+            Battery { Layout.alignment: Qt.AlignVCenter }
             Rectangle {
                 Layout.alignment: Qt.AlignVCenter
                 implicitWidth: 30
                 implicitHeight: 26
-                radius: 8
+                radius: Theme.chipRadius
                 color: panelLoader.active ? Theme.elevated : "transparent"
                 border.color: panelLoader.active ? Theme.borderStrong : Theme.border
                 border.width: 1

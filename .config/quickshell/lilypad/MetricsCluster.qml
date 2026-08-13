@@ -14,14 +14,14 @@ RowLayout {
     id: root
     spacing: 8
 
-    // pill container — every segment sits in one (workspace-pill kinship)
+    // metric tile — full bar-height sibling of Bar's Tile, near-black glass
     component Seg: Rectangle {
         default property alias content: inner.data
-        implicitWidth: inner.implicitWidth + 18
-        implicitHeight: 32
-        radius: 16
-        color: Theme.l1
-        border.color: Theme.l1Border
+        implicitWidth: inner.implicitWidth + 24
+        implicitHeight: Theme.barHeight
+        radius: Theme.islandRadius
+        color: Theme.alpha(Theme.tileBase, Theme.islandAlpha)
+        border.color: Theme.border
         border.width: 1
         RowLayout {
             id: inner

@@ -11,7 +11,7 @@ RowLayout {
 
     // Hyprland only reports existing workspaces; pad so the row reads as pills
     readonly property int shown: Math.max(3,
-        Hyprland.workspaces.values.reduce((m, w) => Math.max(m, w.id), 0))
+        Hyprland.workspaces.values.reduce((m, w) => Math.max(m, w.id), 0), 5)
 
     Repeater {
         model: root.shown

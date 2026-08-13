@@ -1,20 +1,34 @@
-// PowerDraw.qml — live battery power in watts (discharge or charge rate),
-// beside the battery ring. EE catnip. Hides on hosts without a battery.
+// PowerDraw.qml — live battery watts + rate bar, beside the battery ring.
+// Polarity: +green charging (power in), −blue on battery (power out).
+// The bar under the readout scales both directions against the X1C9's 65W
+// USB-C brick — same scale either way so the eye compares like with like.
 import Quickshell.Io
 import Quickshell.Services.UPower
 import QtQuick
+import QtQuick.Layouts
 
-Text {
+ColumnLayout {
     id: root
+    spacing: 3
     property real watts: -1
+    readonly property real maxW: 65
+    readonly property bool charging: !UPower.onBattery
 
-    // input/output differentiator: +green charging (power in), −blue on
-    // battery (power out)
     visible: watts >= 0
-    text: (!UPower.onBattery ? "+" : "−") + watts.toFixed(1) + "W"
-    color: !UPower.onBattery ? Theme.ok : Theme.info
-    font.family: Theme.font
-    font.pixelSize: Theme.fontSizeS
+
+    Text {
+        Layout.alignment: Qt.AlignHCenter
+        text: (root.charging ? "+" : "−") + root.watts.toFixed(1) + "W"
+        color: root.charging ? Theme.ok : Theme.info
+        font.family: Theme.font
+        font.pixelSize: Theme.fontSizeS
+    }
+    MeterBar {
+        Layout.alignment: Qt.AlignHCenter
+        Layout.preferredWidth: 52
+        value: 100 * root.watts / root.maxW
+        fillColor: root.charging ? Theme.ok : Theme.info
+    }
 
     Process {
         id: probe

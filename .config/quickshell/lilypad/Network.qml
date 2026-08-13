@@ -16,17 +16,23 @@ MouseArea {
     Process {
         id: probe
         command: ["sh", "-c",
-            "nmcli -t -f TYPE,STATE,CONNECTION device status 2>/dev/null | grep -m1 ':connected:'"]
+            "nmcli -t -f TYPE,STATE,CONNECTION device status 2>/dev/null | grep -m1 -E '^(wifi|ethernet):connected:'; " +
+            "nmcli -t -f active,ssid dev wifi 2>/dev/null | grep -m1 '^yes:'"]
         stdout: StdioCollector {
             onStreamFinished: {
-                const parts = text.trim().split(":")
+                const lines = text.trim().split("\n")
+                const parts = (lines[0] ?? "").split(":")
                 if (parts.length >= 3 && parts[1] === "connected") {
-                    root.kind = parts[0].includes("wireless") ? "wifi" : "ethernet"
+                    root.kind = parts[0] === "wifi" ? "wifi" : "ethernet"
                     root.label = parts.slice(2).join(":")
                 } else {
                     root.kind = "none"
                     root.label = "offline"
                 }
+                // the actual over-the-air SSID beats the profile name
+                const ssidLine = lines.find(l => l.startsWith("yes:"))
+                if (root.kind === "wifi" && ssidLine)
+                    root.label = ssidLine.slice(4)
             }
         }
     }
@@ -49,7 +55,7 @@ MouseArea {
         }
         Text {
             text: root.label
-            color: Theme.text3
+            color: Theme.text2
             font.family: Theme.font
             font.pixelSize: Theme.fontSize - 1
             visible: root.kind === "wifi"

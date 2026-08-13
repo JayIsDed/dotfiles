@@ -13,13 +13,13 @@ PanelWindow {
     required property var modelData
     screen: modelData
 
-    readonly property int islandH: 40
-    readonly property int mTop: 6
-    readonly property int mSide: 10
+    readonly property int islandH: Theme.barHeight
+    readonly property int mTop: Theme.islandMargin
+    readonly property int mSide: Theme.islandMargin
 
     anchors { left: true; right: true; top: true }
-    implicitHeight: islandH + mTop + 4
-    exclusiveZone: islandH + mTop + 4
+    implicitHeight: islandH + Theme.islandMargin * 2
+    exclusiveZone: islandH + Theme.islandMargin * 2
     color: "transparent"
     WlrLayershell.namespace: "lilypad"
 
@@ -32,7 +32,7 @@ PanelWindow {
         anchors.right: parent.right
         anchors.rightMargin: bar.mSide
         height: bar.islandH
-        radius: 14
+        radius: Theme.islandRadius
         color: Qt.rgba(Theme.bg.r, Theme.bg.g, Theme.bg.b, Theme.islandAlpha)
         border.color: Theme.border
         border.width: 1
@@ -115,6 +115,7 @@ PanelWindow {
             Volume  { Layout.alignment: Qt.AlignVCenter }
             Network { Layout.alignment: Qt.AlignVCenter }
             MetricsCluster { Layout.alignment: Qt.AlignVCenter }
+            BrightnessChip { Layout.alignment: Qt.AlignVCenter }
             Battery { Layout.alignment: Qt.AlignVCenter }
             ScriptModule {
                 id: notif

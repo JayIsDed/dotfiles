@@ -108,7 +108,7 @@ Singleton {
     // stacked thin MeterBars are the bar-level default; gauges live in popups
     readonly property int meterHeight: 6
     readonly property int meterRadius: 3
-    readonly property int meterWidth: 56
+    readonly property int meterWidth: 64
     readonly property color track: alpha(m3onSurface, 0.12)
     readonly property int gaugeSize: 26
     readonly property int gaugeStroke: 3
@@ -130,7 +130,9 @@ Singleton {
 
     // ---- geometry + type ----
     readonly property real islandAlpha: 0.78   // island glass density (was 0.62 — too see-through)
-    readonly property int barHeight: 44
+    readonly property int barHeight: 52        // island height — roomy, uses the inside space
+    readonly property int islandMargin: 4      // uniform thin ring: top = sides = bottom
+    readonly property int islandRadius: 12
     readonly property int radius: 10
     readonly property int chipRadius: 8
     readonly property int pillRadius: 999

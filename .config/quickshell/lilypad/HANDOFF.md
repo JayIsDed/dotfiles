@@ -160,3 +160,28 @@ the contract between seats: read it fully before touching QML.
   autostart swap → retire waybar + ~/.mydotfiles.
 - Launch on laptop is still MANUAL (autostart says waybar until the swap).
 - Archbox: untouched tonight; waybar (ML4W themed) still its bar.
+
+## Session 3 (2026-08-13 ~00:15) — real-estate pass, live-steered
+
+- Two overlaps Jay caught post-close, both from bundles having only LEFT
+  clamps: TS badge ran into powerTile, dvm tile into the clock.
+- **TS badge folded into Network.qml** (powerTile): SSID tinted by tunnel
+  state (ok home / info away / warn off-or-lost), house 󰋜 at home vs tunnel
+  󰖂 away, homelab RTT beside it. tsProbe moved wholesale, semantics intact.
+- **TaskSwitcher takes a `budget` (px) from Bar**: chips even-split the
+  ws↔clock span (minus dvm tile) and pixel-elide; below 96px/chip they show
+  wayland appId instead of titles (appId VERIFIED against end-4 source),
+  floor 38px. Squeeze-tested with 3 spawned kitties: 7 chips compressed
+  evenly, dvm stayed clear of the clock, chips relax when load drops.
+- **Sys card off the bar → ControlPanel** (component reused; its probe only
+  runs while the panel is open). **Net seg = plain rx/tx rates** — sparks
+  dropped, Jay doesn't watch flow; detail belongs to the phase-3 system view.
+- Bundles still have no GENERAL shrink — priority-collapse stays Phase 3's
+  job; tonight removed the actual overflow sources, not the class of bug.
+- **Laptop repo drift**: laptop ~/dotfiles never tracked .config/quickshell/
+  (whole dir untracked) + local hypr/matugen mods. The running bar is
+  scp-fed; canon is 111's clone. Reconcile when convenient.
+- **pgrep -f self-matches too** (read-only cousin of the pkill trap): kill
+  spawned test windows by saved PID, verify via `ps | grep "[s]queeze"`.
+- x1c ssh alias still .101; laptop answers on .247 — reservation didn't
+  hold. Fix alias or DHCP before the next remote seat trips on it.

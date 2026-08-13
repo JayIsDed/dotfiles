@@ -59,3 +59,9 @@ output_path = '~/.config/hyprlock/colors.conf'
 [templates.ohmyposh]
 input_path = '~/.config/matugen/templates/ohmyposh-prompt.toml'
 output_path = '~/.config/ohmyposh/prompt.toml'
+
+# lilypad quickshell palette — JSON, FileView-watched by Theme.qml (no post_hook:
+# the shell picks up the write itself, live, no reload needed)
+[templates.lilypad]
+input_path = '~/.config/matugen/templates/lilypad-colors.json'
+output_path = '~/.local/state/quickshell/lilypad/colors.json'

@@ -165,52 +165,70 @@ PluginComponent {
 
             Column {
                 width: parent.width
-                spacing: Theme.spacingM
+                spacing: Theme.spacingS
 
-                // one grid for every row: label 34 · graph 190 · value 44.
-                // spark sits directly under its metric's bar, same width,
-                // area off — flat lines must read as lines, not dividers.
-                component Metric: Row {
+                // tile grammar: find the section by its heading. Rows keep
+                // the shared grid: label 30 · graph flex · value 40.
+                component BarRow: Row {
                     property string label
-                    property real val: -1          // <0 hides the bar
-                    property var hist: []          // empty hides the spark
+                    property real val
                     property string valueText: Math.round(val) + "%"
+                    property color tone: Theme.primary
+                    spacing: Theme.spacingS
+                    width: parent.width
+                    StyledText { text: label; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 30; anchors.verticalCenter: parent.verticalCenter }
+                    MeterBar { value: val; okColor: tone; implicitWidth: parent.width - 86; implicitHeight: 5; anchors.verticalCenter: parent.verticalCenter }
+                    StyledText { text: valueText; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 40; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
+                }
+                component SparkRow: Row {
+                    property string label
+                    property var hist: []
+                    property string valueText
                     property color tone: Theme.primary
                     property var sparkMin: 0
                     property var sparkMax: 100
                     spacing: Theme.spacingS
-                    StyledText { text: label; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 34; anchors.verticalCenter: parent.verticalCenter }
-                    Column {
-                        spacing: 3
-                        anchors.verticalCenter: parent.verticalCenter
-                        MeterBar { visible: val >= 0; value: val; okColor: tone; implicitWidth: 190; implicitHeight: 5 }
-                        Spark { visible: hist.length > 1; values: hist; lineColor: tone; area: false; minValue: sparkMin; maxValue: sparkMax; implicitWidth: 190; implicitHeight: 16; stroke: 1.5 }
-                    }
-                    StyledText { text: valueText; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 44; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
+                    width: parent.width
+                    StyledText { text: label; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 30; anchors.verticalCenter: parent.verticalCenter }
+                    Spark { values: hist; lineColor: tone; area: false; minValue: sparkMin; maxValue: sparkMax; implicitWidth: parent.width - 86; implicitHeight: 22; stroke: 1.5; anchors.verticalCenter: parent.verticalCenter }
+                    StyledText { text: valueText; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 40; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                 }
 
-                Metric { label: "cpu"; val: root.cpu; hist: root.cpuHist }
-                Metric { label: "ram"; val: root.mem; hist: root.memHist; tone: Theme.secondary }
-                Metric { label: "disk"; val: root.disk }
-                Metric {
-                    label: "tmp"; hist: root.tempHist
-                    valueText: root.temp + "°"
-                    tone: root.temp >= 85 ? "#ef4444" : root.temp >= 70 ? "#fbbf24" : Theme.primary
-                    sparkMin: root.tempHist.length ? Math.min(...root.tempHist) - 2 : 30
-                    sparkMax: root.tempHist.length ? Math.max(...root.tempHist) + 2 : 95
+                Tile {
+                    heading: "LOAD"
+                    headingColor: Theme.surfaceVariantText
+                    BarRow { label: "cpu"; val: root.cpu }
+                    BarRow { label: "ram"; val: root.mem; tone: Theme.secondary }
+                    BarRow { label: "disk"; val: root.disk }
                 }
-                Metric {
-                    label: "fan"; hist: root.fanHist
-                    valueText: root.fan + " rpm"
-                    tone: Theme.secondary
-                    sparkMin: 0
-                    sparkMax: root.fanHist.length ? Math.max(...root.fanHist) + 500 : 5000
+                Tile {
+                    heading: "HISTORY"
+                    headingColor: Theme.surfaceVariantText
+                    SparkRow { label: "cpu"; hist: root.cpuHist; valueText: Math.round(root.cpu) + "%" }
+                    SparkRow { label: "ram"; hist: root.memHist; valueText: Math.round(root.mem) + "%"; tone: Theme.secondary }
+                }
+                Tile {
+                    heading: "THERMALS"
+                    headingColor: Theme.surfaceVariantText
+                    SparkRow {
+                        label: "tmp"; hist: root.tempHist
+                        valueText: root.temp + "°"
+                        tone: root.temp >= 85 ? "#ef4444" : root.temp >= 70 ? "#fbbf24" : Theme.primary
+                        sparkMin: root.tempHist.length ? Math.min(...root.tempHist) - 2 : 30
+                        sparkMax: root.tempHist.length ? Math.max(...root.tempHist) + 2 : 95
+                    }
+                    SparkRow {
+                        label: "fan"; hist: root.fanHist
+                        valueText: root.fan + " rpm"
+                        tone: Theme.secondary
+                        sparkMax: root.fanHist.length ? Math.max(...root.fanHist) + 500 : 5000
+                    }
                 }
             }
         }
     }
     popoutWidth: 320
-    popoutHeight: 380
+    popoutHeight: 470
 
     // headless popout toggle: qs -c dms ipc call popout-sys toggle
     IpcHandler {

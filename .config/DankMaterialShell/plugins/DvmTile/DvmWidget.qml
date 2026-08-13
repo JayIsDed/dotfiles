@@ -17,14 +17,23 @@ PluginComponent {
     property var memHist: []
     property var lastIdle: 0
     property var lastTotal: 0
+    property string up: ""
+    property string loadavg: ""
     readonly property bool alive: containers !== ""
+
+    function fmtUp(s) {
+        const d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600),
+              m = Math.floor(s % 3600 / 60)
+        return d > 0 ? d + "d" + h + "h" : h > 0 ? h + "h" + m + "m" : m + "m"
+    }
 
     function probe() {
         Proc.runCommand("dvmTile.probe",
             ["ssh", "-o", "ConnectTimeout=4", "-o", "BatchMode=yes", "docker-services",
              "echo C $(head -1 /proc/stat); " +
              "echo M $(awk '/MemTotal|MemAvailable/{printf \"%s \", $2}' /proc/meminfo); " +
-             "echo D $(docker ps -q | wc -l)/$(docker ps -aq | wc -l)"],
+             "echo D $(docker ps -q | wc -l)/$(docker ps -aq | wc -l); " +
+             "echo U $(cut -d. -f1 /proc/uptime) $(cut -d\" \" -f1-3 /proc/loadavg)"],
             (stdout, exitCode) => {
                 if (exitCode !== 0 || stdout.trim() === "") {
                     root.containers = ""
@@ -49,6 +58,9 @@ PluginComponent {
                         }
                     } else if (p[0] === "D" && p.length >= 2) {
                         root.containers = p[1]
+                    } else if (p[0] === "U" && p.length >= 5) {
+                        root.up = root.fmtUp(Number(p[1]))
+                        root.loadavg = p[2] + " " + p[3] + " " + p[4]
                     }
                 }
             }, 0, 8000)
@@ -122,37 +134,54 @@ PluginComponent {
 
             Column {
                 width: parent.width
-                spacing: Theme.spacingM
+                spacing: Theme.spacingS
 
-                // shared popout grid: label 34 · graph 190 · value 44
-                component Metric: Row {
+                component BarRow: Row {
                     property string label
                     property real val
-                    property var hist: []
                     property color tone: Theme.primary
                     spacing: Theme.spacingS
-                    StyledText { text: label; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 34; anchors.verticalCenter: parent.verticalCenter }
-                    Column {
-                        spacing: 3
-                        anchors.verticalCenter: parent.verticalCenter
-                        MeterBar { value: val; okColor: tone; implicitWidth: 190; implicitHeight: 5 }
-                        Spark { visible: hist.length > 1; values: hist; lineColor: tone; area: false; minValue: 0; maxValue: 100; implicitWidth: 190; implicitHeight: 16; stroke: 1.5 }
-                    }
-                    StyledText { text: Math.round(val) + "%"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 44; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
+                    width: parent.width
+                    StyledText { text: label; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 30; anchors.verticalCenter: parent.verticalCenter }
+                    MeterBar { value: val; okColor: tone; implicitWidth: parent.width - 86; implicitHeight: 5; anchors.verticalCenter: parent.verticalCenter }
+                    StyledText { text: Math.round(val) + "%"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 40; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
+                }
+                component SparkRow: Row {
+                    property string label
+                    property var hist: []
+                    property string valueText
+                    property color tone: Theme.primary
+                    spacing: Theme.spacingS
+                    width: parent.width
+                    StyledText { text: label; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 30; anchors.verticalCenter: parent.verticalCenter }
+                    Spark { values: hist; lineColor: tone; area: false; minValue: 0; maxValue: 100; implicitWidth: parent.width - 86; implicitHeight: 22; stroke: 1.5; anchors.verticalCenter: parent.verticalCenter }
+                    StyledText { text: valueText; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 40; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                 }
 
-                Metric { label: "cpu"; val: root.cpu; hist: root.cpuHist }
-                Metric { label: "ram"; val: root.mem; hist: root.memHist; tone: Theme.secondary }
-                StyledText {
-                    text: "containers  " + root.containers + "  ·  10s ssh probe"
-                    color: Theme.surfaceText
-                    font.pixelSize: Theme.fontSizeMedium
+                Tile {
+                    heading: "LOAD"
+                    headingColor: Theme.surfaceVariantText
+                    BarRow { label: "cpu"; val: root.cpu }
+                    BarRow { label: "ram"; val: root.mem; tone: Theme.secondary }
+                }
+                Tile {
+                    heading: "HISTORY"
+                    headingColor: Theme.surfaceVariantText
+                    SparkRow { label: "cpu"; hist: root.cpuHist; valueText: Math.round(root.cpu) + "%" }
+                    SparkRow { label: "ram"; hist: root.memHist; valueText: Math.round(root.mem) + "%"; tone: Theme.secondary }
+                }
+                Tile {
+                    heading: "HOST"
+                    headingColor: Theme.surfaceVariantText
+                    StyledText { text: "containers   " + root.containers; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeMedium }
+                    StyledText { text: "load   " + root.loadavg; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall }
+                    StyledText { text: "up   " + root.up + "  ·  10s ssh probe"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall }
                 }
             }
         }
     }
     popoutWidth: 320
-    popoutHeight: 300
+    popoutHeight: 440
 
     // headless popout toggle: qs -c dms ipc call popout-dvm toggle
     IpcHandler {

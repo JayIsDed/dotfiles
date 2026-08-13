@@ -14,7 +14,16 @@ PluginComponent {
 
     property real cu5: -1
     property real cu7: -1
+    property string reset5: ""
+    property string reset7: ""
     readonly property bool alive: cu5 >= 0
+
+    function fmtReset(iso) {
+        const d = new Date(iso)
+        if (isNaN(d)) return ""
+        const pad = n => String(n).padStart(2, "0")
+        return pad(d.getHours()) + ":" + pad(d.getMinutes())
+    }
 
     function probe() {
         Proc.runCommand("claudeUsage.probe",
@@ -30,6 +39,8 @@ PluginComponent {
                     const j = JSON.parse(stdout)
                     root.cu5 = j.five ? j.five.pct : -1
                     root.cu7 = j.seven ? j.seven.pct : -1
+                    root.reset5 = j.five && j.five.reset ? root.fmtReset(j.five.reset) : ""
+                    root.reset7 = j.seven && j.seven.reset ? root.fmtReset(j.seven.reset) : ""
                 } catch (e) {
                     root.cu5 = -1
                     root.cu7 = -1
@@ -110,36 +121,51 @@ PluginComponent {
                 width: parent.width
                 spacing: Theme.spacingS
 
-                Row {
-                    spacing: Theme.spacingS
-                    StyledText { text: "5h"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 34; anchors.verticalCenter: parent.verticalCenter }
-                    MeterBar {
-                        value: root.cu5; implicitWidth: 190; implicitHeight: 6
-                        fillColor: root.cu5 >= 85 ? "#ef4444" : root.cu5 >= 70 ? "#fbbf24" : Theme.primary
-                        anchors.verticalCenter: parent.verticalCenter
+                Tile {
+                    heading: "WINDOWS"
+                    headingColor: Theme.surfaceVariantText
+                    Row {
+                        spacing: Theme.spacingS
+                        width: parent.width
+                        StyledText { text: "5h"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 30; anchors.verticalCenter: parent.verticalCenter }
+                        MeterBar {
+                            value: root.cu5; implicitWidth: parent.width - 86; implicitHeight: 6
+                            fillColor: root.cu5 >= 85 ? "#ef4444" : root.cu5 >= 70 ? "#fbbf24" : Theme.primary
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                        StyledText { text: root.alive ? Math.round(root.cu5) + "%" : "—"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 40; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                     }
-                    StyledText { text: root.alive ? Math.round(root.cu5) + "%" : "—"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 44; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
-                }
-                Row {
-                    spacing: Theme.spacingS
-                    StyledText { text: "7d"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 34; anchors.verticalCenter: parent.verticalCenter }
-                    MeterBar {
-                        value: root.cu7; marker: 50; implicitWidth: 190; implicitHeight: 6
-                        fillColor: root.cu7 >= 85 ? "#ef4444" : root.cu7 >= 70 ? "#fbbf24" : Theme.secondary
-                        anchors.verticalCenter: parent.verticalCenter
+                    Row {
+                        spacing: Theme.spacingS
+                        width: parent.width
+                        StyledText { text: "7d"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 30; anchors.verticalCenter: parent.verticalCenter }
+                        MeterBar {
+                            value: root.cu7; marker: 50; implicitWidth: parent.width - 86; implicitHeight: 6
+                            fillColor: root.cu7 >= 85 ? "#ef4444" : root.cu7 >= 70 ? "#fbbf24" : Theme.secondary
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                        StyledText { text: root.cu7 >= 0 ? Math.round(root.cu7) + "%" : "—"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 40; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                     }
-                    StyledText { text: root.cu7 >= 0 ? Math.round(root.cu7) + "%" : "—"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 44; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                 }
-                StyledText {
-                    text: (root.cu7 >= 50 ? "past" : "under") + " the fable ceiling (tick = 50%) · 3min relay"
-                    color: Theme.surfaceVariantText
-                    font.pixelSize: Theme.fontSizeSmall
+                Tile {
+                    heading: "RESETS"
+                    headingColor: Theme.surfaceVariantText
+                    Row {
+                        spacing: Theme.spacingM
+                        StyledText { text: "5h → " + (root.reset5 || "—"); color: Theme.surfaceText; font.pixelSize: Theme.fontSizeMedium }
+                        StyledText { text: "7d → " + (root.reset7 || "—"); color: Theme.surfaceText; font.pixelSize: Theme.fontSizeMedium }
+                    }
+                    StyledText {
+                        text: (root.cu7 >= 50 ? "past" : "under") + " the fable ceiling (tick = 50%) · 3min relay"
+                        color: Theme.surfaceVariantText
+                        font.pixelSize: Theme.fontSizeSmall
+                    }
                 }
             }
         }
     }
     popoutWidth: 320
-    popoutHeight: 200
+    popoutHeight: 280
 
     // headless popout toggle: qs -c dms ipc call popout-claude toggle
     IpcHandler {

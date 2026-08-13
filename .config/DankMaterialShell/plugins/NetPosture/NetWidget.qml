@@ -16,6 +16,8 @@ PluginComponent {
     property string tsMode: ""     // home | away | lost | off
     property color tsColor: "#fbbf24"
     property string lat: ""
+    property string localIp: ""
+    property string tsIp: ""
 
     property var latHist: []
 
@@ -49,7 +51,9 @@ PluginComponent {
              "tailscale status --json 2>/dev/null | grep -m1 BackendState; " +
              "ip route show default 2>/dev/null | head -1; " +
              "test -e /sys/class/net/proton && echo PROTON; " +
-             "ping -c1 -W1 192.168.8.111 2>/dev/null | grep -o 'time=[0-9.]*'"],
+             "ping -c1 -W1 192.168.8.111 2>/dev/null | grep -o 'time=[0-9.]*'; " +
+             "echo LOCALIP $(ip route get 1.1.1.1 2>/dev/null | grep -o 'src [0-9.]*' | cut -d' ' -f2); " +
+             "echo TSIP $(tailscale ip -4 2>/dev/null | head -1)"],
             (stdout, exitCode) => {
                 const t = stdout
                 const running = t.indexOf("\"Running\"") >= 0
@@ -62,6 +66,10 @@ PluginComponent {
                 const m = t.match(/time=([0-9.]+)/)
                 root.lat = m ? Math.round(Number(m[1])) + "ms" : ""
                 if (m) root.latHist = root.latHist.concat(Number(m[1])).slice(-30)
+                const li = t.match(/LOCALIP ([0-9.]+)/)
+                root.localIp = li ? li[1] : ""
+                const ti = t.match(/TSIP ([0-9.]+)/)
+                root.tsIp = ti ? ti[1] : ""
             }, 0, 8000)
     }
 
@@ -125,35 +133,50 @@ PluginComponent {
 
             Column {
                 width: parent.width
-                spacing: Theme.spacingM
+                spacing: Theme.spacingS
 
-                StyledText { text: "ssid  " + root.ssid; color: root.tsColor; font.pixelSize: Theme.fontSizeLarge }
-                StyledText {
-                    text: "posture  " + (root.tsMode === "home" ? "home (LAN direct)" : root.tsMode === "away" ? "away (tunnel + vpn)" : root.tsMode === "lost" ? "away? (no vpn seen)" : "tailscale OFF")
-                    color: root.tsColor
-                    font.pixelSize: Theme.fontSizeLarge
-                }
-                Row {
-                    spacing: Theme.spacingS
-                    StyledText { text: "rtt"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 34; anchors.verticalCenter: parent.verticalCenter }
-                    Spark {
-                        values: root.latHist
-                        lineColor: root.tsColor
-                        area: false
-                        minValue: 0
-                        implicitWidth: 190
-                        implicitHeight: 26
-                        stroke: 1.5
-                        anchors.verticalCenter: parent.verticalCenter
+                Tile {
+                    heading: "LINK"
+                    headingColor: Theme.surfaceVariantText
+                    StyledText { text: root.ssid; color: root.tsColor; font.pixelSize: Theme.fontSizeLarge; font.weight: Font.Bold }
+                    StyledText {
+                        text: root.tsMode === "home" ? "home · LAN direct" : root.tsMode === "away" ? "away · tunnel + vpn" : root.tsMode === "lost" ? "away? · no vpn seen" : "tailscale OFF"
+                        color: root.tsColor
+                        font.pixelSize: Theme.fontSizeMedium
                     }
-                    StyledText { text: root.lat || "—"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 44; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                 }
-                StyledText { text: "homelab rtt · 10s ticks · autoscale from 0"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall }
+                Tile {
+                    heading: "HOMELAB"
+                    headingColor: Theme.surfaceVariantText
+                    Row {
+                        spacing: Theme.spacingS
+                        width: parent.width
+                        StyledText { text: "rtt"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 30; anchors.verticalCenter: parent.verticalCenter }
+                        Spark {
+                            values: root.latHist
+                            lineColor: root.tsColor
+                            area: false
+                            minValue: 0
+                            implicitWidth: parent.width - 86
+                            implicitHeight: 26
+                            stroke: 1.5
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                        StyledText { text: root.lat || "—"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 40; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
+                    }
+                    StyledText { text: "ping 111 · 10s ticks"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall }
+                }
+                Tile {
+                    heading: "ADDRESSES"
+                    headingColor: Theme.surfaceVariantText
+                    StyledText { text: "local   " + (root.localIp || "—"); color: Theme.surfaceText; font.pixelSize: Theme.fontSizeMedium }
+                    StyledText { text: "tailnet " + (root.tsIp || "—"); color: Theme.surfaceText; font.pixelSize: Theme.fontSizeMedium }
+                }
             }
         }
     }
     popoutWidth: 320
-    popoutHeight: 280
+    popoutHeight: 400
 
     // headless popout toggle: qs -c dms ipc call popout-net toggle
     IpcHandler {

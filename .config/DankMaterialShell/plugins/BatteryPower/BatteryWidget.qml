@@ -13,21 +13,33 @@ PluginComponent {
     property int pct: -1
     property string status: ""
     property real watts: 0
+    property real health: -1
     property var wattsHist: []
     readonly property bool alive: pct >= 0
     readonly property bool charging: status === "Charging"
     readonly property color polColor: charging ? "#4ade80" : "#60a5fa"
 
     function probe() {
+        // keyed lines so a missing sysfs node can't shift the parse
         Proc.runCommand("batteryPower.probe",
             ["sh", "-c",
-             "cat /sys/class/power_supply/BAT0/capacity /sys/class/power_supply/BAT0/status /sys/class/power_supply/BAT0/power_now 2>/dev/null"],
+             "cd /sys/class/power_supply/BAT0 2>/dev/null && " +
+             "for f in capacity status power_now energy_full energy_full_design charge_full charge_full_design; do " +
+             "v=$(cat $f 2>/dev/null); [ -n \"$v\" ] && echo $f=$v; done; true"],
             (stdout, exitCode) => {
-                const p = stdout.trim().split("\n")
-                if (exitCode !== 0 || p.length < 3) { root.pct = -1; return }
-                root.pct = Number(p[0])
-                root.status = p[1]
-                root.watts = Number(p[2]) / 1000000
+                if (exitCode !== 0) { root.pct = -1; return }
+                const kv = {}
+                for (const line of stdout.trim().split("\n")) {
+                    const i = line.indexOf("=")
+                    if (i > 0) kv[line.slice(0, i)] = line.slice(i + 1)
+                }
+                if (kv.capacity === undefined) { root.pct = -1; return }
+                root.pct = Number(kv.capacity)
+                root.status = kv.status || ""
+                root.watts = Number(kv.power_now || 0) / 1000000
+                const full = Number(kv.energy_full || kv.charge_full || 0)
+                const design = Number(kv.energy_full_design || kv.charge_full_design || 0)
+                root.health = design > 0 ? full / design * 100 : -1
                 // signed history: charge above zero, draw below
                 root.wattsHist = root.wattsHist.concat(
                     root.charging ? root.watts : -root.watts).slice(-60)
@@ -90,38 +102,53 @@ PluginComponent {
 
             Column {
                 width: parent.width
-                spacing: Theme.spacingM
+                spacing: Theme.spacingS
 
-                StyledText { text: "charge  " + root.pct + "%"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeLarge }
-                Row {
-                    spacing: Theme.spacingS
-                    StyledText { text: root.charging ? "+W" : "−W"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 34; anchors.verticalCenter: parent.verticalCenter }
-                    Column {
-                        spacing: 3
-                        anchors.verticalCenter: parent.verticalCenter
-                        MeterBar {
-                            value: root.watts / 65 * 100
-                            fillColor: root.polColor
-                            implicitWidth: 190
-                            implicitHeight: 5
-                        }
-                        Spark {
-                            values: root.wattsHist
-                            lineColor: root.polColor
-                            area: false
-                            implicitWidth: 190
-                            implicitHeight: 22
-                            stroke: 1.5
-                        }
+                Tile {
+                    heading: "CHARGE"
+                    headingColor: Theme.surfaceVariantText
+                    Row {
+                        spacing: Theme.spacingS
+                        width: parent.width
+                        StyledText { text: root.pct + "%"; color: Theme.surfaceText; font.pixelSize: 22; font.weight: Font.Bold; anchors.verticalCenter: parent.verticalCenter }
+                        StyledText { text: root.status.toLowerCase(); color: root.polColor; font.pixelSize: Theme.fontSizeSmall; anchors.verticalCenter: parent.verticalCenter }
                     }
-                    StyledText { text: root.watts.toFixed(1); color: root.polColor; font.pixelSize: Theme.fontSizeSmall; width: 44; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
+                    MeterBar { value: root.pct; okColor: root.polColor; warnLevel: 101; implicitWidth: parent.width; implicitHeight: 5 }
                 }
-                StyledText { text: "±W history · 5s ticks · rate bar 0–65 W (brick)"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall }
+                Tile {
+                    heading: "POWER"
+                    headingColor: Theme.surfaceVariantText
+                    Row {
+                        spacing: Theme.spacingS
+                        width: parent.width
+                        StyledText { text: root.charging ? "+W" : "−W"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 30; anchors.verticalCenter: parent.verticalCenter }
+                        MeterBar { value: root.watts / 65 * 100; fillColor: root.polColor; implicitWidth: parent.width - 86; implicitHeight: 5; anchors.verticalCenter: parent.verticalCenter }
+                        StyledText { text: root.watts.toFixed(1); color: root.polColor; font.pixelSize: Theme.fontSizeSmall; width: 40; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
+                    }
+                    Spark {
+                        values: root.wattsHist
+                        lineColor: root.polColor
+                        area: false
+                        implicitWidth: parent.width
+                        implicitHeight: 26
+                        stroke: 1.5
+                    }
+                    StyledText { text: "±W · 5s ticks · bar scale 0–65 W (brick)"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall }
+                }
+                Tile {
+                    heading: "HEALTH"
+                    headingColor: Theme.surfaceVariantText
+                    Row {
+                        spacing: Theme.spacingM
+                        StyledText { text: root.health >= 0 ? root.health.toFixed(1) + "% of design" : "—"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeMedium }
+                        StyledText { text: "TLP holds 75–80"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; anchors.verticalCenter: parent.verticalCenter }
+                    }
+                }
             }
         }
     }
-    popoutWidth: 300
-    popoutHeight: 220
+    popoutWidth: 320
+    popoutHeight: 400
 
     // headless popout toggle: qs -c dms ipc call popout-bat toggle
     IpcHandler {

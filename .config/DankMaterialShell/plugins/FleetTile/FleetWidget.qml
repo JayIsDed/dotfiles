@@ -32,7 +32,13 @@ PluginComponent {
     property real dvmCpu: 0
     property real dvmMem: 0
     property string dvmExtra: ""
+    property real dvmMemUsedG: 0
+    property real dvmMemTotalG: 0
+    property int dvmDisk: -1
+    property string dvmDiskUsed: ""
+    property string dvmDiskSize: ""
     property var dvmHist: []
+    property var dvmMemHist: []
     property var dvmPrevI: 0
     property var dvmPrevT: 0
 
@@ -78,7 +84,13 @@ PluginComponent {
     property real labCpu: 0
     property real labMem: 0
     property string labExtra: ""
+    property real labMemUsedG: 0
+    property real labMemTotalG: 0
+    property int labDisk: -1
+    property string labDiskUsed: ""
+    property string labDiskSize: ""
     property var labHist: []
+    property var labMemHist: []
     property var labPrevI: 0
     property var labPrevT: 0
 
@@ -133,7 +145,8 @@ PluginComponent {
             ["ssh", "-o", "ConnectTimeout=4", "-o", "BatchMode=yes", "docker-services",
              "echo C $(head -1 /proc/stat); " +
              "echo M $(awk '/MemTotal|MemAvailable/{printf \"%s \", $2}' /proc/meminfo); " +
-             "echo D $(docker ps -q | wc -l)/$(docker ps -aq | wc -l)"],
+             "echo D $(docker ps -q | wc -l)/$(docker ps -aq | wc -l); " +
+             "echo K $(df -BG --output=pcent,used,size / 2>/dev/null | tail -1 | tr -d '%G')"],
             (stdout, exitCode) => {
                 if (exitCode !== 0 || stdout.trim() === "") { root.dvmAlive = false; return }
                 root.dvmAlive = true
@@ -148,8 +161,15 @@ PluginComponent {
                         root.dvmPrevI = r.idle; root.dvmPrevT = r.total
                     } else if (p[0] === "M" && p.length >= 3 && Number(p[1]) > 0) {
                         root.dvmMem = 100 * (1 - Number(p[2]) / Number(p[1]))
+                        root.dvmMemHist = root.dvmMemHist.concat(root.dvmMem).slice(-30)
+                        root.dvmMemTotalG = Number(p[1]) / 1048576
+                        root.dvmMemUsedG = (Number(p[1]) - Number(p[2])) / 1048576
                     } else if (p[0] === "D" && p.length >= 2) {
                         root.dvmExtra = p[1]
+                    } else if (p[0] === "K" && p.length >= 4) {
+                        root.dvmDisk = Number(p[1])
+                        root.dvmDiskUsed = p[2]
+                        root.dvmDiskSize = p[3]
                     }
                 }
             }, 0, 8000)
@@ -246,7 +266,8 @@ PluginComponent {
             ["ssh", "-o", "ConnectTimeout=4", "-o", "BatchMode=yes", "claude-dev",
              "echo C $(head -1 /proc/stat); " +
              "echo M $(awk '/MemTotal|MemAvailable/{printf \"%s \", $2}' /proc/meminfo); " +
-             "echo L $(cut -d\" \" -f1 /proc/loadavg)"],
+             "echo L $(cut -d\" \" -f1 /proc/loadavg); " +
+             "echo K $(df -BG --output=pcent,used,size / 2>/dev/null | tail -1 | tr -d '%G')"],
             (stdout, exitCode) => {
                 if (exitCode !== 0 || stdout.trim() === "") { root.labAlive = false; return }
                 root.labAlive = true
@@ -261,8 +282,15 @@ PluginComponent {
                         root.labPrevI = r.idle; root.labPrevT = r.total
                     } else if (p[0] === "M" && p.length >= 3 && Number(p[1]) > 0) {
                         root.labMem = 100 * (1 - Number(p[2]) / Number(p[1]))
+                        root.labMemHist = root.labMemHist.concat(root.labMem).slice(-30)
+                        root.labMemTotalG = Number(p[1]) / 1048576
+                        root.labMemUsedG = (Number(p[1]) - Number(p[2])) / 1048576
                     } else if (p[0] === "L" && p.length >= 2) {
                         root.labExtra = "load " + p[1]
+                    } else if (p[0] === "K" && p.length >= 4) {
+                        root.labDisk = Number(p[1])
+                        root.labDiskUsed = p[2]
+                        root.labDiskSize = p[3]
                     }
                 }
             }, 0, 8000)
@@ -419,13 +447,9 @@ PluginComponent {
                 // ── docker-vm: aggregate
                 Tile {
                     HostHeader { key: "dvm"; label: "docker-vm"; alive: root.dvmAlive; tail: root.dvmAlive ? root.dvmExtra + " containers" : "unreachable" }
-                    Row {
-                        spacing: Theme.spacingM
-                        width: parent.width
-                        StyledText { text: "cpu " + Math.round(root.dvmCpu) + "%"; color: Theme.primary; font.pixelSize: Theme.fontSizeSmall }
-                        StyledText { text: "ram " + Math.round(root.dvmMem) + "%"; color: Theme.secondary; font.pixelSize: Theme.fontSizeSmall }
-                    }
-                    Spark { visible: root.dvmHist.length > 1; values: root.dvmHist; lineColor: Theme.primary; area: false; minValue: 0; maxValue: 100; implicitWidth: parent.width; implicitHeight: 12; stroke: 1 }
+                    VRow { label: "cpu"; val: root.dvmCpu; hist: root.dvmHist; valueText: Math.round(root.dvmCpu) + "%"; tone: Theme.primary; visible: root.dvmAlive }
+                    VRow { label: "ram"; val: root.dvmMem; hist: root.dvmMemHist; valueText: root.dvmMemUsedG.toFixed(1) + "/" + root.dvmMemTotalG.toFixed(0) + "G"; tone: Theme.secondary; visible: root.dvmAlive }
+                    VRow { label: "dsk"; val: root.dvmDisk; valueText: root.dvmDiskUsed + "/" + root.dvmDiskSize + "G"; tone: root.cFan; visible: root.dvmAlive && root.dvmDisk >= 0 }
                 }
 
                 // ── archbox: the instrument panel
@@ -569,13 +593,9 @@ PluginComponent {
                 // ── claude-dev: aggregate
                 Tile {
                     HostHeader { key: "111"; label: "claude-dev"; alive: root.labAlive; tail: root.labAlive ? root.labExtra : "unreachable" }
-                    Row {
-                        spacing: Theme.spacingM
-                        width: parent.width
-                        StyledText { text: "cpu " + Math.round(root.labCpu) + "%"; color: Theme.primary; font.pixelSize: Theme.fontSizeSmall }
-                        StyledText { text: "ram " + Math.round(root.labMem) + "%"; color: Theme.secondary; font.pixelSize: Theme.fontSizeSmall }
-                    }
-                    Spark { visible: root.labHist.length > 1; values: root.labHist; lineColor: Theme.primary; area: false; minValue: 0; maxValue: 100; implicitWidth: parent.width; implicitHeight: 12; stroke: 1 }
+                    VRow { label: "cpu"; val: root.labCpu; hist: root.labHist; valueText: Math.round(root.labCpu) + "%"; tone: Theme.primary; visible: root.labAlive }
+                    VRow { label: "ram"; val: root.labMem; hist: root.labMemHist; valueText: root.labMemUsedG.toFixed(1) + "/" + root.labMemTotalG.toFixed(0) + "G"; tone: Theme.secondary; visible: root.labAlive }
+                    VRow { label: "dsk"; val: root.labDisk; valueText: root.labDiskUsed + "/" + root.labDiskSize + "G"; tone: root.cFan; visible: root.labAlive && root.labDisk >= 0 }
                 }
 
                 StyledText {
@@ -587,7 +607,7 @@ PluginComponent {
         }
     }
     popoutWidth: 480
-    popoutHeight: 940
+    popoutHeight: 1040
 
     // headless popout toggle: qs -c dms ipc call popout-fleet toggle
     IpcHandler {

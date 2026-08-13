@@ -106,8 +106,8 @@ if command -v jq >/dev/null && [ -f "$DC/settings.json" ] \
         && say "batteryPower pill" "removed (no BAT0 here)"
 fi
 
-# 7 — relay legs the plugins depend on
-for host in claude-dev docker-services; do
+# 7 — relay legs the plugins depend on (archbox = fleet's self-probe)
+for host in claude-dev docker-services archbox; do
     ssh -o BatchMode=yes -o ConnectTimeout=4 "$host" true 2>/dev/null \
         && say "ssh $host" "ok" || need "ssh $host" "key/alias missing"
 done

@@ -8,3 +8,6 @@
 .DS_Store
 Thumbs.db
 .config/hypr/colors.conf
+
+# dms writes its hyprland integration here at runtime
+.config/hypr/dms/

@@ -222,3 +222,23 @@ Services/ + DankPopout instead. Start at quickshell/PLUGINS/README.md.
   ~/.local/bin/matugen (appends `--prefer darkness` for image mode ONLY
   when caller didn't pass --prefer; explicit callers untouched). Dynamic
   theme now generates dms-colors.json; accent tracks the wallpaper.
+
+## ADOPTED (2026-08-13 09:17, Jay's stamp) — dms is the shell
+
+Trial passed on all axes; Jay: "everything looks good... lets adopt it."
+- **State**: dms live on laptop + autostart swapped (host-gated, archbox
+  untouched). Plugins: DvmTile + ClaudeUsage (canon: dotfiles
+  .config/DankMaterialShell/plugins/). settings canon = barConfigs[0]
+  .{left,center,right}Widgets in settings.json — the store REWRITES flat
+  legacy keys into this shape, edit there. plugin_settings.json gates
+  per-plugin enabled.
+- **Pill pattern (the overlap lesson)**: horizontalBarPill Component is
+  CONTENT inside their BasePill — size via implicitWidth, DankIcon +
+  StyledText, never own chrome. The PLUGINS/README StyledRect example
+  misleads; built-ins (CpuMonitor) are the truth.
+- **lilypad shell = museum** (keep the dir; the ledger above stays the
+  QML/quickshell knowledge base). Widgets live on as dms plugins.
+- **Next seats**: bar layout arrangement (Jay, GUI editor) · port TS+RTT
+  bits if their Tailscale CC panel lacks the homelab ping · archbox dms
+  port (nvidia/triple-head validation) · retire waybar + ~/.mydotfiles
+  after that · upstream issue: dms CLI --prefer passthrough for matugen.

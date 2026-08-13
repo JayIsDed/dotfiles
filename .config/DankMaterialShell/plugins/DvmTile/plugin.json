@@ -1,0 +1,12 @@
+{
+    "id": "dvmTile",
+    "name": "DVM Tile",
+    "description": "docker-vm (VM 202) vitals — host cpu/ram + container count over SSH",
+    "version": "0.1.0",
+    "author": "Jay",
+    "type": "widget",
+    "capabilities": ["dankbar-widget"],
+    "component": "./DvmWidget.qml",
+    "icon": "dns",
+    "requires": ["ssh"]
+}

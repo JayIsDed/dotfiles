@@ -137,16 +137,26 @@ the contract between seats: read it fully before touching QML.
 - Autostart swap when stable: hypr/autostart.lua waybar line → qs (per-host).
 - Retire waybar + ~/.mydotfiles after both hosts are on lilypad.
 
-## State right now (session 2)
+## State at session-2 close (2026-08-12 23:48) — DISPLAY LAYER DONE
 
-- Laptop: overhaul RAN (kernel 7.1.8, rebooted). lilypad running on the NEW
-  token board (manual launch, log /tmp/lilypad.log), waybar killed for the
-  session (autostart still says waybar). Live palette feed proven end-to-end.
-- Pending Jay: `sudo pacman -S matugen` on laptop, then any wallpaper change
-  (or one manual `matugen image <wall> -m dark`) replaces the pink test palette
-  with real values.
-- Phase queue: 1 graph kit (MeterBar primary — stacked bars, Jay's call —
-  + Gauge + Spark) → 2 bar metrics island + deep view → 3 chips/popover
-  dropdowns + render-scale chip → 4 overview grid.
-- Archbox: full Lua hypr config live and stable, waybar (ML4W themed) still its
-  bar. Untouched tonight.
+- **The bar v2 is COMPLETE and live on the laptop** (30 commits, ef67736 →
+  95e3d5e): matugen palette (pond-green fallback anchor), graph kit
+  (MeterBar/Gauge/Spark), tile-row geometry (3 fixed anchors ws/clock/power +
+  2 self-centering span bundles), metrics everywhere — cpu/ram/dsk ·
+  tmp/fan dual-spark · claude 5h/7d (111 relay, 50% fable tick) · rx/tx ·
+  TS badge + homelab RTT · SysCard west · DockerTile (VM 202 vitals 45/47) ·
+  TaskSwitcher chips · brightness wheel · PowerDraw ±W + 0-65W rate bar ·
+  Battery ring. All pills share one grammar: label | visual | number.
+- **New gotchas in the ledger above** + errors-and-fixes: on+Capital property
+  names, new component FILES need a shell bounce, visibility-deadlock (bind
+  data props, never child .visible), matugen --prefer non-interactive panic.
+- **Jay finger-tests still pending**: task-chip click (wayland activate +
+  dispatch fallback), workspace click (Lua shorthand fix), brightness wheel.
+- **Next seat = Phase 3 popovers**: shared click-popover (StyledPopup pattern,
+  PanelWindow+mask) → deep system view → volume/wifi/battery/calendar/updates
+  dropdowns → render-scale chip (100-200%) → responsive priority-collapse for
+  the bundles (spotify guards are interim: 18ch chips + x-clamps). Then
+  Phase 4 overview grid; then archbox port (NVML/iCX3/llama-swap widgets) →
+  autostart swap → retire waybar + ~/.mydotfiles.
+- Launch on laptop is still MANUAL (autostart says waybar until the swap).
+- Archbox: untouched tonight; waybar (ML4W themed) still its bar.

@@ -48,11 +48,15 @@ PopupWindow {
             spacing: 8
 
             Text {
-                text: "lilypad · " + panel.host
+                text: "lilypad"
                 color: Theme.text3
                 font.family: Theme.font
                 font.pixelSize: Theme.fontSize - 2
             }
+
+            // host · kernel · uptime — moved off the bar (Jay 08-13); the
+            // component carries its own 30s probe, only alive while open
+            SysCard {}
 
             component PadButton: Rectangle {
                 property string label

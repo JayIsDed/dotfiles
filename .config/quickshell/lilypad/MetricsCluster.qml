@@ -37,6 +37,14 @@ RowLayout {
         horizontalAlignment: Text.AlignRight
         Layout.preferredWidth: 34
     }
+    // fixed centered box so stacked icons align regardless of glyph width
+    component MiniIcon: Text {
+        color: Theme.text3
+        font.family: Theme.font
+        font.pixelSize: Theme.fontSizeS
+        horizontalAlignment: Text.AlignHCenter
+        Layout.preferredWidth: 16
+    }
 
     property real cpu: 0
     property real mem: 0
@@ -205,8 +213,8 @@ RowLayout {
         Layout.alignment: Qt.AlignVCenter
         ColumnLayout {
             spacing: 0
-            Text { text: "󰔏"; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
-            Text { text: "󰈐"; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
+            MiniIcon { text: "󰔏" }
+            MiniIcon { text: "󰈐" }
         }
         ColumnLayout {
             spacing: 2
@@ -269,8 +277,8 @@ RowLayout {
         Layout.alignment: Qt.AlignVCenter
         ColumnLayout {
             spacing: 0
-            Text { text: "󰇚"; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
-            Text { text: "󰕒"; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
+            MiniIcon { text: "󰇚" }
+            MiniIcon { text: "󰕒" }
         }
         ColumnLayout {
             spacing: 2

@@ -216,3 +216,9 @@ Services/ + DankPopout instead. Start at quickshell/PLUGINS/README.md.
   a failed spawn pre-CLI-install; persisted across one restart). DEBUG NEXT.
   Then the pond decision (Jay's): wallpaper-dynamic (foliage → ice blue per
   dial table) vs hex-source pond green (dms supports --kind hex).
+- **Theming FIXED (08-13 08:59)**: root cause = the documented matugen 4.x
+  multi-candidate no-TTY panic, hit through the dms CLI (no --prefer
+  passthrough — worth an upstream issue). Fix = matugen shim at laptop
+  ~/.local/bin/matugen (appends `--prefer darkness` for image mode ONLY
+  when caller didn't pass --prefer; explicit callers untouched). Dynamic
+  theme now generates dms-colors.json; accent tracks the wallpaper.

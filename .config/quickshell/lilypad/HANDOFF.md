@@ -45,6 +45,41 @@ the contract between seats: read it fully before touching QML.
 - waybar-JSON convention carried over: ScriptModule hides when script output is
   empty; `class` maps critical/urgent→red, warning/disconnected→amber.
 
+## Session 2 (2026-08-12 late) — token board + verified API additions
+
+- **VERIFIED on 0.3.0**: `FileView` (Quickshell.Io) — path / watchChanges /
+  onFileChanged / onLoaded / text(), and `Quickshell.env()`. Used by Theme.qml.
+- **QML rule**: property names may NOT start with `on`+Capital (collides with
+  signal-handler syntax) — this is WHY end-4 prefixes every palette color `m3`.
+  We adopted the same convention.
+- **Theme.qml is now the token board**: m3 raw palette (matugen-fed, mutable) →
+  layers l0–l3 (each with Text/Hover/Active/Border, derived via mix()) → fixed
+  status hues (green/amber/red/blue/purple — deliberately wallpaper-proof) →
+  graph tokens (meter/gauge/spark/track/thresholds) → legacy v1 aliases (all 18
+  consumer tokens preserved). Palette feed: matugen `[templates.lilypad]` →
+  `~/.local/state/quickshell/lilypad/colors.json` → FileView live-patch, no
+  shell bounce (PROVEN via hand-written test JSON — pink ring test).
+- **Jay's design brief v2 (tonight)**: FULL matugen (pond = fallback statics
+  only); stacked thin MeterBars > circle gauges on the bar (gauges live in
+  popups); metrics island ON the bar (sys stats + condensed sys card + Claude
+  usage), click → full-depth system view; render-scale chip 100/125/150/175/200
+  (4K 14" panel); overview grid (end-4 port) queued as Phase 4.
+- **Claude usage feed (verified via plugin src + web)**: claude.ai/api/oauth/usage,
+  token from ~/.claude/.credentials.json → five_hour / seven_day (+seven_day_sonnet)
+  each utilization 0-100 + resets_at. NO fable bucket — Fable draws the shared
+  weekly, capped at 50% of it → draw a marker at 50% on the 7d bar.
+- **Reference clone**: end-4/dots-hyprland at `~/git/reference/dots-hyprland`
+  (on 111). Steal from dots/.config/quickshell/ii/ — Appearance.qml (tokens),
+  StyledPopup.qml (PanelWindow+mask popover, no PopupWindow), sidebarRight/
+  (wifi/bt/volume/calendar/todo dropdown content), overview/. Their qs.modules.*
+  imports are a NEWER quickshell feature — port patterns, never copy imports.
+- **Laptop drift fixed**: ~/.config/matugen symlink pointed at the dead ML4W
+  tree — repointed to ~/dotfiles/.config/matugen. matugen itself NOT installed
+  yet (extra/matugen 4.1.0, needs Jay's local sudo; fprintd blocks SSH sudo).
+  Until then colors.json holds the pink test palette.
+- Laptop roams: .101 → **.247** (ssh alias `x1c` stale). Monitor scale
+  currently 1.25 (3072 logical width).
+
 ## Architecture
 
 - `shell.qml` → Variants over screens → `Bar.qml` (full-width transparent
@@ -90,12 +125,16 @@ the contract between seats: read it fully before touching QML.
 - Autostart swap when stable: hypr/autostart.lua waybar line → qs (per-host).
 - Retire waybar + ~/.mydotfiles after both hosts are on lilypad.
 
-## State right now
+## State right now (session 2)
 
-- Laptop: lilypad running (manual launch, log at /tmp/lilypad.log), waybar
-  killed for the session (relogin restores it — autostart still says waybar).
-- Laptop system: update script staged at /tmp/overhaul.sh (Jay runs with local
-  sudo/fingerprint; ~126 pkgs + kernel 7.1.8 + orphans + cache). Reboot pending
-  after. Btrfs safety snapshot /.pre-overhaul-20260812 gets made by the script.
+- Laptop: overhaul RAN (kernel 7.1.8, rebooted). lilypad running on the NEW
+  token board (manual launch, log /tmp/lilypad.log), waybar killed for the
+  session (autostart still says waybar). Live palette feed proven end-to-end.
+- Pending Jay: `sudo pacman -S matugen` on laptop, then any wallpaper change
+  (or one manual `matugen image <wall> -m dark`) replaces the pink test palette
+  with real values.
+- Phase queue: 1 graph kit (MeterBar primary — stacked bars, Jay's call —
+  + Gauge + Spark) → 2 bar metrics island + deep view → 3 chips/popover
+  dropdowns + render-scale chip → 4 overview grid.
 - Archbox: full Lua hypr config live and stable, waybar (ML4W themed) still its
-  bar. Everything committed on dotfiles feat/lua-rebuild.
+  bar. Untouched tonight.

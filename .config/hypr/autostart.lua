@@ -24,10 +24,19 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("swaync")
   hl.exec_cmd("hypridle")
   hl.exec_cmd("wl-paste --watch cliphist store")
-  -- waybar via ML4W launch.sh (assembles themed config from themes/) —
-  -- bare `waybar` renders stock. Dies entirely when quickshell lands.
-  hl.exec_cmd(os.getenv("HOME") .. "/.config/waybar/launch.sh")
-  hl.exec_cmd("awww-daemon")           -- wallpaper daemon (waypaper backend)
-  hl.exec_cmd("waypaper --restore")
+  if require("hosts").is_laptop then
+    -- dms (DankMaterialShell) — ADOPTED 2026-08-13. Runs from the git
+    -- clone (their supported dev mode); PATH prefix so its spawns find
+    -- dms/dgop/matugen-shim in ~/.local/bin. dms owns the wallpaper
+    -- layer, so no waypaper restore here.
+    hl.exec_cmd("sh -c 'PATH=$HOME/.local/bin:$PATH exec qs -p $HOME/git/reference/DankMaterialShell/quickshell'")
+  else
+    -- archbox stays on waybar until its dms port seat.
+    -- waybar via ML4W launch.sh (assembles themed config from themes/) —
+    -- bare `waybar` renders stock.
+    hl.exec_cmd(os.getenv("HOME") .. "/.config/waybar/launch.sh")
+    hl.exec_cmd("awww-daemon")         -- wallpaper daemon (waypaper backend)
+    hl.exec_cmd("waypaper --restore")
+  end
   hl.exec_cmd("hyprctl setcursor Bibata-Modern-Ice 24")
 end)

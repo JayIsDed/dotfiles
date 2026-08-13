@@ -1,0 +1,12 @@
+{
+    "id": "claudeUsage",
+    "name": "Claude Usage",
+    "description": "Claude 5h / 7d window utilization via the 111 relay",
+    "version": "0.1.0",
+    "author": "Jay",
+    "type": "widget",
+    "capabilities": ["dankbar-widget"],
+    "component": "./ClaudeWidget.qml",
+    "icon": "smart_toy",
+    "requires": ["ssh"]
+}

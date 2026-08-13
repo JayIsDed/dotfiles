@@ -133,16 +133,22 @@ PluginComponent {
                     color: root.tsColor
                     font.pixelSize: Theme.fontSizeLarge
                 }
-                StyledText { text: "homelab rtt  " + (root.lat || "unreachable"); color: Theme.surfaceText; font.pixelSize: Theme.fontSizeLarge }
-                Spark {
-                    values: root.latHist
-                    lineColor: root.tsColor
-                    minValue: 0
-                    implicitWidth: 260
-                    implicitHeight: 30
-                    stroke: 2
+                Row {
+                    spacing: Theme.spacingS
+                    StyledText { text: "rtt"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 34; anchors.verticalCenter: parent.verticalCenter }
+                    Spark {
+                        values: root.latHist
+                        lineColor: root.tsColor
+                        area: false
+                        minValue: 0
+                        implicitWidth: 190
+                        implicitHeight: 26
+                        stroke: 1.5
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    StyledText { text: root.lat || "—"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 44; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                 }
-                StyledText { text: "rtt history · 10s ticks · autoscale from 0"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall }
+                StyledText { text: "homelab rtt · 10s ticks · autoscale from 0"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall }
             }
         }
     }

@@ -93,23 +93,28 @@ PluginComponent {
                 spacing: Theme.spacingM
 
                 StyledText { text: "charge  " + root.pct + "%"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeLarge }
-                StyledText {
-                    text: (root.charging ? "charging  +" : "draw  −") + root.watts.toFixed(1) + " W"
-                    color: root.polColor
-                    font.pixelSize: Theme.fontSizeLarge
-                }
-                MeterBar {
-                    value: root.watts / 65 * 100
-                    fillColor: root.polColor
-                    implicitWidth: 200
-                    implicitHeight: 5
-                }
-                Spark {
-                    values: root.wattsHist
-                    lineColor: root.polColor
-                    implicitWidth: 260
-                    implicitHeight: 30
-                    stroke: 2
+                Row {
+                    spacing: Theme.spacingS
+                    StyledText { text: root.charging ? "+W" : "−W"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 34; anchors.verticalCenter: parent.verticalCenter }
+                    Column {
+                        spacing: 3
+                        anchors.verticalCenter: parent.verticalCenter
+                        MeterBar {
+                            value: root.watts / 65 * 100
+                            fillColor: root.polColor
+                            implicitWidth: 190
+                            implicitHeight: 5
+                        }
+                        Spark {
+                            values: root.wattsHist
+                            lineColor: root.polColor
+                            area: false
+                            implicitWidth: 190
+                            implicitHeight: 22
+                            stroke: 1.5
+                        }
+                    }
+                    StyledText { text: root.watts.toFixed(1); color: root.polColor; font.pixelSize: Theme.fontSizeSmall; width: 44; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                 }
                 StyledText { text: "±W history · 5s ticks · rate bar 0–65 W (brick)"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall }
             }

@@ -165,49 +165,46 @@ PluginComponent {
 
             Column {
                 width: parent.width
-                spacing: Theme.spacingS
+                spacing: Theme.spacingM
 
-                component MetricRow: Row {
+                // one grid for every row: label 34 · graph 190 · value 44.
+                // spark sits directly under its metric's bar, same width,
+                // area off — flat lines must read as lines, not dividers.
+                component Metric: Row {
                     property string label
-                    property real val
-                    property var hist: []
+                    property real val: -1          // <0 hides the bar
+                    property var hist: []          // empty hides the spark
+                    property string valueText: Math.round(val) + "%"
+                    property color tone: Theme.primary
+                    property var sparkMin: 0
+                    property var sparkMax: 100
                     spacing: Theme.spacingS
                     StyledText { text: label; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 34; anchors.verticalCenter: parent.verticalCenter }
-                    MeterBar { value: val; okColor: Theme.primary; implicitWidth: 150; implicitHeight: 5; anchors.verticalCenter: parent.verticalCenter }
-                    StyledText { text: Math.round(val) + "%"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 34; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
+                    Column {
+                        spacing: 3
+                        anchors.verticalCenter: parent.verticalCenter
+                        MeterBar { visible: val >= 0; value: val; okColor: tone; implicitWidth: 190; implicitHeight: 5 }
+                        Spark { visible: hist.length > 1; values: hist; lineColor: tone; area: false; minValue: sparkMin; maxValue: sparkMax; implicitWidth: 190; implicitHeight: 16; stroke: 1.5 }
+                    }
+                    StyledText { text: valueText; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 44; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                 }
 
-                MetricRow { label: "cpu"; val: root.cpu; }
-                Spark { values: root.cpuHist; lineColor: Theme.primary; minValue: 0; maxValue: 100; implicitWidth: 260; implicitHeight: 26; stroke: 2 }
-                MetricRow { label: "ram"; val: root.mem }
-                Spark { values: root.memHist; lineColor: Theme.secondary; minValue: 0; maxValue: 100; implicitWidth: 260; implicitHeight: 26; stroke: 2 }
-                MetricRow { label: "disk"; val: root.disk }
-
-                Row {
-                    spacing: Theme.spacingS
-                    StyledText { text: "tmp"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 34; anchors.verticalCenter: parent.verticalCenter }
-                    Spark {
-                        values: root.tempHist
-                        minValue: root.tempHist.length ? Math.min(...root.tempHist) - 2 : 30
-                        maxValue: root.tempHist.length ? Math.max(...root.tempHist) + 2 : 95
-                        lineColor: root.temp >= 85 ? "#ef4444" : root.temp >= 70 ? "#fbbf24" : Theme.primary
-                        implicitWidth: 184; implicitHeight: 24; stroke: 2
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-                    StyledText { text: root.temp + "°"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 34; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
+                Metric { label: "cpu"; val: root.cpu; hist: root.cpuHist }
+                Metric { label: "ram"; val: root.mem; hist: root.memHist; tone: Theme.secondary }
+                Metric { label: "disk"; val: root.disk }
+                Metric {
+                    label: "tmp"; hist: root.tempHist
+                    valueText: root.temp + "°"
+                    tone: root.temp >= 85 ? "#ef4444" : root.temp >= 70 ? "#fbbf24" : Theme.primary
+                    sparkMin: root.tempHist.length ? Math.min(...root.tempHist) - 2 : 30
+                    sparkMax: root.tempHist.length ? Math.max(...root.tempHist) + 2 : 95
                 }
-                Row {
-                    spacing: Theme.spacingS
-                    StyledText { text: "fan"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 34; anchors.verticalCenter: parent.verticalCenter }
-                    Spark {
-                        values: root.fanHist
-                        minValue: 0
-                        maxValue: root.fanHist.length ? Math.max(...root.fanHist) + 500 : 5000
-                        lineColor: Theme.secondary
-                        implicitWidth: 184; implicitHeight: 24; stroke: 2
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-                    StyledText { text: root.fan + " rpm"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; anchors.verticalCenter: parent.verticalCenter }
+                Metric {
+                    label: "fan"; hist: root.fanHist
+                    valueText: root.fan + " rpm"
+                    tone: Theme.secondary
+                    sparkMin: 0
+                    sparkMax: root.fanHist.length ? Math.max(...root.fanHist) + 500 : 5000
                 }
             }
         }

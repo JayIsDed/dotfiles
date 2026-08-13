@@ -122,22 +122,27 @@ PluginComponent {
 
             Column {
                 width: parent.width
-                spacing: Theme.spacingS
+                spacing: Theme.spacingM
 
-                Row {
+                // shared popout grid: label 34 · graph 190 · value 44
+                component Metric: Row {
+                    property string label
+                    property real val
+                    property var hist: []
+                    property color tone: Theme.primary
                     spacing: Theme.spacingS
-                    StyledText { text: "cpu"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 34; anchors.verticalCenter: parent.verticalCenter }
-                    MeterBar { value: root.cpu; okColor: Theme.primary; implicitWidth: 150; implicitHeight: 5; anchors.verticalCenter: parent.verticalCenter }
-                    StyledText { text: Math.round(root.cpu) + "%"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 34; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
+                    StyledText { text: label; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 34; anchors.verticalCenter: parent.verticalCenter }
+                    Column {
+                        spacing: 3
+                        anchors.verticalCenter: parent.verticalCenter
+                        MeterBar { value: val; okColor: tone; implicitWidth: 190; implicitHeight: 5 }
+                        Spark { visible: hist.length > 1; values: hist; lineColor: tone; area: false; minValue: 0; maxValue: 100; implicitWidth: 190; implicitHeight: 16; stroke: 1.5 }
+                    }
+                    StyledText { text: Math.round(val) + "%"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 44; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                 }
-                Spark { values: root.cpuHist; lineColor: Theme.primary; minValue: 0; maxValue: 100; implicitWidth: 260; implicitHeight: 26; stroke: 2 }
-                Row {
-                    spacing: Theme.spacingS
-                    StyledText { text: "ram"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 34; anchors.verticalCenter: parent.verticalCenter }
-                    MeterBar { value: root.mem; okColor: Theme.primary; implicitWidth: 150; implicitHeight: 5; anchors.verticalCenter: parent.verticalCenter }
-                    StyledText { text: Math.round(root.mem) + "%"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 34; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
-                }
-                Spark { values: root.memHist; lineColor: Theme.secondary; minValue: 0; maxValue: 100; implicitWidth: 260; implicitHeight: 26; stroke: 2 }
+
+                Metric { label: "cpu"; val: root.cpu; hist: root.cpuHist }
+                Metric { label: "ram"; val: root.mem; hist: root.memHist; tone: Theme.secondary }
                 StyledText {
                     text: "containers  " + root.containers + "  ·  10s ssh probe"
                     color: Theme.surfaceText

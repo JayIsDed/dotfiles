@@ -3,6 +3,15 @@
 
 local hosts = require("hosts")
 
+if hosts.is_laptop then
+  -- five pre-allocated workspace dots (Jay 08-13): the dms switcher shows
+  -- what the compositor reports, so persistence lives HERE, not in the bar
+  -- (their padding hardcodes to 3).
+  for ws = 1, 5 do
+    hl.workspace_rule({ workspace = tostring(ws), persistent = true })
+  end
+end
+
 if not hosts.is_laptop then
   local pin = {
     { ws = 1, mon = "DP-4", default = true },

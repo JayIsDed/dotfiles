@@ -26,16 +26,16 @@ RowLayout {
         RowLayout {
             id: inner
             anchors.centerIn: parent
-            spacing: 6
+            spacing: 8
         }
     }
     // right-aligned percent readout, width reserved so pills don't breathe
     component Pct: Text {
         color: Theme.text2
         font.family: Theme.font
-        font.pixelSize: 10
+        font.pixelSize: 11
         horizontalAlignment: Text.AlignRight
-        Layout.preferredWidth: 30
+        Layout.preferredWidth: 34
     }
 
     property real cpu: 0
@@ -167,8 +167,8 @@ RowLayout {
         Layout.alignment: Qt.AlignVCenter
         ColumnLayout {
             spacing: 0
-            Text { text: "cpu"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 9 }
-            Text { text: "ram"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 9 }
+            Text { text: "cpu"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 10 }
+            Text { text: "ram"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 10 }
         }
         ColumnLayout {
             spacing: Theme.meterGap
@@ -207,8 +207,8 @@ RowLayout {
         visible: root.cu5 >= 0
         ColumnLayout {
             spacing: 0
-            Text { text: "5h"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 9 }
-            Text { text: "7d"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 9 }
+            Text { text: "5h"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 10 }
+            Text { text: "7d"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 10 }
         }
         ColumnLayout {
             spacing: Theme.meterGap
@@ -254,14 +254,4 @@ RowLayout {
         }
     }
 
-    // sys card: host · kernel · uptime
-    Seg {
-        Layout.alignment: Qt.AlignVCenter
-        visible: root.host !== ""
-        Text {
-            text: root.host + " · " + root.kernel.split("-")[0] + " · " + root.up
-            color: Theme.text3
-            font.family: Theme.font; font.pixelSize: Theme.fontSizeS
-        }
-    }
 }

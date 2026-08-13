@@ -43,16 +43,10 @@ PanelWindow {
         spacing: Theme.pad
 
         Tile { Workspaces { Layout.alignment: Qt.AlignVCenter } }
+        Tile { SysCard { Layout.alignment: Qt.AlignVCenter } }
         Tile {
-            visible: (Hyprland.activeToplevel?.title ?? "") !== ""
-            Text {
-                Layout.maximumWidth: bar.width * 0.22
-                text: Hyprland.activeToplevel?.title ?? ""
-                color: Theme.text2
-                font.family: Theme.font
-                font.pixelSize: Theme.fontSize
-                elide: Text.ElideRight
-            }
+            visible: tasks.any
+            TaskSwitcher { id: tasks; Layout.alignment: Qt.AlignVCenter }
         }
     }
 

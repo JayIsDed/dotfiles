@@ -108,7 +108,7 @@ Singleton {
     // stacked thin MeterBars are the bar-level default; gauges live in popups
     readonly property int meterHeight: 6
     readonly property int meterRadius: 3
-    readonly property int meterWidth: 64
+    readonly property int meterWidth: 96
     readonly property int meterGap: 4      // vertical gap inside stacked meter pairs
     readonly property color track: alpha(m3onSurface, 0.12)
     readonly property int gaugeSize: 26

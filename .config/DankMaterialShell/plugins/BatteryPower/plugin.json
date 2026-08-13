@@ -1,0 +1,11 @@
+{
+    "id": "batteryPower",
+    "name": "Battery + Power",
+    "description": "Battery with lilypad's PowerDraw — ±W polarity readout and 0-65W rate bar",
+    "version": "0.1.0",
+    "author": "Jay",
+    "type": "widget",
+    "capabilities": ["dankbar-widget"],
+    "component": "./BatteryWidget.qml",
+    "icon": "battery_charging_full"
+}

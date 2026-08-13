@@ -1,0 +1,12 @@
+{
+    "id": "netPosture",
+    "name": "Net Posture",
+    "description": "SSID tinted by tailscale posture, house/tunnel glyph, homelab RTT — the lilypad network chip",
+    "version": "0.1.0",
+    "author": "Jay",
+    "type": "widget",
+    "capabilities": ["dankbar-widget"],
+    "component": "./NetWidget.qml",
+    "icon": "wifi",
+    "requires": ["nmcli", "tailscale"]
+}

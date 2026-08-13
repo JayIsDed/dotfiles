@@ -430,6 +430,8 @@ PluginComponent {
                     Rectangle { width: 7; height: 7; radius: 4; color: alive ? "#4ade80" : "#ef4444"; anchors.verticalCenter: parent.verticalCenter }
                     StyledText { text: tail; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; anchors.verticalCenter: parent.verticalCenter }
                 }
+                // one visual per row (Jay 08-13): history = severity spark,
+                // bounded/no-hist = bar. pct rows (val>=0) get threshold color.
                 component VRow: Row {
                     property string label
                     property real val: -1
@@ -438,16 +440,18 @@ PluginComponent {
                     property color tone: Theme.primary
                     property var sMin: 0
                     property var sMax: 100
+                    readonly property color sev: val >= 85 ? "#ef4444" : val >= 70 ? "#fbbf24" : tone
                     spacing: Theme.spacingS
                     width: parent.width
                     StyledText { text: label; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 30; anchors.verticalCenter: parent.verticalCenter }
-                    Column {
-                        spacing: 2
+                    Item {
+                        width: parent.width - 128
+                        height: 18
                         anchors.verticalCenter: parent.verticalCenter
-                        MeterBar { visible: val >= 0; value: val; okColor: tone; warnLevel: 101; implicitWidth: parent.parent.width - 128; implicitHeight: 4 }
-                        Spark { visible: hist.length > 1; values: hist; lineColor: tone; area: false; minValue: sMin; maxValue: sMax; implicitWidth: parent.parent.width - 128; implicitHeight: 16; stroke: 1.2 }
+                        MeterBar { visible: hist.length <= 1 && val >= 0; value: val; okColor: tone; warnLevel: 101; implicitWidth: parent.width; implicitHeight: 4; anchors.verticalCenter: parent.verticalCenter; width: parent.width }
+                        Spark { visible: hist.length > 1; values: hist; lineColor: val >= 0 ? sev : tone; area: false; minValue: sMin; maxValue: sMax; implicitWidth: parent.width; implicitHeight: 18; stroke: 1.2; width: parent.width; height: 18 }
                     }
-                    StyledText { text: valueText; color: tone; font.pixelSize: Theme.fontSizeSmall; width: 82; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
+                    StyledText { text: valueText; color: val >= 70 ? sev : tone; font.pixelSize: Theme.fontSizeSmall; width: 82; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                 }
 
                 // ── docker-vm: aggregate

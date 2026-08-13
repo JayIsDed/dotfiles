@@ -149,12 +149,10 @@ PluginComponent {
                     Row {
                         spacing: Theme.spacingS
                         width: parent.width
-                        StyledText { text: "now"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 30; anchors.verticalCenter: parent.verticalCenter }
-                        MeterBar { value: root.watts / 65 * 100; fillColor: root.polColor; implicitWidth: parent.width - 100; implicitHeight: 5; anchors.verticalCenter: parent.verticalCenter }
-                        StyledText { text: (root.charging ? "+" : "−") + root.watts.toFixed(1) + "W"; color: root.polColor; font.pixelSize: Theme.fontSizeSmall; width: 54; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
+                        StyledText { text: "now"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; anchors.verticalCenter: parent.verticalCenter }
+                        StyledText { text: (root.charging ? "+" : "−") + root.watts.toFixed(1) + "W"; color: root.polColor; font.pixelSize: Theme.fontSizeLarge; font.weight: Font.Bold; anchors.verticalCenter: parent.verticalCenter }
                     }
                     Spark {
-                        framed: true
                         values: root.wattsHist
                         lineColor: root.polColor
                         area: false
@@ -162,7 +160,7 @@ PluginComponent {
                         implicitHeight: 30
                         stroke: 1.5
                     }
-                    StyledText { text: "±W · 5s ticks · bar scale 0–65 W (brick)"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall }
+                    StyledText { text: "±W · 5s ticks · brick is 65 W"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall }
                 }
                 Tile {
                     heading: "HEALTH"

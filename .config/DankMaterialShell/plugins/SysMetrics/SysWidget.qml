@@ -283,6 +283,8 @@ PluginComponent {
                         onClicked: root.setPinned(parent.key)
                     }
                 }
+                // one visual per row: history rows get a severity-colored
+                // spark, bounded rows (no hist) keep the bar. Never both.
                 component MetricRow: Row {
                     property string pinKey
                     property string label
@@ -290,17 +292,19 @@ PluginComponent {
                     property var hist: []
                     property string valueText
                     property color tone: Theme.primary
+                    readonly property color sev: val >= 85 ? "#ef4444" : val >= 70 ? "#fbbf24" : tone
                     spacing: Theme.spacingS
                     width: parent.width
                     PinDot { key: parent.pinKey }
                     StyledText { text: label; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall; width: 28; anchors.verticalCenter: parent.verticalCenter }
-                    Column {
-                        spacing: 3
+                    Item {
+                        width: parent.width - 172
+                        height: 20
                         anchors.verticalCenter: parent.verticalCenter
-                        MeterBar { visible: val >= 0; value: val; okColor: tone; implicitWidth: parent.parent.width - 172; implicitHeight: 5 }
-                        Spark { visible: hist.length > 1; values: hist; lineColor: tone; area: false; minValue: 0; maxValue: 100; implicitWidth: parent.parent.width - 172; implicitHeight: 18; stroke: 1.5 }
+                        MeterBar { visible: hist.length <= 1 && val >= 0; value: val; okColor: tone; implicitWidth: parent.width; implicitHeight: 5; anchors.verticalCenter: parent.verticalCenter; width: parent.width }
+                        Spark { visible: hist.length > 1; values: hist; lineColor: sev; area: false; minValue: 0; maxValue: 100; implicitWidth: parent.width; implicitHeight: 20; stroke: 1.5; width: parent.width; height: 20 }
                     }
-                    StyledText { text: valueText; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 108; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
+                    StyledText { text: valueText; color: val >= 70 ? sev : Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 108; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                 }
 
                 Tile {

@@ -104,8 +104,6 @@ PanelWindow {
                 script: "bluetooth.sh"; interval: 5000
                 leftCmd: ["blueman-manager"]
             }
-            Volume  { Layout.alignment: Qt.AlignVCenter }
-            Network { Layout.alignment: Qt.AlignVCenter }
             ScriptModule {
                 id: notif
                 Layout.alignment: Qt.AlignVCenter
@@ -118,7 +116,10 @@ PanelWindow {
         MetricsCluster { Layout.alignment: Qt.AlignVCenter }
 
         Tile {
+            Volume  { Layout.alignment: Qt.AlignVCenter }
+            Network { Layout.alignment: Qt.AlignVCenter }
             BrightnessChip { Layout.alignment: Qt.AlignVCenter }
+            PowerDraw { Layout.alignment: Qt.AlignVCenter }
             Battery { Layout.alignment: Qt.AlignVCenter }
             Rectangle {
                 Layout.alignment: Qt.AlignVCenter

@@ -40,6 +40,9 @@ RowLayout {
 
     property real cpu: 0
     property real mem: 0
+    property int disk: -1
+    property int fan: 0
+    property string lat: ""
     property int temp: 0
     property var tempHist: []
     property var lastIdle: 0
@@ -77,6 +80,8 @@ RowLayout {
             "echo M $(awk '/MemTotal|MemAvailable/{printf \"%s \", $2}' /proc/meminfo); " +
             "echo T $(cat /sys/class/hwmon/hwmon*/temp1_input 2>/dev/null | sort -rn | head -1); " +
             "echo N $(awk 'NR>2 {sub(/^ +/,\"\"); split($0,a,/[: ]+/); if (a[1]!=\"lo\") {rx+=a[2]; tx+=a[10]}} END {print rx+0, tx+0}' /proc/net/dev); " +
+            "echo D $(df --output=pcent / 2>/dev/null | tail -1 | tr -d ' %'); " +
+            "echo F $(cat /sys/class/hwmon/hwmon*/fan1_input 2>/dev/null | head -1); " +
             "echo U $(cut -d. -f1 /proc/uptime) $(cat /proc/sys/kernel/hostname) $(uname -r)"]
         stdout: StdioCollector {
             onStreamFinished: {
@@ -107,6 +112,10 @@ RowLayout {
                             root.txHist = root.txHist.concat(txB).slice(-30)
                         }
                         root.lastRx = rx; root.lastTx = tx; root.lastNetMs = now
+                    } else if (p[0] === "D" && p.length >= 2) {
+                        root.disk = Number(p[1])
+                    } else if (p[0] === "F" && p.length >= 2) {
+                        root.fan = Number(p[1])
                     } else if (p[0] === "U" && p.length >= 4) {
                         root.up = root.fmtUp(Number(p[1]))
                         root.host = p[2]
@@ -125,7 +134,8 @@ RowLayout {
         command: ["sh", "-c",
             "tailscale status --json 2>/dev/null | grep -m1 BackendState; " +
             "ip route show default 2>/dev/null | head -1; " +
-            "test -e /sys/class/net/proton && echo PROTON"]
+            "test -e /sys/class/net/proton && echo PROTON; " +
+            "ping -c1 -W1 192.168.8.111 2>/dev/null | grep -o 'time=[0-9.]*'"]
         stdout: StdioCollector {
             onStreamFinished: {
                 const t = text
@@ -136,6 +146,9 @@ RowLayout {
                 else if (home)     { root.tsLabel = "󰖂 HOME"; root.tsColor = Theme.ok }
                 else if (vpn)      { root.tsLabel = "󰖂 AWAY"; root.tsColor = Theme.info }
                 else               { root.tsLabel = "󰖂 AWAY?"; root.tsColor = Theme.warn }
+                // homelab RTT rides along (ping to 111 direct or via tunnel)
+                const m = t.match(/time=([0-9.]+)/)
+                root.lat = m ? Math.round(Number(m[1])) + "ms" : ""
             }
         }
     }
@@ -169,16 +182,19 @@ RowLayout {
             spacing: 0
             Text { text: "cpu"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 10 }
             Text { text: "ram"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 10 }
+            Text { text: "dsk"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 10; visible: root.disk >= 0 }
         }
         ColumnLayout {
             spacing: Theme.meterGap
             MeterBar { value: root.cpu }
             MeterBar { value: root.mem }
+            MeterBar { value: root.disk; visible: root.disk >= 0 }
         }
         ColumnLayout {
             spacing: 0
             Pct { text: Math.round(root.cpu) + "%" }
             Pct { text: Math.round(root.mem) + "%" }
+            Pct { text: root.disk + "%"; visible: root.disk >= 0 }
         }
     }
 
@@ -198,6 +214,12 @@ RowLayout {
             text: root.temp + "°"
             color: root.temp >= 85 ? Theme.crit : root.temp >= 70 ? Theme.warn : Theme.text2
             font.family: Theme.font; font.pixelSize: Theme.fontSize
+        }
+        Text {
+            visible: root.fan > 0
+            text: "󰈐 " + root.fan
+            color: Theme.text3
+            font.family: Theme.font; font.pixelSize: Theme.fontSizeS
         }
     }
 
@@ -248,7 +270,7 @@ RowLayout {
         Layout.alignment: Qt.AlignVCenter
         visible: root.tsLabel !== ""
         Text {
-            text: root.tsLabel
+            text: root.tsLabel + (root.lat !== "" ? " · " + root.lat : "")
             color: root.tsColor
             font.family: Theme.font; font.pixelSize: Theme.fontSizeS
         }

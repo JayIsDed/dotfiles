@@ -17,13 +17,16 @@ local env = {
   { "OZONE_PLATFORM", "wayland" },
   { "ELECTRON_OZONE_PLATFORM_HINT", "wayland" },
   { "SDL_VIDEODRIVER", "wayland" },
-  -- nvidia (610.57 open modules)
-  { "LIBVA_DRIVER_NAME", "nvidia" },
-  { "__GLX_VENDOR_LIBRARY_NAME", "nvidia" },
   -- cursor
   { "XCURSOR_SIZE", "24" },
   { "HYPRCURSOR_SIZE", "24" },
 }
+
+-- nvidia (610.57 open modules) — archbox only; poison on Intel hosts
+if require("hosts").is_archbox then
+  table.insert(env, { "LIBVA_DRIVER_NAME", "nvidia" })
+  table.insert(env, { "__GLX_VENDOR_LIBRARY_NAME", "nvidia" })
+end
 
 for _, e in ipairs(env) do
   hl.env(e[1], e[2])

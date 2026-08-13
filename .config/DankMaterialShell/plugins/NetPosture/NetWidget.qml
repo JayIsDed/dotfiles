@@ -206,7 +206,7 @@ PluginComponent {
                             area: false
                             minValue: 0
                             implicitWidth: parent.width - 116
-                            implicitHeight: 16
+                            implicitHeight: 20
                             stroke: 1.2
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -233,7 +233,7 @@ PluginComponent {
                             // turn a flat healthy line into a cliff face
                             maxValue: root.latHist.length ? Math.max(50, Math.max(...root.latHist) * 1.15) : 50
                             implicitWidth: parent.width - 86
-                            implicitHeight: 26
+                            implicitHeight: 28
                             stroke: 1.5
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -251,7 +251,7 @@ PluginComponent {
         }
     }
     popoutWidth: 320
-    popoutHeight: 400
+    popoutHeight: 460
 
     // headless popout toggle: qs -c dms ipc call popout-net toggle
     IpcHandler {

@@ -45,6 +45,8 @@ PluginComponent {
     // ── arch (full panel)
     property bool archAlive: false
     property bool archWaking: false
+    // ssh dead but the plug is pulling real watts = wedged, not asleep
+    readonly property bool archWedged: !archAlive && wallW > 60
     property real archCpu: 0
     property real archMem: 0
     property real archMemUsedG: 0
@@ -379,8 +381,12 @@ PluginComponent {
                     StyledText { text: Math.round(root.resMem) + "%"; color: Theme.widgetTextColor; font.pixelSize: 8; horizontalAlignment: Text.AlignRight; width: 22 }
                 }
                 StyledText {
-                    text: root.resAlive ? root.resExtra : "off"
-                    color: root.resAlive ? Theme.widgetTextColor : Theme.surfaceVariantText
+                    text: root.resAlive ? root.resExtra
+                        : root.resident === "arch" && root.archWedged ? "ssh↓ " + root.wallW.toFixed(0) + "W"
+                        : "off"
+                    color: root.resAlive ? Theme.widgetTextColor
+                        : root.resident === "arch" && root.archWedged ? "#fbbf24"
+                        : Theme.surfaceVariantText
                     font.pixelSize: Theme.fontSizeSmall
                     anchors.verticalCenter: parent.verticalCenter
                 }
@@ -439,8 +445,7 @@ PluginComponent {
                         spacing: 2
                         anchors.verticalCenter: parent.verticalCenter
                         MeterBar { visible: val >= 0; value: val; okColor: tone; warnLevel: 101; implicitWidth: parent.parent.width - 128; implicitHeight: 4 }
-                        // standalone spark (no bar above) = framed trend chip
-                        Spark { visible: hist.length > 1; framed: val < 0; values: hist; lineColor: tone; area: false; minValue: sMin; maxValue: sMax; implicitWidth: parent.parent.width - 128; implicitHeight: 13; stroke: 1.2 }
+                        Spark { visible: hist.length > 1; values: hist; lineColor: tone; area: false; minValue: sMin; maxValue: sMax; implicitWidth: parent.parent.width - 128; implicitHeight: 16; stroke: 1.2 }
                     }
                     StyledText { text: valueText; color: tone; font.pixelSize: Theme.fontSizeSmall; width: 82; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                 }
@@ -487,12 +492,11 @@ PluginComponent {
                                 spacing: 2
                                 StyledText { text: "c" + index; color: Theme.surfaceVariantText; font.pixelSize: 8; width: 16; anchors.verticalCenter: parent.verticalCenter }
                                 Spark {
-                                    framed: true
                                     values: root.aCoreHist[index] || []
                                     lineColor: Theme.primary
                                     area: false
                                     minValue: 0; maxValue: 100
-                                    implicitWidth: 20; implicitHeight: 10; stroke: 1
+                                    implicitWidth: 20; implicitHeight: 12; stroke: 1
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
                                 StyledText {
@@ -613,7 +617,7 @@ PluginComponent {
         }
     }
     popoutWidth: 480
-    popoutHeight: 1040
+    popoutHeight: 1080
 
     // headless popout toggle: qs -c dms ipc call popout-fleet toggle
     IpcHandler {

@@ -222,7 +222,7 @@ PluginComponent {
                         // framed + damped ranges: trend chips, not seismographs
                         Spark {
                             framed: true
-                            implicitHeight: 10
+                            implicitHeight: 12
                             area: false
                             values: root.tempHist
                             minValue: root.tempHist.length ? Math.min(...root.tempHist) - 6 : 30
@@ -231,7 +231,7 @@ PluginComponent {
                         }
                         Spark {
                             framed: true
-                            implicitHeight: 10
+                            implicitHeight: 12
                             area: false
                             values: root.fanHist
                             minValue: 0
@@ -298,7 +298,7 @@ PluginComponent {
                         spacing: 3
                         anchors.verticalCenter: parent.verticalCenter
                         MeterBar { visible: val >= 0; value: val; okColor: tone; implicitWidth: parent.parent.width - 172; implicitHeight: 5 }
-                        Spark { visible: hist.length > 1; values: hist; lineColor: tone; area: false; minValue: 0; maxValue: 100; implicitWidth: parent.parent.width - 172; implicitHeight: 15; stroke: 1.5 }
+                        Spark { visible: hist.length > 1; values: hist; lineColor: tone; area: false; minValue: 0; maxValue: 100; implicitWidth: parent.parent.width - 172; implicitHeight: 18; stroke: 1.5 }
                     }
                     StyledText { text: valueText; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 108; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
                 }
@@ -348,7 +348,7 @@ PluginComponent {
                                     lineColor: Theme.primary
                                     area: false
                                     minValue: 0; maxValue: 100
-                                    implicitWidth: 40; implicitHeight: 12; stroke: 1
+                                    implicitWidth: 40; implicitHeight: 14; stroke: 1
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
                                 StyledText {
@@ -383,7 +383,7 @@ PluginComponent {
                             area: false
                             minValue: root.tempHist.length ? Math.min(...root.tempHist) - 2 : 30
                             maxValue: root.tempHist.length ? Math.max(...root.tempHist) + 2 : 95
-                            implicitWidth: parent.width - 130; implicitHeight: 20; stroke: 1.5
+                            implicitWidth: parent.width - 130; implicitHeight: 24; stroke: 1.5
                             anchors.verticalCenter: parent.verticalCenter
                         }
                         StyledText { text: root.temp + "°"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 60; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
@@ -400,7 +400,7 @@ PluginComponent {
                             area: false
                             minValue: 0
                             maxValue: root.fanHist.length ? Math.max(...root.fanHist) + 500 : 5000
-                            implicitWidth: parent.width - 130; implicitHeight: 20; stroke: 1.5
+                            implicitWidth: parent.width - 130; implicitHeight: 24; stroke: 1.5
                             anchors.verticalCenter: parent.verticalCenter
                         }
                         StyledText { text: root.fan + " rpm"; color: Theme.surfaceText; font.pixelSize: Theme.fontSizeSmall; width: 60; horizontalAlignment: Text.AlignRight; anchors.verticalCenter: parent.verticalCenter }
@@ -416,7 +416,7 @@ PluginComponent {
         }
     }
     popoutWidth: 340
-    popoutHeight: 560
+    popoutHeight: 640
 
     // headless popout toggle: qs -c dms ipc call popout-sys toggle
     IpcHandler {

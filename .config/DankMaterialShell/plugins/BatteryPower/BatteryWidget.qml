@@ -159,7 +159,7 @@ PluginComponent {
                         lineColor: root.polColor
                         area: false
                         implicitWidth: parent.width
-                        implicitHeight: 26
+                        implicitHeight: 30
                         stroke: 1.5
                     }
                     StyledText { text: "±W · 5s ticks · bar scale 0–65 W (brick)"; color: Theme.surfaceVariantText; font.pixelSize: Theme.fontSizeSmall }
@@ -178,7 +178,7 @@ PluginComponent {
         }
     }
     popoutWidth: 320
-    popoutHeight: 400
+    popoutHeight: 420
 
     // headless popout toggle: qs -c dms ipc call popout-bat toggle
     IpcHandler {

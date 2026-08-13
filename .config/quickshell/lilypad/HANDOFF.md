@@ -78,7 +78,19 @@ the contract between seats: read it fully before touching QML.
   yet (extra/matugen 4.1.0, needs Jay's local sudo; fprintd blocks SSH sudo).
   Until then colors.json holds the pink test palette.
 - Laptop roams: .101 → **.247** (ssh alias `x1c` stale). Monitor scale
-  currently 1.25 (3072 logical width).
+  currently 1.25 (3072 logical width); Jay's daily driver is 125%.
+- **matugen 4.x gotchas**: panics WITHOUT --prefer when an image has multiple
+  source candidates and no TTY (waypaper hook = no TTY). Empirical dial table
+  on the wallnest foliage wallpaper: darkness/less-saturation/value → slate →
+  ice blue; lightness → mint; saturation → sky → periwinkle;
+  **closest-to-fallback + --fallback-color #4ade80 → foliage → leaf green
+  #a0d39a (CHOSEN — pond green as extraction bias, wallpaper.sh sets it)**.
+  Test dials safely with `--dry-run --json hex` (nested {dark:{color}} shape).
+- **Graph kit shipped (Phase 1)**: MeterBar (marker ticks, threshold auto-color,
+  pinnable), Gauge (Canvas ring, popup furniture), Spark (autoscale or pinned
+  range). Same-dir flat files; consumed like any type. Visually verified.
+- **Workspace clicks fixed**: `Hyprland.dispatch("workspace(N)")` — Lua
+  shorthand, the old "workspace N" hyprlang string errors on 0.55+.
 
 ## Architecture
 

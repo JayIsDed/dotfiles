@@ -269,3 +269,12 @@ Modules/features still unexplored:
 - Plugin registry: plugins.danklinux.com (230+, ranked).
 Bar height: barConfigs[0].innerPadding drives it (widgetThickness =
 26 + innerPadding*0.6; 4→10 on 08-13 for the taller bar).
+- **CC network "Not connected" (08-13 09:45, via IPC+grim loop)**: their
+  NetworkService rides the dms CLI server, which only exists under
+  `dms run` (= `qs -c dms`, daemon flag -d; NO -p flag — it briefly
+  killed the bar). Fix path queued: make ~/.config/quickshell a REAL dir
+  (ledger: -c discovery fails through the symlink) with entries
+  lilypad → dotfiles + dms → ~/git/reference/DankMaterialShell/quickshell,
+  then autostart becomes `dms run -d`. Until then: bare qs -p works,
+  CC wifi panel just reads empty. Verified working: control-center open
+  via IPC + grim = the popout verification loop for everything.

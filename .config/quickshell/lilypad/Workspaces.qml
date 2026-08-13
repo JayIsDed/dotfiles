@@ -41,7 +41,8 @@ RowLayout {
             }
             MouseArea {
                 anchors.fill: parent
-                onClicked: Hyprland.dispatch("workspace " + wsId)
+                // hypr 0.55+ Lua shorthand: dispatch args are Lua, not hyprlang
+                onClicked: Hyprland.dispatch("workspace(" + wsId + ")")
             }
         }
     }

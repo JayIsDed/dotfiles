@@ -55,30 +55,32 @@ PluginComponent {
         onTriggered: root.probe()
     }
 
+    // NOTE: the pill Component is CONTENT inside dms's BasePill (chrome,
+    // padding, hover all come free) — size via implicitWidth like their
+    // built-in widgets, never draw your own pill rect (double chrome +
+    // zero-width allocation = the overlap Jay caught)
     horizontalBarPill: Component {
-        StyledRect {
-            width: row.implicitWidth + Theme.spacingM * 2
-            height: parent.widgetThickness
-            radius: Theme.cornerRadius
-            color: Theme.surfaceContainerHigh
+        Item {
+            implicitWidth: dvmRow.implicitWidth
+            implicitHeight: dvmRow.implicitHeight
 
             Row {
-                id: row
+                id: dvmRow
                 anchors.centerIn: parent
-                spacing: Theme.spacingS
+                spacing: Theme.spacingXS
 
-                StyledText {
-                    text: "dvm"
-                    color: Theme.surfaceVariantText
-                    font.pixelSize: Theme.fontSizeSmall
+                DankIcon {
+                    name: "dns"
+                    size: root.iconSize
+                    color: root.alive ? Theme.widgetIconColor : Theme.surfaceVariantText
                     anchors.verticalCenter: parent.verticalCenter
                 }
                 StyledText {
                     text: root.alive
                         ? Math.round(root.cpu) + "% " + Math.round(root.mem) + "% " + root.containers
                         : "off"
-                    color: root.alive ? Theme.surfaceText : Theme.surfaceVariantText
-                    font.pixelSize: Theme.fontSizeSmall
+                    color: Theme.widgetTextColor
+                    font.pixelSize: Theme.barTextSize(root.barThickness, root.barConfig?.fontScale, root.barConfig?.maximizeWidgetText)
                     anchors.verticalCenter: parent.verticalCenter
                 }
             }

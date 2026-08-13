@@ -109,6 +109,7 @@ Singleton {
     readonly property int meterHeight: 6
     readonly property int meterRadius: 3
     readonly property int meterWidth: 64
+    readonly property int meterGap: 4      // vertical gap inside stacked meter pairs
     readonly property color track: alpha(m3onSurface, 0.12)
     readonly property int gaugeSize: 26
     readonly property int gaugeStroke: 3
@@ -129,7 +130,7 @@ Singleton {
     readonly property color borderStrong: alpha(m3onSurface, 0.17)
 
     // ---- geometry + type ----
-    readonly property real islandAlpha: 0.78   // island glass density (was 0.62 — too see-through)
+    readonly property real islandAlpha: 0.86   // island glass density (0.62 -> 0.78 -> 0.86, Jay-tuned; hypr blurs behind it)
     readonly property int barHeight: 52        // island height — roomy, uses the inside space
     readonly property int islandMargin: 4      // uniform thin ring: top = sides = bottom
     readonly property int islandRadius: 12

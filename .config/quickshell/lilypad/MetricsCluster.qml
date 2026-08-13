@@ -12,7 +12,31 @@ import QtQuick.Layouts
 
 RowLayout {
     id: root
-    spacing: 13
+    spacing: 8
+
+    // pill container — every segment sits in one (workspace-pill kinship)
+    component Seg: Rectangle {
+        default property alias content: inner.data
+        implicitWidth: inner.implicitWidth + 18
+        implicitHeight: 32
+        radius: 16
+        color: Theme.l1
+        border.color: Theme.l1Border
+        border.width: 1
+        RowLayout {
+            id: inner
+            anchors.centerIn: parent
+            spacing: 6
+        }
+    }
+    // right-aligned percent readout, width reserved so pills don't breathe
+    component Pct: Text {
+        color: Theme.text2
+        font.family: Theme.font
+        font.pixelSize: 10
+        horizontalAlignment: Text.AlignRight
+        Layout.preferredWidth: 30
+    }
 
     property real cpu: 0
     property real mem: 0
@@ -139,29 +163,35 @@ RowLayout {
     // ════ segments ════
 
     // cpu / ram — labeled like the claude pair, threshold colors (green->amber->red)
-    RowLayout {
+    Seg {
         Layout.alignment: Qt.AlignVCenter
-        spacing: 4
         ColumnLayout {
             spacing: 0
             Text { text: "cpu"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 9 }
             Text { text: "ram"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 9 }
         }
         ColumnLayout {
-            spacing: 3
+            spacing: Theme.meterGap
             MeterBar { value: root.cpu }
             MeterBar { value: root.mem }
+        }
+        ColumnLayout {
+            spacing: 0
+            Pct { text: Math.round(root.cpu) + "%" }
+            Pct { text: Math.round(root.mem) + "%" }
         }
     }
 
     // temp — sparkline + current
-    RowLayout {
+    Seg {
         Layout.alignment: Qt.AlignVCenter
-        spacing: 4
         Spark {
             values: root.tempHist
             implicitHeight: 16
-            minValue: 30; maxValue: 95
+            // window hugs the observed range so a 3-degree drift still draws
+            // a visible shape (a fixed 30-95 scale rendered it flat)
+            minValue: root.tempHist.length ? Math.min(...root.tempHist) - 2 : 30
+            maxValue: root.tempHist.length ? Math.max(...root.tempHist) + 2 : 95
             lineColor: root.temp >= 85 ? Theme.crit : root.temp >= 70 ? Theme.warn : Theme.ok
         }
         Text {
@@ -171,10 +201,9 @@ RowLayout {
         }
     }
 
-    // claude 5h / 7d — primary/tertiary hues, marker = fable ceiling
-    RowLayout {
+    // claude 5h / 7d — blue/purple, marker = fable ceiling
+    Seg {
         Layout.alignment: Qt.AlignVCenter
-        spacing: 4
         visible: root.cu5 >= 0
         ColumnLayout {
             spacing: 0
@@ -182,7 +211,7 @@ RowLayout {
             Text { text: "7d"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 9 }
         }
         ColumnLayout {
-            spacing: 3
+            spacing: Theme.meterGap
             MeterBar {
                 value: root.cu5
                 fillColor: root.cu5 >= Theme.warnAt ? Theme.valueToColor(root.cu5) : Theme.info
@@ -192,47 +221,47 @@ RowLayout {
                 fillColor: root.cu7 >= Theme.warnAt ? Theme.valueToColor(root.cu7) : Theme.purple
             }
         }
+        ColumnLayout {
+            spacing: 0
+            Pct { text: Math.round(root.cu5) + "%" }
+            Pct { text: Math.round(root.cu7) + "%" }
+        }
     }
 
     // net sparks + rates
-    ColumnLayout {
+    Seg {
         Layout.alignment: Qt.AlignVCenter
-        spacing: 2
-        Spark { values: root.rxHist; implicitHeight: 9; minValue: 0 }
-        Spark { values: root.txHist; implicitHeight: 9; minValue: 0; lineColor: Theme.purple }
-    }
-    ColumnLayout {
-        Layout.alignment: Qt.AlignVCenter
-        spacing: 0
-        Text { text: "󰇚" + root.rxRate; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
-        Text { text: "󰕒" + root.txRate; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
+        ColumnLayout {
+            spacing: 2
+            Spark { values: root.rxHist; implicitHeight: 9; minValue: 0 }
+            Spark { values: root.txHist; implicitHeight: 9; minValue: 0; lineColor: Theme.purple }
+        }
+        ColumnLayout {
+            spacing: 0
+            Text { text: "󰇚" + root.rxRate; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
+            Text { text: "󰕒" + root.txRate; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
+        }
     }
 
     // tailscale badge
-    Rectangle {
+    Seg {
         Layout.alignment: Qt.AlignVCenter
-        implicitWidth: tsText.implicitWidth + 14
-        implicitHeight: 22
-        radius: Theme.chipRadius
-        color: Theme.l2
-        border.color: Theme.l2Border
-        border.width: 1
+        visible: root.tsLabel !== ""
         Text {
-            id: tsText
-            anchors.centerIn: parent
             text: root.tsLabel
             color: root.tsColor
             font.family: Theme.font; font.pixelSize: Theme.fontSizeS
         }
-        visible: root.tsLabel !== ""
     }
 
     // sys card: host · kernel · uptime
-    Text {
+    Seg {
         Layout.alignment: Qt.AlignVCenter
-        text: root.host + " · " + root.kernel.split("-")[0] + " · " + root.up
-        color: Theme.text3
-        font.family: Theme.font; font.pixelSize: Theme.fontSizeS
         visible: root.host !== ""
+        Text {
+            text: root.host + " · " + root.kernel.split("-")[0] + " · " + root.up
+            color: Theme.text3
+            font.family: Theme.font; font.pixelSize: Theme.fontSizeS
+        }
     }
 }

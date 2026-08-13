@@ -1,0 +1,12 @@
+{
+    "id": "pondDeck",
+    "name": "Pond Deck",
+    "description": "Printer fleet on the desktop — per-printer state, job, progress via the 111 relay",
+    "version": "0.1.0",
+    "author": "Jay",
+    "type": "desktop",
+    "capabilities": ["desktop-widget"],
+    "component": "./PondWidget.qml",
+    "icon": "print",
+    "requires": ["ssh"]
+}

@@ -1,0 +1,12 @@
+{
+    "id": "sshLauncher",
+    "name": "SSH Launcher",
+    "description": "Type ! in the launcher to jump to any ssh host from ~/.ssh/config in kitty",
+    "version": "0.1.0",
+    "author": "Jay",
+    "type": "launcher",
+    "capabilities": ["command-execution"],
+    "component": "./SshLauncher.qml",
+    "icon": "terminal",
+    "trigger": "!"
+}

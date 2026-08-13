@@ -104,7 +104,8 @@ PanelWindow {
         }
     }
 
-    // ── left bundle: sys card · tasks · dvm, centered in the ws↔clock span
+    // ── left bundle: tasks · dvm, centered in the ws↔clock span (sys card
+    // moved into ControlPanel — Jay 08-13, bar real estate pass)
     RowLayout {
         id: leftBundle
         anchors.verticalCenter: parent.verticalCenter
@@ -117,12 +118,23 @@ PanelWindow {
         }
         spacing: Theme.pad
 
-        Tile { SysCard { Layout.alignment: Qt.AlignVCenter } }
         Tile {
             visible: tasks.any
-            TaskSwitcher { id: tasks; Layout.alignment: Qt.AlignVCenter }
+            TaskSwitcher {
+                id: tasks
+                Layout.alignment: Qt.AlignVCenter
+                // chips share the span minus the dvm tile and paddings, so
+                // the bundle can no longer grow into the clock (the dvm
+                // overlap Jay caught 08-13)
+                budget: {
+                    const span = clockTile.x - (wsTile.x + wsTile.width)
+                    const dvm = dockerTile.alive ? dvmTile.width + Theme.pad : 0
+                    return span - 2 * Theme.pad - 28 - dvm
+                }
+            }
         }
         Tile {
+            id: dvmTile
             visible: dockerTile.alive
             DockerTile { id: dockerTile; Layout.alignment: Qt.AlignVCenter }
         }

@@ -243,6 +243,47 @@ Trial passed on all axes; Jay: "everything looks good... lets adopt it."
   port (nvidia/triple-head validation) · retire waybar + ~/.mydotfiles
   after that · upstream issue: dms CLI --prefer passthrough for matugen.
 
+## Session 5 (2026-08-13 afternoon, remote via tailnet) — refinement + archbox staging
+
+- **Sparks are chips now**: Spark.qml `framed: true` BY DEFAULT — MeterBar's
+  rounded track behind every line (Jay: "backgrounds on everything"), taller
+  across the board (bar 12 / rows 16-20 / thermals 24 / power 30). One
+  visual family, bar through popouts. Damped bar-thermal autoscale (±6°/
+  ±600rpm), RTT ceiling floored at 50ms — no more drama from flat lines.
+- **New metrics**: sys popout swp + load 1/5/15 · net popout signal dBm +
+  FLOW rx/tx (default-route iface, counter-reset guarded) · battery cycles
+  + ~time-to-empty/full. Battery popout "now" row was clipping — width 54.
+- **Reload truth**: `plugin-scan scan` reloads QML *sometimes* (dir-mtime
+  dependent?); `dms restart` is the reliable path, ~9s to bar-back. IPC
+  toggle + grim loop unchanged and remains the verification standard.
+- **Archbox incident (the whole afternoon's flavor)**: box showed "asleep"
+  but pulled 148W — sshd wedged (accepts TCP, no banner, RST = classic
+  unrestarted openssh upgrade; per-connection re-exec dies). Ping fine,
+  telegraf fine, HA sensors fine. NO side door: keeper decommissioned
+  07-31, no tailscale on box, bench-bridge lanes ride the same dead ssh.
+  Fix = clean cycle via switch.archbox (HA → archbox-power :9395
+  authenticated poweroff, NOT the plug) then WoL. Jay owns the cycle.
+  **Fleet tile learned the lesson**: ssh-dead + >60W = "UP but ssh dead ·
+  cycle it" (amber), never "asleep"/"off" — WoL is a no-op in that state.
+- **Archbox port STAGED, flag-gated** (nothing flips until the flag):
+  autostart.lua now: is_laptop OR ~/.config/dms-adopted exists → dms; else
+  waybar+swaync. `scripts/port-dms-archbox.sh` = idempotent stage (pkg
+  check, payload binaries/font, quickshell real-dir links, plugins SYMLINK
+  to dotfiles canon — not scp-fed like the laptop — seeded settings with
+  batteryPower stripped, relay ssh checks). Payload (dms/dgop/matugen-shim
+  + MaterialSymbolsRounded.ttf + laptop settings seed) staged on 111
+  scratchpad; rsync to archbox ~/dms-port-payload/ once sshd returns.
+  Laptop dms clone ref: AvengeMedia/DankMaterialShell @ 7b9b34b +
+  dank-qml-common 83518be.
+- **Laptop clone reconciled**: workspaces.lua persistent-dots (5 dots,
+  morning session) rescued into canon; hypr/dms/ (dms-generated lua)
+  gitignored; colors.conf stays local (live matugen palette). Only-drift
+  now = colors.conf, by design.
+- **Fleet probes archbox via `ssh archbox` alias, dvm via `docker-services`,
+  111 via `claude-dev`** — the port script checks claude-dev +
+  docker-services; archbox's own plugins will need the same aliases in
+  ITS ~/.ssh/config (it probes dvm/111 FROM itself when it's the seat).
+
 ## dms loot list (found in the repo, 08-13 — DURABLE COPY, Jay asked)
 
 Bar widget ids (add via barConfigs[0].*Widgets): diskUsage · cpuTemp ·

@@ -1,0 +1,129 @@
+{
+  "currentThemeName": "dynamic",
+  "useFahrenheit": true,
+  "barElevationEnabled": false,
+  "barConfigs": [
+    {
+      "id": "default",
+      "name": "Main Bar",
+      "enabled": true,
+      "position": 0,
+      "screenPreferences": [
+        "all"
+      ],
+      "showOnLastDisplay": true,
+      "leftWidgets": [
+        "launcherButton",
+        "systemUpdate",
+        "privacyIndicator",
+        "idleInhibitor",
+        "notepadButton",
+        "colorPicker",
+        "clipboard",
+        "workspaceSwitcher",
+        "focusedWindow"
+      ],
+      "centerWidgets": [
+        "music",
+        "clock",
+        "weather"
+      ],
+      "rightWidgets": [
+        "systemTray",
+        "sysMetrics",
+        "fleetTile",
+        "claudeUsage",
+        "notificationButton",
+        "netPosture",
+        "batteryPower",
+        "controlCenterButton",
+        "powerMenuButton"
+      ],
+      "spacing": 4,
+      "innerPadding": 10,
+      "bottomGap": 0,
+      "transparency": 1,
+      "widgetTransparency": 1,
+      "squareCorners": false,
+      "noBackground": false,
+      "gothCornersEnabled": false,
+      "gothCornerRadiusOverride": false,
+      "gothCornerRadiusValue": 12,
+      "borderEnabled": false,
+      "borderColor": "surfaceText",
+      "borderOpacity": 1,
+      "borderThickness": 1,
+      "fontScale": 1,
+      "autoHide": false,
+      "autoHideDelay": 250,
+      "openOnOverview": false,
+      "visible": true,
+      "popupGapsAuto": true,
+      "popupGapsManual": 4,
+      "hoverPopouts": false,
+      "hoverPopoutDelay": 365
+    }
+  ],
+  "desktopClockCustomColor": {
+    "r": 1,
+    "g": 1,
+    "b": 1,
+    "a": 1,
+    "hsvHue": -1,
+    "hsvSaturation": 0,
+    "hsvValue": 1,
+    "hslHue": -1,
+    "hslSaturation": 0,
+    "hslLightness": 1,
+    "valid": true
+  },
+  "systemMonitorCustomColor": {
+    "r": 1,
+    "g": 1,
+    "b": 1,
+    "a": 1,
+    "hsvHue": -1,
+    "hsvSaturation": 0,
+    "hsvValue": 1,
+    "hslHue": -1,
+    "hslSaturation": 0,
+    "hslLightness": 1,
+    "valid": true
+  },
+  "desktopWidgetInstances": [
+    {
+      "id": "dw_1786629828750_homelab",
+      "widgetType": "homelabDeck",
+      "name": "Homelab Deck",
+      "enabled": true,
+      "config": {
+        "desktopX": 60,
+        "desktopY": 120,
+        "desktopWidth": 320,
+        "desktopHeight": 210
+      }
+    },
+    {
+      "id": "dw_1786630648904_arch",
+      "widgetType": "archDeck",
+      "name": "Arch-Box Deck",
+      "enabled": true,
+      "config": {}
+    },
+    {
+      "id": "dw_1786631606799_shelf",
+      "widgetType": "shelfDeck",
+      "name": "Shelf Deck",
+      "enabled": true,
+      "config": {}
+    },
+    {
+      "id": "dw_1786631806781_pond",
+      "widgetType": "pondDeck",
+      "name": "Pond Deck",
+      "enabled": true,
+      "config": {}
+    }
+  ],
+  "configVersion": 15
+}

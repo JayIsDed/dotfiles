@@ -1,0 +1,37 @@
+{
+  "dvmTile": {
+    "enabled": false
+  },
+  "claudeUsage": {
+    "enabled": true
+  },
+  "sysMetrics": {
+    "enabled": true,
+    "pinned": ""
+  },
+  "batteryPower": {
+    "enabled": true
+  },
+  "netPosture": {
+    "enabled": true
+  },
+  "homelabDeck": {
+    "enabled": true
+  },
+  "archDeck": {
+    "enabled": true
+  },
+  "shelfDeck": {
+    "enabled": true
+  },
+  "pondDeck": {
+    "enabled": true
+  },
+  "sshLauncher": {
+    "enabled": true
+  },
+  "fleetTile": {
+    "enabled": true,
+    "resident": "arch"
+  }
+}

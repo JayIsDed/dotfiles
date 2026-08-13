@@ -37,17 +37,13 @@ RowLayout {
         horizontalAlignment: Text.AlignRight
         Layout.preferredWidth: 34
     }
-    // fixed centered box so stacked icons align regardless of glyph width
-    // (nerd glyphs mix single- and double-cell advances)
-    component MiniIcon: Text {
+    // text labels beat icon glyphs here: nf-md ink boxes vary wildly
+    // (thermometer is narrow, fan is wide) so icon columns never look
+    // aligned — monospace text always does, and matches the other pills
+    component RowLabel: Text {
         color: Theme.text3
         font.family: Theme.font
-        font.pixelSize: 11
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        Layout.preferredWidth: 18
-        Layout.maximumWidth: 18
-        Layout.preferredHeight: 9
+        font.pixelSize: 10
     }
 
     property real cpu: 0
@@ -196,7 +192,7 @@ RowLayout {
             spacing: 0
             Text { text: "cpu"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 10 }
             Text { text: "ram"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 10 }
-            Text { text: "dsk"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 10; visible: root.disk >= 0 }
+            RowLabel { text: "dsk"; visible: root.disk >= 0 }
         }
         ColumnLayout {
             spacing: Theme.meterGap
@@ -217,8 +213,8 @@ RowLayout {
         Layout.alignment: Qt.AlignVCenter
         ColumnLayout {
             spacing: 2
-            MiniIcon { text: "󰔏" }
-            MiniIcon { text: "󰈐" }
+            RowLabel { text: "tmp" }
+            RowLabel { text: "fan" }
         }
         ColumnLayout {
             spacing: 2
@@ -281,8 +277,8 @@ RowLayout {
         Layout.alignment: Qt.AlignVCenter
         ColumnLayout {
             spacing: 2
-            MiniIcon { text: "󰇚" }
-            MiniIcon { text: "󰕒" }
+            RowLabel { text: "rx" }
+            RowLabel { text: "tx" }
         }
         ColumnLayout {
             spacing: 2

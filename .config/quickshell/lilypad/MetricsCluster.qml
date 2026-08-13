@@ -42,6 +42,7 @@ RowLayout {
     property real mem: 0
     property int disk: -1
     property int fan: 0
+    property var fanHist: []
     property string lat: ""
     property int temp: 0
     property var tempHist: []
@@ -116,6 +117,7 @@ RowLayout {
                         root.disk = Number(p[1])
                     } else if (p[0] === "F" && p.length >= 2) {
                         root.fan = Number(p[1])
+                        root.fanHist = root.fanHist.concat(root.fan).slice(-30)
                     } else if (p[0] === "U" && p.length >= 4) {
                         root.up = root.fmtUp(Number(p[1]))
                         root.host = p[2]
@@ -198,28 +200,40 @@ RowLayout {
         }
     }
 
-    // temp — sparkline + current
+    // thermal — dual spark like the net pill: counts | sparks | icons
     Seg {
         Layout.alignment: Qt.AlignVCenter
-        Spark {
-            values: root.tempHist
-            implicitHeight: 16
-            // window hugs the observed range so a 3-degree drift still draws
-            // a visible shape (a fixed 30-95 scale rendered it flat)
-            minValue: root.tempHist.length ? Math.min(...root.tempHist) - 2 : 30
-            maxValue: root.tempHist.length ? Math.max(...root.tempHist) + 2 : 95
-            lineColor: root.temp >= 85 ? Theme.crit : root.temp >= 70 ? Theme.warn : Theme.ok
+        ColumnLayout {
+            spacing: 0
+            Pct {
+                text: root.temp + "°"
+                color: root.temp >= 85 ? Theme.crit : root.temp >= 70 ? Theme.warn : Theme.text2
+            }
+            Pct { text: root.fan; visible: root.fan > 0 }
         }
-        Text {
-            text: root.temp + "°"
-            color: root.temp >= 85 ? Theme.crit : root.temp >= 70 ? Theme.warn : Theme.text2
-            font.family: Theme.font; font.pixelSize: Theme.fontSize
+        ColumnLayout {
+            spacing: 2
+            Spark {
+                values: root.tempHist
+                implicitHeight: 9
+                // window hugs the observed range so a 3-degree drift still
+                // draws a visible shape (a fixed 30-95 scale rendered it flat)
+                minValue: root.tempHist.length ? Math.min(...root.tempHist) - 2 : 30
+                maxValue: root.tempHist.length ? Math.max(...root.tempHist) + 2 : 95
+                lineColor: root.temp >= 85 ? Theme.crit : root.temp >= 70 ? Theme.warn : Theme.ok
+            }
+            Spark {
+                values: root.fanHist
+                implicitHeight: 9
+                minValue: 0
+                maxValue: root.fanHist.length ? Math.max(...root.fanHist) + 500 : 5000
+                lineColor: Theme.purple
+            }
         }
-        Text {
-            visible: root.fan > 0
-            text: "󰈐 " + root.fan
-            color: Theme.text3
-            font.family: Theme.font; font.pixelSize: Theme.fontSizeS
+        ColumnLayout {
+            spacing: 0
+            Text { text: "󰔏"; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
+            Text { text: "󰈐"; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
         }
     }
 
@@ -250,9 +264,14 @@ RowLayout {
         }
     }
 
-    // net sparks + rates
+    // net — same arrangement: counts | sparks | icons
     Seg {
         Layout.alignment: Qt.AlignVCenter
+        ColumnLayout {
+            spacing: 0
+            Pct { text: root.rxRate }
+            Pct { text: root.txRate }
+        }
         ColumnLayout {
             spacing: 2
             Spark { values: root.rxHist; implicitHeight: 9; minValue: 0 }
@@ -260,8 +279,8 @@ RowLayout {
         }
         ColumnLayout {
             spacing: 0
-            Text { text: "󰇚" + root.rxRate; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
-            Text { text: "󰕒" + root.txRate; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
+            Text { text: "󰇚"; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
+            Text { text: "󰕒"; color: Theme.text3; font.family: Theme.font; font.pixelSize: Theme.fontSizeS }
         }
     }
 

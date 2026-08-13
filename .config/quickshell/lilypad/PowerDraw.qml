@@ -8,9 +8,11 @@ Text {
     id: root
     property real watts: -1
 
+    // input/output differentiator: +green charging (power in), −blue on
+    // battery (power out)
     visible: watts >= 0
-    text: watts.toFixed(1) + "W"
-    color: !UPower.onBattery ? Theme.ok : Theme.text2
+    text: (!UPower.onBattery ? "+" : "−") + watts.toFixed(1) + "W"
+    color: !UPower.onBattery ? Theme.ok : Theme.info
     font.family: Theme.font
     font.pixelSize: Theme.fontSizeS
 

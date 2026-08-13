@@ -138,25 +138,19 @@ RowLayout {
 
     // ════ segments ════
 
-    // cpu / ram — icon + hue differentiated, escalate at thresholds
-    ColumnLayout {
+    // cpu / ram — labeled like the claude pair, threshold colors (green->amber->red)
+    RowLayout {
         Layout.alignment: Qt.AlignVCenter
-        spacing: 3
-        RowLayout {
-            spacing: 4
-            Text { text: ""; color: Theme.info; font.family: Theme.font; font.pixelSize: 12 }
-            MeterBar {
-                value: root.cpu
-                fillColor: root.cpu >= Theme.warnAt ? Theme.valueToColor(root.cpu) : Theme.info
-            }
+        spacing: 4
+        ColumnLayout {
+            spacing: 0
+            Text { text: "cpu"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 9 }
+            Text { text: "ram"; color: Theme.text3; font.family: Theme.font; font.pixelSize: 9 }
         }
-        RowLayout {
-            spacing: 4
-            Text { text: ""; color: Theme.purple; font.family: Theme.font; font.pixelSize: 12 }
-            MeterBar {
-                value: root.mem
-                fillColor: root.mem >= Theme.warnAt ? Theme.valueToColor(root.mem) : Theme.purple
-            }
+        ColumnLayout {
+            spacing: 3
+            MeterBar { value: root.cpu }
+            MeterBar { value: root.mem }
         }
     }
 
@@ -191,11 +185,11 @@ RowLayout {
             spacing: 3
             MeterBar {
                 value: root.cu5
-                fillColor: root.cu5 >= Theme.warnAt ? Theme.valueToColor(root.cu5) : Theme.m3primary
+                fillColor: root.cu5 >= Theme.warnAt ? Theme.valueToColor(root.cu5) : Theme.info
             }
             MeterBar {
                 value: root.cu7; marker: 50
-                fillColor: root.cu7 >= Theme.warnAt ? Theme.valueToColor(root.cu7) : Theme.m3tertiary
+                fillColor: root.cu7 >= Theme.warnAt ? Theme.valueToColor(root.cu7) : Theme.purple
             }
         }
     }

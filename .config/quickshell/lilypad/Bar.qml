@@ -22,8 +22,10 @@ PanelWindow {
     color: "transparent"
     WlrLayershell.namespace: "lilypad"
 
-    // one floating tile — near-black glass, blur behind
+    // one floating tile — near-black glass, blur behind. autoHide collapses
+    // the pill when every module inside is empty/hidden (no sliver pills).
     component Tile: Rectangle {
+        property bool autoHide: false
         default property alias content: inner.data
         implicitWidth: inner.implicitWidth + 24
         implicitHeight: Theme.barHeight
@@ -31,6 +33,7 @@ PanelWindow {
         color: Theme.alpha(Theme.tileBase, Theme.islandAlpha)
         border.color: Theme.border
         border.width: 1
+        visible: !autoHide || inner.implicitWidth > 8
         RowLayout {
             id: inner
             anchors.centerIn: parent
@@ -79,15 +82,16 @@ PanelWindow {
         spacing: Theme.pad
 
         Tile {
+            visible: dockerTile.alive
+            DockerTile { id: dockerTile; Layout.alignment: Qt.AlignVCenter }
+        }
+
+        Tile {
+            autoHide: true
             ScriptModule {
                 Layout.alignment: Qt.AlignVCenter
                 script: "updates.sh"; interval: 3600000
                 leftCmd: ["kitty", "-e", "sudo", "pacman", "-Syu"]
-            }
-            ScriptModule {
-                Layout.alignment: Qt.AlignVCenter
-                script: "docker-status.sh"; interval: 30000
-                leftCmd: ["kitty", "ssh", "docker-services"]
             }
             Tray { Layout.alignment: Qt.AlignVCenter }
             ScriptModule {

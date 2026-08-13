@@ -136,7 +136,7 @@ Singleton {
     readonly property int barHeight: 52        // island height — roomy, uses the inside space
     readonly property int islandMargin: 4      // vertical ring: tile to screen-top / to windows
     readonly property int barSideMargin: 8     // = hypr gaps_out, so end tiles align with window borders
-    readonly property int islandRadius: 12
+    readonly property int islandRadius: 16
     readonly property int radius: 10
     readonly property int chipRadius: 8
     readonly property int pillRadius: 999

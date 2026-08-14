@@ -326,3 +326,39 @@ Bar height: barConfigs[0].innerPadding drives it (widgetThickness =
   then autostart becomes `dms run -d`. Until then: bare qs -p works,
   CC wifi panel just reads empty. Verified working: control-center open
   via IPC + grim = the popout verification loop for everything.
+
+## Session 6 (2026-08-14 morning, remote via tailnet) — the font saga + scale/thinkpad chips
+
+- **THE FONT ROOT CAUSE (months of "some apps render wrong")**: user
+  fontconfig `~/.config/fontconfig/conf.d/75-noto-color-emoji.conf` (May 20)
+  strongly PREFERRED Noto Color Emoji first for sans-serif/serif/monospace.
+  Apps that walk the fallback chain shrugged; apps taking fontconfig's first
+  match literally rendered Latin as NOTHING (dms notepad among them). Plus
+  the laptop had no base text fonts at all (fc-match sans → emoji). Fix:
+  text-font-first prefer order (file now in dotfiles canon + requires
+  noto-fonts) + Jay installed noto-fonts / ttf-fira-code / inter-font.
+- **dms notepad blank = that bug**: editor uses SettingsData.monoFontFamily
+  RAW ("Fira Code", NotepadTextEditor.qml:582), bypassing the Theme resolver;
+  dms's bundled font registers as "FiraCode Nerd Font" so the default misses
+  on any box without system Fira Code → invisible text over a live char
+  count. settings.json now pins monoFontFamily "FiraCode Nerd Font".
+  UPSTREAM: default monoFontFamily should match the bundled family.
+- **`hyprctl keyword` is DEAD under the Lua config** ("keyword can't work
+  with non-legacy parsers. Use eval."). Runtime monitor changes =
+  `hyprctl eval 'hl.monitor({...})'`. Hyprland silently NUDGES non-integral
+  scales (asked 1.75, got 5/3 = 1.6667) and returns "ok" either way — always
+  reprobe and show actual. Back-to-back evals drop silently; settle ~1s
+  between apply and reprobe. Preserve `transform` on re-apply or DP-5 loses
+  portrait.
+- **New plugins (canon, laptop live)**: DisplayScale (bar % chip → popout
+  ladder of whole-pixel divisors computed per panel; persists to
+  ~/.config/hypr/scale-<output>, read by monitors.lua scale_override()) and
+  ThinkPad (platform_profile + fan RPM severity spark + TLP 75–80 + kbd
+  light; read-only — profile writes need root/udev rule). IPC:
+  popout-scale / popout-tp. Kit md5 family: 13 dirs, still single-hash.
+- 47-nm-wifi-scan.rules INSTALLED on laptop (and banked in dotfiles
+  scripts/ so it stops evaporating from /tmp).
+- **Archbox follow-ups**: plugins arrive via its canon symlink on git pull —
+  still needs settings.json widget entries + plugin_settings enable there;
+  check its fontconfig for the same emoji-first file; box was unreachable
+  (off/asleep) all morning.

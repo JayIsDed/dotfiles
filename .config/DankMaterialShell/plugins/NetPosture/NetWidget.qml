@@ -110,6 +110,19 @@ PluginComponent {
             }, 0, 8000)
     }
 
+    property string extIp: ""
+
+    // public/external IP — slow lane: one tiny HTTPS ask per 5 min, never
+    // per-tick. Offline or weird answer renders as "—", not garbage.
+    function probeExt() {
+        Proc.runCommand("netPosture.ext",
+            ["sh", "-c", "curl -sf --max-time 4 https://api.ipify.org || true"],
+            (stdout, exitCode) => {
+                const t = stdout.trim()
+                root.extIp = /^[0-9]{1,3}(\.[0-9]{1,3}){3}$/.test(t) ? t : "—"
+            }, 0, 6000)
+    }
+
     Timer {
         interval: 5000; running: true; repeat: true
         triggeredOnStart: true
@@ -119,6 +132,11 @@ PluginComponent {
         interval: 10000; running: true; repeat: true
         triggeredOnStart: true
         onTriggered: root.probeTs()
+    }
+    Timer {
+        interval: 300000; running: true; repeat: true
+        triggeredOnStart: true
+        onTriggered: root.probeExt()
     }
 
     horizontalBarPill: Component {
@@ -246,6 +264,7 @@ PluginComponent {
                     headingColor: Theme.surfaceVariantText
                     StyledText { text: "local   " + (root.localIp || "—"); color: Theme.surfaceText; font.pixelSize: Theme.fontSizeMedium }
                     StyledText { text: "tailnet " + (root.tsIp || "—"); color: Theme.surfaceText; font.pixelSize: Theme.fontSizeMedium }
+                    StyledText { text: "public  " + (root.extIp || "—"); color: Theme.surfaceText; font.pixelSize: Theme.fontSizeMedium }
                 }
             }
         }

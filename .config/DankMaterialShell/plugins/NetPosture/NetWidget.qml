@@ -262,9 +262,45 @@ PluginComponent {
                 Tile {
                     heading: "ADDRESSES"
                     headingColor: Theme.surfaceVariantText
-                    StyledText { text: "local   " + (root.localIp || "—"); color: Theme.surfaceText; font.pixelSize: Theme.fontSizeMedium }
-                    StyledText { text: "tailnet " + (root.tsIp || "—"); color: Theme.surfaceText; font.pixelSize: Theme.fontSizeMedium }
-                    StyledText { text: "public  " + (root.extIp || "—"); color: Theme.surfaceText; font.pixelSize: Theme.fontSizeMedium }
+
+                    // address row with a click-to-copy tail (wl-copy, argv
+                    // direct — IPs are digits+dots, no shell involved).
+                    // Icon flips to a green check for a beat as receipt.
+                    component AddrRow: Row {
+                        id: ar
+                        property string label
+                        property string value
+                        property bool copied: false
+                        spacing: Theme.spacingS
+                        StyledText {
+                            text: ar.label + (ar.value || "—")
+                            color: Theme.surfaceText
+                            font.pixelSize: Theme.fontSizeMedium
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                        DankIcon {
+                            name: ar.copied ? "check" : "content_copy"
+                            size: 14
+                            color: ar.copied ? "#4ade80" : Theme.surfaceVariantText
+                            visible: ar.value !== ""
+                            anchors.verticalCenter: parent.verticalCenter
+                            MouseArea {
+                                anchors.fill: parent
+                                anchors.margins: -8
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: {
+                                    Proc.runCommand("netPosture.copy", ["wl-copy", ar.value], () => {}, 0, 3000)
+                                    ar.copied = true
+                                    copyReset.restart()
+                                }
+                            }
+                        }
+                        Timer { id: copyReset; interval: 1500; onTriggered: ar.copied = false }
+                    }
+
+                    AddrRow { label: "local   "; value: root.localIp }
+                    AddrRow { label: "tailnet "; value: root.tsIp }
+                    AddrRow { label: "public  "; value: root.extIp === "—" ? "" : root.extIp }
                 }
             }
         }

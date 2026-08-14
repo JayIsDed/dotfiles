@@ -179,72 +179,48 @@ PluginComponent {
             Row {
                 id: cluster
                 anchors.centerIn: parent
-                spacing: Theme.spacingM
+                spacing: Theme.spacingS
 
-                Row {
-                    spacing: Theme.spacingXS
+                // per-metric stack: readable number over a thin bar — the
+                // battery pill's wattage grammar (Jay's pick 08-14). Units
+                // carry identity (% · % · ° · k); the 8px label columns are
+                // gone and the tmp/fan sparks retired to the popout.
+                component MStack: Column {
+                    property string txt
+                    property real val: 0
+                    property var fill: undefined
+                    property color tone: Theme.widgetTextColor
+                    spacing: 2
                     anchors.verticalCenter: parent.verticalCenter
-                    Column {
-                        spacing: 1
-                        anchors.verticalCenter: parent.verticalCenter
-                        StyledText { text: "cpu"; color: Theme.surfaceVariantText; font.pixelSize: 8 }
-                        StyledText { text: "ram"; color: Theme.surfaceVariantText; font.pixelSize: 8 }
-                        StyledText { text: "dsk"; color: Theme.surfaceVariantText; font.pixelSize: 8; visible: root.disk >= 0 }
+                    StyledText {
+                        text: parent.txt
+                        color: parent.tone
+                        font.pixelSize: 11
+                        font.weight: Font.Bold
+                        anchors.horizontalCenter: parent.horizontalCenter
                     }
-                    Column {
-                        spacing: 4
-                        anchors.verticalCenter: parent.verticalCenter
-                        MeterBar { value: root.cpu; okColor: Theme.primary }
-                        MeterBar { value: root.mem; okColor: Theme.primary }
-                        MeterBar { value: root.disk; okColor: Theme.primary; visible: root.disk >= 0 }
-                    }
-                    Column {
-                        spacing: 1
-                        anchors.verticalCenter: parent.verticalCenter
-                        StyledText { text: Math.round(root.cpu) + "%"; color: Theme.widgetTextColor; font.pixelSize: 8; horizontalAlignment: Text.AlignRight; width: 22 }
-                        StyledText { text: Math.round(root.mem) + "%"; color: Theme.widgetTextColor; font.pixelSize: 8; horizontalAlignment: Text.AlignRight; width: 22 }
-                        StyledText { text: root.disk + "%"; color: Theme.widgetTextColor; font.pixelSize: 8; horizontalAlignment: Text.AlignRight; width: 22; visible: root.disk >= 0 }
+                    MeterBar {
+                        value: parent.val
+                        fillColor: parent.fill
+                        okColor: Theme.primary
+                        implicitWidth: 34
+                        anchors.horizontalCenter: parent.horizontalCenter
                     }
                 }
 
-                Row {
-                    spacing: Theme.spacingXS
-                    anchors.verticalCenter: parent.verticalCenter
-                    Column {
-                        spacing: 1
-                        anchors.verticalCenter: parent.verticalCenter
-                        StyledText { text: "tmp"; color: Theme.surfaceVariantText; font.pixelSize: 8 }
-                        StyledText { text: "fan"; color: Theme.surfaceVariantText; font.pixelSize: 8 }
-                    }
-                    Column {
-                        spacing: 2
-                        anchors.verticalCenter: parent.verticalCenter
-                        // framed + damped ranges: trend chips, not seismographs
-                        Spark {
-                            framed: true
-                            implicitHeight: 12
-                            area: false
-                            values: root.tempHist
-                            minValue: root.tempHist.length ? Math.min(...root.tempHist) - 6 : 30
-                            maxValue: root.tempHist.length ? Math.max(...root.tempHist) + 6 : 95
-                            lineColor: root.temp >= 85 ? "#ef4444" : root.temp >= 70 ? "#fbbf24" : Theme.primary
-                        }
-                        Spark {
-                            framed: true
-                            implicitHeight: 12
-                            area: false
-                            values: root.fanHist
-                            minValue: 0
-                            maxValue: root.fanHist.length ? Math.max(...root.fanHist) + 600 : 5000
-                            lineColor: Theme.secondary
-                        }
-                    }
-                    Column {
-                        spacing: 1
-                        anchors.verticalCenter: parent.verticalCenter
-                        StyledText { text: root.temp + "°"; color: root.temp >= 85 ? "#ef4444" : root.temp >= 70 ? "#fbbf24" : Theme.widgetTextColor; font.pixelSize: 8; horizontalAlignment: Text.AlignRight; width: 26 }
-                        StyledText { text: String(root.fan); color: Theme.widgetTextColor; font.pixelSize: 8; horizontalAlignment: Text.AlignRight; width: 26 }
-                    }
+                MStack { txt: Math.round(root.cpu) + "%"; val: root.cpu }
+                MStack { txt: Math.round(root.mem) + "%"; val: root.mem }
+                MStack {
+                    txt: root.temp + "°"
+                    val: (root.temp - 30) / 65 * 100
+                    tone: root.temp >= 85 ? "#ef4444" : root.temp >= 70 ? "#fbbf24" : Theme.widgetTextColor
+                    fill: root.temp >= 85 ? "#ef4444" : root.temp >= 70 ? "#fbbf24" : Theme.primary
+                }
+                MStack {
+                    visible: root.fan >= 0
+                    txt: root.fan >= 1000 ? (root.fan / 1000).toFixed(1) + "k" : String(root.fan)
+                    val: root.fan / 70
+                    fill: Theme.secondary
                 }
 
                 // ── resident: the pinned metric's live value

@@ -362,3 +362,20 @@ Bar height: barConfigs[0].innerPadding drives it (widgetThickness =
   still needs settings.json widget entries + plugin_settings enable there;
   check its fontconfig for the same emoji-first file; box was unreachable
   (off/asleep) all morning.
+- **Refinement pass (same morning, Jay steering)**: sysMetrics pill →
+  number-over-bar stacks (battery-wattage grammar; 8px label columns dead,
+  sparks popout-only; circle gauges considered + rejected again).
+  ThinkPad plugin RETIRED same hour it shipped — profile/TLP/kbd absorbed
+  into BatteryPower popout (fan already lived in sysMetrics; battery icon
+  tints primary on performance profile). displayScale off the bar → CC
+  (contract: ccWidgetIcon/ccWidgetPrimaryText/ccWidgetSecondaryText on the
+  PluginComponent root + ccDetailContent Component; enroll via settings
+  controlCenterWidgets id "plugin_displayScale" — key ABSENT by default,
+  write the FULL default array [volumeSlider brightnessSlider wifi
+  bluetooth audioOutput audioInput nightMode darkMode] + the plugin entry
+  or the sliders vanish). CC detail content CAN reference the plugin root's
+  ids (same capture as popoutContent) — the shipped example re-reads
+  SettingsData instead, that's style not law. DankDash is NOT
+  plugin-extensible (checked); CC + bar + desktop are the three surfaces.
+  Bar right order now: tray · sysMetrics · fleet · claude · netPosture ·
+  battery · CC · notifications · power.

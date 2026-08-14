@@ -1,0 +1,12 @@
+{
+    "id": "displayScale",
+    "name": "Display Scale",
+    "description": "UI-scale chip for the focused monitor — clean Hyprland divisors, eval apply, reboot-proof via monitors.lua override",
+    "version": "0.1.0",
+    "author": "Jay",
+    "type": "widget",
+    "capabilities": ["dankbar-widget"],
+    "component": "./ScaleWidget.qml",
+    "icon": "display_settings",
+    "requires": ["hyprctl"]
+}

@@ -196,20 +196,26 @@ PluginComponent {
                     property color tone: Theme.widgetTextColor
                     spacing: 2
                     anchors.verticalCenter: parent.verticalCenter
-                    Row {
-                        spacing: 3
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        DankIcon {
-                            name: stk.icon
-                            size: 13
-                            color: Theme.widgetIconColor
-                            anchors.verticalCenter: parent.verticalCenter
-                        }
+                    // number stays dead-center over the bar; the icon hangs
+                    // off its left without shifting the centering
+                    Item {
+                        width: 52
+                        height: 14
                         StyledText {
+                            id: num
                             text: stk.txt
                             color: stk.tone
                             font.pixelSize: 11
                             font.weight: Font.Bold
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                        DankIcon {
+                            name: stk.icon
+                            size: 13
+                            color: Theme.widgetIconColor
+                            anchors.right: num.left
+                            anchors.rightMargin: 3
                             anchors.verticalCenter: parent.verticalCenter
                         }
                     }

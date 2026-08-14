@@ -181,42 +181,58 @@ PluginComponent {
                 anchors.centerIn: parent
                 spacing: Theme.spacingS
 
-                // per-metric stack: readable number over a thin bar — the
-                // battery pill's wattage grammar (Jay's pick 08-14). Units
-                // carry identity (% · % · ° · k); the 8px label columns are
-                // gone and the tmp/fan sparks retired to the popout.
+                // per-metric stack: icon + readable number over a bar — the
+                // battery pill's wattage grammar (Jay's picks 08-14). Icons
+                // follow dms's own monitor widgets (developer_board/memory/
+                // device_thermostat) so identity reads at a glance; the bar
+                // spans the stack. 8px label columns gone; tmp/fan sparks
+                // retired to the popout.
                 component MStack: Column {
+                    id: stk
+                    property string icon
                     property string txt
                     property real val: 0
                     property var fill: undefined
                     property color tone: Theme.widgetTextColor
                     spacing: 2
                     anchors.verticalCenter: parent.verticalCenter
-                    StyledText {
-                        text: parent.txt
-                        color: parent.tone
-                        font.pixelSize: 11
-                        font.weight: Font.Bold
+                    Row {
+                        spacing: 3
                         anchors.horizontalCenter: parent.horizontalCenter
+                        DankIcon {
+                            name: stk.icon
+                            size: 13
+                            color: Theme.widgetIconColor
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                        StyledText {
+                            text: stk.txt
+                            color: stk.tone
+                            font.pixelSize: 11
+                            font.weight: Font.Bold
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
                     }
                     MeterBar {
-                        value: parent.val
-                        fillColor: parent.fill
+                        value: stk.val
+                        fillColor: stk.fill
                         okColor: Theme.primary
-                        implicitWidth: 34
+                        implicitWidth: 52
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
                 }
 
-                MStack { txt: Math.round(root.cpu) + "%"; val: root.cpu }
-                MStack { txt: Math.round(root.mem) + "%"; val: root.mem }
+                MStack { icon: "developer_board"; txt: Math.round(root.cpu) + "%"; val: root.cpu }
+                MStack { icon: "memory"; txt: Math.round(root.mem) + "%"; val: root.mem }
                 MStack {
+                    icon: "device_thermostat"
                     txt: root.temp + "°"
                     val: (root.temp - 30) / 65 * 100
                     tone: root.temp >= 85 ? "#ef4444" : root.temp >= 70 ? "#fbbf24" : Theme.widgetTextColor
                     fill: root.temp >= 85 ? "#ef4444" : root.temp >= 70 ? "#fbbf24" : Theme.primary
                 }
                 MStack {
+                    icon: "mode_fan"
                     visible: root.fan >= 0
                     txt: root.fan >= 1000 ? (root.fan / 1000).toFixed(1) + "k" : String(root.fan)
                     val: root.fan / 70

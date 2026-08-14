@@ -1,0 +1,11 @@
+/* 47-nm-wifi-scan.rules — allow NetworkManager wifi scans without polkit auth.
+ * The dms bar wifi panel polls scans; without this every poll raises a polkit
+ * prompt (the fingerprint-storm of 2026-08-13). Install on each dms host:
+ *   sudo install -m 644 scripts/47-nm-wifi-scan.rules /etc/polkit-1/rules.d/
+ */
+polkit.addRule(function (action, subject) {
+    if (action.id == "org.freedesktop.NetworkManager.wifi.scan" &&
+        subject.user == "jay") {
+        return polkit.Result.YES;
+    }
+});

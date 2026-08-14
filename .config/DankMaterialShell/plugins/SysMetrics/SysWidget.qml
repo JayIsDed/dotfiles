@@ -196,26 +196,23 @@ PluginComponent {
                     property color tone: Theme.widgetTextColor
                     spacing: 2
                     anchors.verticalCenter: parent.verticalCenter
-                    // number stays dead-center over the bar; the icon hangs
-                    // off its left without shifting the centering
-                    Item {
-                        width: 52
-                        height: 14
-                        StyledText {
-                            id: num
-                            text: stk.txt
-                            color: stk.tone
-                            font.pixelSize: 11
-                            font.weight: Font.Bold
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.verticalCenter: parent.verticalCenter
-                        }
+                    // icon+number ride as ONE centered group; the bar spans
+                    // the group (floor 52) so wide values grow the stack
+                    Row {
+                        id: pair
+                        spacing: 3
+                        anchors.horizontalCenter: parent.horizontalCenter
                         DankIcon {
                             name: stk.icon
                             size: 13
                             color: Theme.widgetIconColor
-                            anchors.right: num.left
-                            anchors.rightMargin: 3
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                        StyledText {
+                            text: stk.txt
+                            color: stk.tone
+                            font.pixelSize: 11
+                            font.weight: Font.Bold
                             anchors.verticalCenter: parent.verticalCenter
                         }
                     }
@@ -223,13 +220,25 @@ PluginComponent {
                         value: stk.val
                         fillColor: stk.fill
                         okColor: Theme.primary
-                        implicitWidth: 52
+                        implicitWidth: Math.max(52, pair.implicitWidth)
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
                 }
 
+                // hairline divider between stacks — segmentation without
+                // nesting a pill in a pill
+                component Sep: Rectangle {
+                    width: 1
+                    height: 18
+                    radius: 0.5
+                    color: Qt.rgba(1, 1, 1, 0.14)
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
                 MStack { icon: "developer_board"; txt: Math.round(root.cpu) + "%"; val: root.cpu }
+                Sep {}
                 MStack { icon: "memory"; txt: Math.round(root.mem) + "%"; val: root.mem }
+                Sep {}
                 MStack {
                     icon: "device_thermostat"
                     txt: root.temp + "°"
@@ -237,10 +246,11 @@ PluginComponent {
                     tone: root.temp >= 85 ? "#ef4444" : root.temp >= 70 ? "#fbbf24" : Theme.widgetTextColor
                     fill: root.temp >= 85 ? "#ef4444" : root.temp >= 70 ? "#fbbf24" : Theme.primary
                 }
+                Sep { visible: root.fan >= 0 }
                 MStack {
                     icon: "mode_fan"
                     visible: root.fan >= 0
-                    txt: root.fan >= 1000 ? (root.fan / 1000).toFixed(1) + "k" : String(root.fan)
+                    txt: String(root.fan)
                     val: root.fan / 70
                     fill: Theme.secondary
                 }

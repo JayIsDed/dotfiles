@@ -1,0 +1,11 @@
+#%PAM-1.0
+# fprintd guard (2026-08-14): skip fingerprint when there is no TTY
+# (non-interactive sudo — Claude over ssh, cron, scripts). Empty PAM_TTY
+# matches the leading colon in ":unknown" (["", "unknown"]).
+# Interactive sudo keeps fingerprint, bounded to 10s before password fallback.
+# Install: sudo install -m 644 -o root -g root <this file> /etc/pam.d/sudo
+auth      [success=1 default=ignore]  pam_succeed_if.so quiet tty in :unknown
+auth      sufficient                  pam_fprintd.so timeout=10
+auth      include                     system-auth
+account   include                     system-auth
+session   include                     system-auth

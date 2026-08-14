@@ -181,47 +181,44 @@ PluginComponent {
                 anchors.centerIn: parent
                 spacing: Theme.spacingS
 
-                // per-metric stack: icon + readable number over a bar — the
-                // battery pill's wattage grammar (Jay's picks 08-14). Icons
-                // follow dms's own monitor widgets (developer_board/memory/
-                // device_thermostat) so identity reads at a glance; the bar
-                // spans the stack. 8px label columns gone; tmp/fan sparks
-                // retired to the popout.
-                component MStack: Column {
+                // per-metric: icon BESIDE the stack, number dead-center over
+                // its own bar (icon stays out of the column so nothing gets
+                // pushed off-axis — "the uneven thing", 08-14). Icons follow
+                // dms's own monitor widgets. 8px label columns gone; tmp/fan
+                // sparks retired to the popout.
+                component MStack: Row {
                     id: stk
                     property string icon
                     property string txt
                     property real val: 0
                     property var fill: undefined
                     property color tone: Theme.widgetTextColor
-                    spacing: 2
+                    spacing: 3
                     anchors.verticalCenter: parent.verticalCenter
-                    // icon+number ride as ONE centered group; the bar spans
-                    // the group (floor 52) so wide values grow the stack
-                    Row {
-                        id: pair
-                        spacing: 3
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        DankIcon {
-                            name: stk.icon
-                            size: 13
-                            color: Theme.widgetIconColor
-                            anchors.verticalCenter: parent.verticalCenter
-                        }
+                    DankIcon {
+                        name: stk.icon
+                        size: 13
+                        color: Theme.widgetIconColor
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    Column {
+                        spacing: 2
+                        anchors.verticalCenter: parent.verticalCenter
                         StyledText {
+                            id: numLabel
                             text: stk.txt
                             color: stk.tone
                             font.pixelSize: 11
                             font.weight: Font.Bold
-                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.horizontalCenter: parent.horizontalCenter
                         }
-                    }
-                    MeterBar {
-                        value: stk.val
-                        fillColor: stk.fill
-                        okColor: Theme.primary
-                        implicitWidth: Math.max(52, pair.implicitWidth)
-                        anchors.horizontalCenter: parent.horizontalCenter
+                        MeterBar {
+                            value: stk.val
+                            fillColor: stk.fill
+                            okColor: Theme.primary
+                            implicitWidth: Math.max(40, numLabel.implicitWidth + 4)
+                            anchors.horizontalCenter: parent.horizontalCenter
+                        }
                     }
                 }
 

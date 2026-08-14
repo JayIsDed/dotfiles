@@ -1,9 +1,12 @@
-// ScaleWidget.qml — UI-scale chip for the focused monitor. The ladder is
-// computed per panel: only scales whose logical size lands on whole pixels
-// (hyprland silently nudges anything else — 1.75 on the X1C9 became 5/3).
-// Apply path is `hyprctl eval hl.monitor{...}` — `keyword` is dead under
-// the Lua config — then a settled reprobe shows what hyprland chose.
-// Persistence: ~/.config/hypr/scale-<output>, read back by monitors.lua.
+// ScaleWidget.qml — UI-scale control for the focused monitor. Lives in the
+// CONTROL CENTER (Jay's call 08-14: with the brightness/sound sliders) via
+// the ccWidget contract; the bar pill below survives unused for the day it
+// is wanted back. Ladder is computed per panel: only scales whose logical
+// size lands on whole pixels (hyprland silently nudges anything else —
+// 1.75 on the X1C9 became 5/3). Apply path is `hyprctl eval hl.monitor{...}`
+// — `keyword` is dead under the Lua config — then a settled reprobe shows
+// what hyprland chose. Persist: ~/.config/hypr/scale-<output> → monitors.lua.
+// CC enrollment: settings.json controlCenterWidgets id "plugin_displayScale".
 import QtQuick
 import Quickshell.Io
 import qs.Common
@@ -80,6 +83,75 @@ PluginComponent {
         interval: 10000; running: true; repeat: true
         triggeredOnStart: true
         onTriggered: root.probe()
+    }
+
+    // ── Control Center face: pill row + expandable chip ladder
+    ccWidgetIcon: "display_settings"
+    ccWidgetPrimaryText: "UI scale"
+    ccWidgetSecondaryText: alive ? pctLabel(monScale) + " · " + monName : "—"
+    ccWidgetIsActive: alive
+
+    ccDetailContent: Component {
+        Rectangle {
+            implicitHeight: detailCol.implicitHeight + Theme.spacingM * 2
+            radius: Theme.cornerRadius
+            color: Theme.surfaceContainerHigh
+
+            Column {
+                id: detailCol
+                anchors.fill: parent
+                anchors.margins: Theme.spacingM
+                spacing: Theme.spacingS
+
+                StyledText {
+                    text: root.alive
+                        ? root.monName + " · " + Math.round(root.monW / root.monScale) + "x"
+                          + Math.round(root.monH / root.monScale) + " logical"
+                        : "no monitor"
+                    color: Theme.surfaceVariantText
+                    font.pixelSize: Theme.fontSizeSmall
+                }
+                Flow {
+                    width: parent.width
+                    spacing: Theme.spacingXS
+
+                    Repeater {
+                        model: root.ladder
+                        delegate: Rectangle {
+                            required property real modelData
+                            readonly property bool current: root.isCurrent(modelData)
+                            width: ccChipLabel.implicitWidth + 18
+                            height: 30
+                            radius: 8
+                            color: current ? Qt.alpha(Theme.primary, 0.25) : Qt.rgba(1, 1, 1, 0.05)
+                            border.color: current ? Theme.primary : Qt.rgba(1, 1, 1, 0.08)
+                            border.width: 1
+
+                            StyledText {
+                                id: ccChipLabel
+                                anchors.centerIn: parent
+                                text: root.pctLabel(parent.modelData)
+                                color: parent.current ? Theme.primary : Theme.surfaceText
+                                font.pixelSize: Theme.fontSizeSmall
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                enabled: !root.applying
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: root.applyScale(parent.modelData)
+                            }
+                        }
+                    }
+                }
+                StyledText {
+                    text: "whole-pixel divisors · survives reboot via monitors.lua"
+                    color: Theme.surfaceVariantText
+                    font.pixelSize: Theme.fontSizeSmall
+                    wrapMode: Text.WordWrap
+                    width: parent.width
+                }
+            }
+        }
     }
 
     horizontalBarPill: Component {

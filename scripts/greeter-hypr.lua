@@ -5,4 +5,5 @@
 -- Static 1.25: greeter runs as the `greeter` user and can't read jay's
 -- ~/.config/hypr/scale-eDP-1 override; login-screen scale changes are rare.
 hl.env("DMS_RUN_GREETER", "1")
+hl.config({ misc = { disable_hyprland_logo = true, disable_splash_rendering = true } })
 hl.monitor({ output = "eDP-1", mode = "preferred", position = "0x0", scale = 1.25 })

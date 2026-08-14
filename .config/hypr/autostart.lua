@@ -20,8 +20,14 @@ end
 hl.on("hyprland.start", function()
   if already_ran() then return end
   hl.exec_cmd("gnome-keyring-daemon --start --components=secrets,ssh")
-  hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
-  hl.exec_cmd("hypridle")
+  -- polkit agent + idle: dms ships both (PolkitService default-on +
+  -- IdleService timers in settings.json), so the laptop — fully on dms
+  -- lock/idle since 08-14 — skips them. Archbox keeps hypridle +
+  -- polkit-gnome until its idle keys land (desk seat).
+  if not require("hosts").is_laptop then
+    hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
+    hl.exec_cmd("hypridle")
+  end
   hl.exec_cmd("wl-paste --watch cliphist store")
   -- dms (DankMaterialShell) — ADOPTED 2026-08-13. `dms run` = qs -c dms
   -- (~/.config/quickshell is a REAL dir since 08-13: dms + lilypad

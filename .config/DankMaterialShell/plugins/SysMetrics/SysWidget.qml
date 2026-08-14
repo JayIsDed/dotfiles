@@ -197,7 +197,7 @@ PluginComponent {
                     anchors.verticalCenter: parent.verticalCenter
                     DankIcon {
                         name: stk.icon
-                        size: 13
+                        size: root.iconSize    // match the wifi icon — uniform bar iconography
                         color: Theme.widgetIconColor
                         anchors.verticalCenter: parent.verticalCenter
                     }
